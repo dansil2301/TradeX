@@ -1,2 +1,39 @@
-# ignore idea
-/.idea
+TradeX/HELP.md
+TradeX/.gradle/
+TradeX/build/
+!TradeX/gradle/wrapper/gradle-wrapper.jar
+!TradeX/**/src/main/**/build/
+!TradeX/**/src/test/**/build/
+
+### STS ###
+TradeX/.apt_generated
+TradeX/.classpath
+TradeX/.factorypath
+TradeX/.project
+TradeX/.settings
+TradeX/.springBeans
+TradeX/.sts4-cache
+TradeX/bin/
+
+### IntelliJ IDEA ###
+.idea/
+TradeX/*.iws
+TradeX/*.iml
+TradeX/*.ipr
+TradeX/out/
+!TradeX/**/src/main/**/out/
+!TradeX/**/src/test/**/out/
+
+### VS Code ###
+TradeX/.vscode/
+TradeX/.vscode/*
+!TradeX/.vscode/settings.json
+!TradeX/.vscode/tasks.json
+!TradeX/.vscode/extensions.json
+
+### NetBeans ###
+TradeX/nbproject/private/
+TradeX/nbbuild/
+TradeX/dist/
+TradeX/nbdist/
+TradeX/.nb-gradle/
