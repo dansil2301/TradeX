@@ -8,6 +8,6 @@ import java.time.Instant;
 import java.util.List;
 
 public interface ClientAPIRepository {
-    public List<HistoricCandle> getHistoricalCandles(String figi, Instant _from, Instant _to);
-    public Candle getStreamServiceCandle(String figi, CandleInterval interval);
+    <T> List<T> getHistoricalCandles(Instant _from, Instant _to, String figi, CandleInterval interval);
+    Candle getStreamServiceCandle(String figi, CandleInterval interval);
 }
