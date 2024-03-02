@@ -1,8 +1,8 @@
 package persistence.impl.tinkoff;
 
+import Eco.TradeX.persistence.impl.tinkoff.ClientTinkoffAPIImpl;
+import Eco.TradeX.persistence.impl.tinkoff.TokenManagerTinkoffImpl;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;
 
 import java.math.BigDecimal;
@@ -13,7 +13,6 @@ import java.time.ZoneId;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static ru.tinkoff.piapi.core.utils.MapperUtils.quotationToBigDecimal;
 
 
 class ClientTinkoffAPIImplTest {
@@ -27,7 +26,7 @@ class ClientTinkoffAPIImplTest {
         Instant from = to.minus(Duration.ofDays(1));
 
         var candles = client.getHistoricalCandles(from, to, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_1_MIN);
-        var close = quotationToBigDecimal(candles.get(0).getClose());
+        var close = candles.get(0).getClose();
         assertEquals(new BigDecimal("141.060000000"), close);
     }
 
