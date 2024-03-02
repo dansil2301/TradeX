@@ -17,7 +17,7 @@ import java.util.List;
 public class CandlesController {
     private final GetCandlesAPIInformationUseCase getCandlesAPIInformationUseCase;
 
-    @GetMapping("/getPeriodCandles")
+    @GetMapping("/period-candles")
     public ResponseEntity<GetCandlesResponse> getCandles(@RequestParam(value = "from") Instant from,
                                                          @RequestParam(value = "to") Instant to,
                                                          @RequestParam(value = "figi") String figi,

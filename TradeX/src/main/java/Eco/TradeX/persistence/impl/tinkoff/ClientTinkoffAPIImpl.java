@@ -79,6 +79,7 @@ public class ClientTinkoffAPIImpl implements ClientAPIRepository {
 
     @Override
     public Candle getStreamServiceCandle(String figi, CandleInterval interval) {
+
         return null;
     }
 }
