@@ -46,7 +46,7 @@ public class ClientTinkoffAPIImpl implements ClientAPIRepository {
                         .high(quotationToBigDecimal(originalCandle.getHigh()))
                         .low(quotationToBigDecimal(originalCandle.getLow()))
                         .volume(originalCandle.getVolume())
-                        .time(originalCandle.getTime())
+                        .time(Instant.ofEpochSecond(originalCandle.getTime().getSeconds(), originalCandle.getTime().getNanos()))
                         .build();
             }).toList();
         } catch (Exception e) {
