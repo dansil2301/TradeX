@@ -4,6 +4,7 @@ import Eco.TradeX.business.GetCandlesAPIInformationUseCase;
 import Eco.TradeX.business.GetStrategyParamsUseCase;
 import Eco.TradeX.domain.CandleData;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;
 
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
+@Primary
 public class StrategyMAUseCaseImpl implements GetStrategyParamsUseCase {
     private GetCandlesAPIInformationUseCase getCandlesAPIInformationUseCase;
     private final int extraCandlesNeeded;

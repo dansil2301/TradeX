@@ -24,8 +24,8 @@ public class CandlesController {
                                                          @RequestParam(value = "interval") CandleInterval interval) {
         List<CandleData> candles = getCandlesAPIInformationUseCase.getHistoricalCandlesAPI(from, to, figi, interval);
         return  ResponseEntity.ok().body(GetCandlesResponse.builder()
-                .to(from)
-                .from(to)
+                .to(to)
+                .from(from)
                 .figi(figi)
                 .interval(interval)
                 .candles(candles)
