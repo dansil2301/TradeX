@@ -9,5 +9,6 @@ import java.util.List;
 
 public interface ClientAPIRepository {
     List<CandleData> getHistoricalCandles(Instant _from, Instant _to, String figi, CandleInterval interval);
+    List<CandleData> getExtraHistoricalCandlesFromCertainTime(Instant _from, String figi, CandleInterval interval, int extraCandlesNeeded);
     Candle getStreamServiceCandle(String figi, CandleInterval interval);
 }

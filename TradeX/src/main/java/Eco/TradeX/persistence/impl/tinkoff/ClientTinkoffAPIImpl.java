@@ -1,5 +1,6 @@
 package Eco.TradeX.persistence.impl.tinkoff;
 
+import Eco.TradeX.business.utils.CandleIntervalConverter;
 import Eco.TradeX.domain.CandleData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import ru.tinkoff.piapi.contract.v1.HistoricCandle;
 import ru.tinkoff.piapi.core.InvestApi;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
 
 import static ru.tinkoff.piapi.core.utils.MapperUtils.quotationToBigDecimal;
@@ -53,6 +55,26 @@ public class ClientTinkoffAPIImpl implements ClientAPIRepository {
             LOGGER.error("Error fetching historical candles: " + e.getLocalizedMessage());
             throw new RuntimeException("Error fetching historical candles");
         }
+    }
+
+
+    public List<CandleData> getExtraHistoricalCandlesFromCertainTime(Instant _from, String figi, CandleInterval interval, int extraCandlesNeeded){
+        Instant from = _from;
+        List<CandleData> candles = Collections.emptyList();
+
+        // todo think about stop condition in case of going out of bounds
+        while (candles.size() < extraCandlesNeeded) {
+            int newPeriod = extraCandlesNeeded - candles.size();
+            from = from.minusSeconds((long) CandleIntervalConverter.toSeconds(interval) * newPeriod);
+            candles = getHistoricalCandles(from, _from, figi, interval);
+            candles = (candles == null) ? Collections.emptyList() : candles;
+        }
+
+        if (extraCandlesNeeded != candles.size()) {
+            candles = candles.subList(Math.max(candles.size() - extraCandlesNeeded, 0), candles.size());
+        }
+
+        return candles;
     }
 
     @Override

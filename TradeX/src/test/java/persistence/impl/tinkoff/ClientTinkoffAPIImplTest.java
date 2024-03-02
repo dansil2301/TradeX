@@ -61,4 +61,37 @@ class ClientTinkoffAPIImplTest {
         String actualMessage = exception.getMessage();
         assertEquals(expectedMessage, actualMessage);
     }
+
+    @Test
+    void getExtraHistoricalCandlesFromCertainTime1MinCandle() {
+        TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
+        ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
+
+        Instant from = LocalDate.of(2023, 12, 11).atStartOfDay(ZoneId.systemDefault()).toInstant();
+
+        var candles = client.getExtraHistoricalCandlesFromCertainTime(from, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_1_MIN, 20);
+        assertEquals(20, candles.size());
+    }
+
+    @Test
+    void getExtraHistoricalCandlesFromCertainTime1DayCandle() {
+        TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
+        ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
+
+        Instant from = LocalDate.of(2023, 12, 11).atStartOfDay(ZoneId.systemDefault()).toInstant();
+
+        var candles = client.getExtraHistoricalCandlesFromCertainTime(from, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_DAY, 5);
+        assertEquals(5, candles.size());
+    }
+
+    @Test
+    void getExtraHistoricalCandlesFromCertainTime1MonthCandle() {
+        TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
+        ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
+
+        Instant from = LocalDate.of(2023, 12, 11).atStartOfDay(ZoneId.systemDefault()).toInstant();
+
+        var candles = client.getExtraHistoricalCandlesFromCertainTime(from, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_MONTH, 2);
+        assertEquals(2, candles.size());
+    }
 }
