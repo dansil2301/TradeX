@@ -3,6 +3,7 @@ package Eco.TradeX.business.Impl.Strategies;
 import Eco.TradeX.business.GetCandlesAPIInformationUseCase;
 import Eco.TradeX.business.GetStrategyParamsUseCase;
 import Eco.TradeX.domain.CandleData;
+import Eco.TradeX.persistence.ClientAPIRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -20,14 +21,14 @@ import java.util.stream.Stream;
 @Service
 @Primary
 public class StrategyMAUseCaseImpl implements GetStrategyParamsUseCase {
-    private GetCandlesAPIInformationUseCase getCandlesAPIInformationUseCase;
+    private ClientAPIRepository clientAPIRepository;
     private final int extraCandlesNeeded;
     // MA specific parameters
     private final int longMA = 20;
     private final int shortMA = 5;
 
-    public StrategyMAUseCaseImpl(GetCandlesAPIInformationUseCase getCandlesAPIInformationUseCase) {
-        this.getCandlesAPIInformationUseCase = getCandlesAPIInformationUseCase;
+    public StrategyMAUseCaseImpl(ClientAPIRepository clientAPIRepository) {
+        this.clientAPIRepository = clientAPIRepository;
         this.extraCandlesNeeded = this.longMA - 1;
     }
 
@@ -41,7 +42,7 @@ public class StrategyMAUseCaseImpl implements GetStrategyParamsUseCase {
 
     @Override
     public Map<String, List<BigDecimal>> getStrategyParametersForCandles(List<CandleData> candles, Instant from, Instant to, String figi, CandleInterval interval) {
-        List<CandleData> extraCandles = getCandlesAPIInformationUseCase.getExtraHistoricalCandlesFromCertainTimeAPI(from, figi, interval, extraCandlesNeeded);
+        List<CandleData> extraCandles = clientAPIRepository.getExtraHistoricalCandlesFromCertainTime(from, figi, interval, extraCandlesNeeded);
         List<CandleData> allCandles = Stream.concat(extraCandles.stream(), candles.stream()).toList();
         Map<String, List<BigDecimal>> parameter_saver = new HashMap<>();
 

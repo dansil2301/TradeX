@@ -25,8 +25,7 @@ class StrategyMAUseCaseImplTest {
     void getStrategyParametersForCandles1MinCandle1DaysLongMA() {
         TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
         ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
-        GetCandlesAPIInformationUseCase getCandlesAPIInformationUseCase = new GetCandlesAPIInformationUseCaseImpl(client);
-        StrategyMAUseCaseImpl strategyMAUseCase = new StrategyMAUseCaseImpl(getCandlesAPIInformationUseCase);
+        StrategyMAUseCaseImpl strategyMAUseCase = new StrategyMAUseCaseImpl(client);
 
         Instant to = LocalDate.of(2023, 2, 2).atStartOfDay(ZoneId.systemDefault()).toInstant();
         Instant from = to.minus(Duration.ofDays(1));
@@ -44,8 +43,7 @@ class StrategyMAUseCaseImplTest {
     void getStrategyParametersForCandles5MinCandle1DaysLongMA() {
         TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
         ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
-        GetCandlesAPIInformationUseCase getCandlesAPIInformationUseCase = new GetCandlesAPIInformationUseCaseImpl(client);
-        StrategyMAUseCaseImpl strategyMAUseCase = new StrategyMAUseCaseImpl(getCandlesAPIInformationUseCase);
+        StrategyMAUseCaseImpl strategyMAUseCase = new StrategyMAUseCaseImpl(client);
 
         Instant to = LocalDate.of(2023, 2, 2).atStartOfDay(ZoneId.systemDefault()).toInstant();
         Instant from = to.minus(Duration.ofDays(1));
