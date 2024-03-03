@@ -1,39 +1,37 @@
-TradeX/HELP.md
-TradeX/.gradle/
-TradeX/build/
-!TradeX/gradle/wrapper/gradle-wrapper.jar
-!TradeX/**/src/main/**/build/
-!TradeX/**/src/test/**/build/
+HELP.md
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
 
 ### STS ###
-TradeX/.apt_generated
-TradeX/.classpath
-TradeX/.factorypath
-TradeX/.project
-TradeX/.settings
-TradeX/.springBeans
-TradeX/.sts4-cache
-TradeX/bin/
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
 
 ### IntelliJ IDEA ###
-.idea/
-TradeX/*.iws
-TradeX/*.iml
-TradeX/*.ipr
-TradeX/out/
-!TradeX/**/src/main/**/out/
-!TradeX/**/src/test/**/out/
-
-### VS Code ###
-TradeX/.vscode/
-TradeX/.vscode/*
-!TradeX/.vscode/settings.json
-!TradeX/.vscode/tasks.json
-!TradeX/.vscode/extensions.json
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
 
 ### NetBeans ###
-TradeX/nbproject/private/
-TradeX/nbbuild/
-TradeX/dist/
-TradeX/nbdist/
-TradeX/.nb-gradle/
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
