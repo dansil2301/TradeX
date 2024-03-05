@@ -63,6 +63,7 @@ public class ClientTinkoffAPIImpl implements ClientAPIRepository {
         List<CandleData> candles = Collections.emptyList();
 
         // todo think about stop condition in case of going out of bounds
+        // todo takes too much think how to improve and make faster
         while (candles.size() < extraCandlesNeeded) {
             int newPeriod = extraCandlesNeeded - candles.size();
             from = from.minusSeconds((long) CandleIntervalConverter.toSeconds(interval) * newPeriod);
