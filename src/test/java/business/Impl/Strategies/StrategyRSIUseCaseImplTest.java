@@ -1,7 +1,6 @@
 package business.Impl.Strategies;
 
-import Eco.TradeX.business.Impl.Strategies.StrategyMAUseCaseImpl;
-import Eco.TradeX.business.Impl.Strategies.StrategyRSIUseCaseImpl;
+import Eco.TradeX.business.Impl.Strategies.RSI.StrategyRSIUseCaseImpl;
 import Eco.TradeX.domain.CandleData;
 import Eco.TradeX.persistence.impl.tinkoff.ClientTinkoffAPIImpl;
 import Eco.TradeX.persistence.impl.tinkoff.TokenManagerTinkoffImpl;

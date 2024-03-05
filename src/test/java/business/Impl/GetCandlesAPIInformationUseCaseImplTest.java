@@ -1,4 +1,4 @@
-package business.Impl.Strategies;
+package business.Impl;
 
 import Eco.TradeX.business.Impl.GetCandlesAPIInformationUseCaseImpl;
 import Eco.TradeX.persistence.impl.tinkoff.ClientTinkoffAPIImpl;

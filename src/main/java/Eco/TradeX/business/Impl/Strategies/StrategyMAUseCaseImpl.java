@@ -40,6 +40,7 @@ public class StrategyMAUseCaseImpl implements GetStrategyParamsUseCase {
         averageMALong.add(averageLong);
     }
 
+    // todo rewrite for each candle and list of candles (like in side project)
     @Override
     public Map<String, List<BigDecimal>> getStrategyParametersForCandles(List<CandleData> candles, Instant from, Instant to, String figi, CandleInterval interval) {
         List<CandleData> extraCandles = clientAPIRepository.getExtraHistoricalCandlesFromCertainTime(from, figi, interval, extraCandlesNeeded);
