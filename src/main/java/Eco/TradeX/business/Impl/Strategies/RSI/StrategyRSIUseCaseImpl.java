@@ -1,7 +1,7 @@
 package Eco.TradeX.business.Impl.Strategies.RSI;
 
-import Eco.TradeX.business.GetStrategyParamsUseCase;
-import Eco.TradeX.business.utils.CalculationHelper;
+import Eco.TradeX.business.ParameterContainer;
+import Eco.TradeX.business.StrategyUseCase;
 import Eco.TradeX.domain.CandleData;
 import Eco.TradeX.persistence.ClientAPIRepository;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import java.util.Map;
 import static Eco.TradeX.business.utils.CalculationHelper.calculateAverage;
 
 @Service
-public class StrategyRSIUseCaseImpl implements GetStrategyParamsUseCase {
+public class StrategyRSIUseCaseImpl implements StrategyUseCase {
     private ClientAPIRepository clientAPIRepository;
     private RSIContainerData rsiContainerData;
     private CandleData prevCandleSaver;
@@ -85,7 +85,7 @@ public class StrategyRSIUseCaseImpl implements GetStrategyParamsUseCase {
     }
 
     @Override
-    public Map<String, BigDecimal> calculateParametersForCandle(CandleData candle) {
+    public ParameterContainer calculateParametersForCandle(CandleData candle) {
         List<BigDecimal> gainLoss = getGainLossCurrentCandle(prevCandleSaver, candle);
         rsiContainerData.moveByOne(gainLoss.get(0), gainLoss.get(1));
 
@@ -108,25 +108,23 @@ public class StrategyRSIUseCaseImpl implements GetStrategyParamsUseCase {
             current_RSI = BigDecimal.ZERO;
         }
 
-         return new HashMap<String, BigDecimal>() {{
-            put("RSI", current_RSI);
-        }};
+         return RSIParameterContainer.builder()
+                 .RSI(current_RSI)
+                 .build();
     }
 
     @Override
-    public Map<String, List<BigDecimal>> getStrategyParametersForCandles(List<CandleData> candles, Instant from, Instant to, String figi, CandleInterval interval) {
+    public List<ParameterContainer> getStrategyParametersForCandles(List<CandleData> candles, Instant from, Instant to, String figi, CandleInterval interval) {
         List<CandleData> extraCandles = clientAPIRepository.getExtraHistoricalCandlesFromCertainTime(from, figi, interval, extraCandlesNeeded);
         rsiContainerData = initializeContainer(extraCandles);
         prevCandleSaver = extraCandles.get(extraCandles.size() - 1);
 
-        Map<String, List<BigDecimal>> parameter_saver = new HashMap<>();
-        List<BigDecimal> RSI = new ArrayList<>();
+        List<ParameterContainer> paramContainer = new ArrayList<>();
         for (CandleData candle : candles) {
-            var current_RSI = calculateParametersForCandle(candle);
-            RSI.add(current_RSI.get("RSI"));
+            var params = calculateParametersForCandle(candle);
+            paramContainer.add(params);
         }
-        parameter_saver.put("RSI", RSI);
 
-        return parameter_saver;
+        return paramContainer;
     }
 }

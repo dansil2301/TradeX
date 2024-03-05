@@ -1,9 +1,9 @@
 package Eco.TradeX.controller;
 
 import Eco.TradeX.business.GetCandlesAPIInformationUseCase;
-import Eco.TradeX.business.GetStrategyParamsUseCase;
+import Eco.TradeX.business.StrategyFactoryUseCase;
+import Eco.TradeX.business.StrategyUseCase;
 import Eco.TradeX.domain.CandleData;
-import Eco.TradeX.domain.Response.GetCandlesResponse;
 import Eco.TradeX.domain.Response.GetStrategiesResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,7 @@ import java.util.List;
 @RequestMapping("/strategies")
 @AllArgsConstructor
 public class StrategiesController {
-    private final GetStrategyParamsUseCase getStrategyParamsUseCase;
+    private StrategyFactoryUseCase strategyFactoryUseCase;
     private final GetCandlesAPIInformationUseCase getCandlesAPIInformationUseCase;
 
     @GetMapping("/strategy-params-without-candles")
@@ -25,16 +25,15 @@ public class StrategiesController {
                                                                          @RequestParam(value = "to") Instant to,
                                                                          @RequestParam(value = "figi") String figi,
                                                                          @RequestParam(value = "interval") CandleInterval interval,
-                                                                         @RequestParam(value = "strategy") String strategy) {
+                                                                         @RequestParam(value = "strategiesNames") List<String> strategiesNames) {
         var candles = getCandlesAPIInformationUseCase.getHistoricalCandlesAPI(from, to, figi, interval);
-        var parameters = getStrategyParamsUseCase.getStrategyParametersForCandles(candles, from, to, figi, interval);
+        var parameters = strategyFactoryUseCase.getCandlesStrategiesParameters(strategiesNames, candles, from, to, figi, interval);
         return ResponseEntity.ok().body(GetStrategiesResponse.builder()
                 .to(to)
                 .from(from)
                 .figi(figi)
                 .interval(interval)
-                .candles(candles)
-                .strategyParameters(parameters)
+                .strategiesParams(parameters)
                 .build());
     }
 
@@ -44,15 +43,14 @@ public class StrategiesController {
                                                                                     @RequestParam(value = "figi") String figi,
                                                                                     @RequestParam(value = "interval") CandleInterval interval,
                                                                                     @RequestBody List<CandleData> candles,
-                                                                                    @RequestParam(value = "strategy") String strategy) {
-        var parameters = getStrategyParamsUseCase.getStrategyParametersForCandles(candles, from, to, figi, interval);
+                                                                                    @RequestParam(value = "strategiesNames") List<String> strategiesNames) {
+        var parameters = strategyFactoryUseCase.getCandlesStrategiesParameters(strategiesNames, candles, from, to, figi, interval);
         return ResponseEntity.ok().body(GetStrategiesResponse.builder()
                 .to(to)
                 .from(from)
                 .figi(figi)
                 .interval(interval)
-                .candles(candles)
-                .strategyParameters(parameters)
+                .strategiesParams(parameters)
                 .build());
     }
 }

@@ -8,9 +8,9 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
-public interface GetStrategyParamsUseCase {
+public interface StrategyUseCase {
     String getStrategyName();
     void initializeContainerForCandleLiveStreaming(String figi, CandleInterval interval);
-    Map<String, BigDecimal> calculateParametersForCandle(CandleData candle);
-    Map<String, List<BigDecimal>> getStrategyParametersForCandles(List<CandleData> candles, Instant from, Instant to, String figi, CandleInterval interval);
+    ParameterContainer calculateParametersForCandle(CandleData candle);
+    List<ParameterContainer> getStrategyParametersForCandles(List<CandleData> candles, Instant from, Instant to, String figi, CandleInterval interval);
 }

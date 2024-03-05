@@ -1,11 +1,9 @@
 package Eco.TradeX.business.Impl.Strategies.MA;
 
-import Eco.TradeX.business.GetCandlesAPIInformationUseCase;
-import Eco.TradeX.business.GetStrategyParamsUseCase;
-import Eco.TradeX.business.Impl.Strategies.RSI.RSIContainerData;
+import Eco.TradeX.business.ParameterContainer;
+import Eco.TradeX.business.StrategyUseCase;
 import Eco.TradeX.domain.CandleData;
 import Eco.TradeX.persistence.ClientAPIRepository;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;
@@ -17,14 +15,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static Eco.TradeX.business.utils.CalculationHelper.calculateAverage;
 
 @Service
 @Primary
-public class StrategyMAUseCaseImpl implements GetStrategyParamsUseCase {
+public class StrategyMAUseCaseImpl implements StrategyUseCase {
     private ClientAPIRepository clientAPIRepository;
     private MAContainerData maContainerData;
     private final int extraCandlesNeeded;
@@ -69,35 +65,30 @@ public class StrategyMAUseCaseImpl implements GetStrategyParamsUseCase {
     }
 
     @Override
-    public Map<String, BigDecimal> calculateParametersForCandle(CandleData candle) {
+    public ParameterContainer calculateParametersForCandle(CandleData candle) {
         maContainerData.moveByOne(candle.getClose());
         BigDecimal maLongAvg = calculateAverage(maContainerData.getCandlesCloseLong(), RoundingMode.HALF_UP);
         BigDecimal maShortAvg = calculateAverage(maContainerData.getCandlesCloseLong()
                 .subList(maContainerData.getCandlesCloseLong().size() - shortMA - 1, maContainerData.getCandlesCloseLong().size() - 1),
                 RoundingMode.HALF_UP);
 
-        return new HashMap<String, BigDecimal>() {{
-            put("long_MA", maLongAvg);
-            put("short_MA", maShortAvg);
-        }};
+        return MAParameterContainer.builder()
+                .longMA(maLongAvg)
+                .shortMA(maShortAvg)
+                .build();
     }
 
     @Override
-    public Map<String, List<BigDecimal>> getStrategyParametersForCandles(List<CandleData> candles, Instant from, Instant to, String figi, CandleInterval interval) {
+    public List<ParameterContainer> getStrategyParametersForCandles(List<CandleData> candles, Instant from, Instant to, String figi, CandleInterval interval) {
         List<CandleData> extraCandles = clientAPIRepository.getExtraHistoricalCandlesFromCertainTime(from, figi, interval, extraCandlesNeeded);
         maContainerData = initializeContainer(extraCandles);
 
-        Map<String, List<BigDecimal>> parameter_saver = new HashMap<>();
-        List<BigDecimal> averageMALong = new ArrayList<>();
-        List<BigDecimal> averageMAShort = new ArrayList<>();
+        List<ParameterContainer> paramContainer = new ArrayList<>();
         for (CandleData candle : candles) {
-            var longShort = calculateParametersForCandle(candle);
-            averageMALong.add(longShort.get("long_MA"));
-            averageMAShort.add(longShort.get("short_MA"));
+            var params = calculateParametersForCandle(candle);
+            paramContainer.add(params);
         }
-        parameter_saver.put("long_MA", averageMALong);
-        parameter_saver.put("short_MA", averageMAShort);
 
-        return parameter_saver;
+        return paramContainer;
     }
 }

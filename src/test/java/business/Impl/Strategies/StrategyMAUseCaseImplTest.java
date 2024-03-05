@@ -31,10 +31,7 @@ class StrategyMAUseCaseImplTest {
         List<CandleData> candles = client.getHistoricalCandles(from, to, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_1_MIN);
 
         var parameters = strategyMAUseCase.getStrategyParametersForCandles(candles, from, to, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_1_MIN);
-        for (Map.Entry<String, List<BigDecimal>> entry : parameters.entrySet()){
-            List<BigDecimal> all_MA = entry.getValue();
-            assertEquals(candles.size(), all_MA.size());
-        }
+        assertEquals(candles.size(), parameters.size());
     }
 
     @Test
@@ -49,9 +46,6 @@ class StrategyMAUseCaseImplTest {
         List<CandleData> candles = client.getHistoricalCandles(from, to, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_5_MIN);
 
         var parameters = strategyMAUseCase.getStrategyParametersForCandles(candles, from, to, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_5_MIN);
-        for (Map.Entry<String, List<BigDecimal>> entry : parameters.entrySet()){
-            List<BigDecimal> all_MA = entry.getValue();
-            assertEquals(candles.size(), all_MA.size());
-        }
+        assertEquals(candles.size(), parameters.size());
     }
 }
