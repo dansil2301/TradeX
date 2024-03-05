@@ -30,6 +30,12 @@ public class StrategyRSIUseCaseImpl implements GetStrategyParamsUseCase {
         this.extraCandlesNeeded = this.periodMA + 1;
     }
 
+    @Override
+    public String getStrategyName() {
+        return "RSI";
+    }
+
+    @Override
     public void initializeContainerForCandleLiveStreaming(String figi, CandleInterval interval) {
         rsiContainerData = RSIContainerData.builder()
                 .gain(new ArrayList<>())
@@ -41,7 +47,7 @@ public class StrategyRSIUseCaseImpl implements GetStrategyParamsUseCase {
         prevCandleSaver = extraCandles.get(extraCandles.size() - 1);
     }
 
-    private RSIContainerData initializeContainer(List<CandleData> extraCandles){
+    private RSIContainerData initializeContainer(List<CandleData> extraCandles) {
         RSIContainerData gainLossContainer = RSIContainerData.builder()
                 .gain(new ArrayList<>())
                 .loss(new ArrayList<>())
@@ -78,7 +84,8 @@ public class StrategyRSIUseCaseImpl implements GetStrategyParamsUseCase {
         return gainLoss;
     }
 
-    public Map<String, BigDecimal> calculateParameterForCandle(CandleData candle) {
+    @Override
+    public Map<String, BigDecimal> calculateParametersForCandle(CandleData candle) {
         List<BigDecimal> gainLoss = getGainLossCurrentCandle(prevCandleSaver, candle);
         rsiContainerData.moveByOne(gainLoss.get(0), gainLoss.get(1));
 
@@ -96,7 +103,8 @@ public class StrategyRSIUseCaseImpl implements GetStrategyParamsUseCase {
             current_RSI = BigDecimal.valueOf(100).subtract(
                     BigDecimal.valueOf(100).divide(divisor, BigDecimal.ROUND_HALF_UP)
             );
-        } else {
+        }
+        else {
             current_RSI = BigDecimal.ZERO;
         }
 
@@ -114,7 +122,7 @@ public class StrategyRSIUseCaseImpl implements GetStrategyParamsUseCase {
         Map<String, List<BigDecimal>> parameter_saver = new HashMap<>();
         List<BigDecimal> RSI = new ArrayList<>();
         for (CandleData candle : candles) {
-            var current_RSI = calculateParameterForCandle(candle);
+            var current_RSI = calculateParametersForCandle(candle);
             RSI.add(current_RSI.get("RSI"));
         }
         parameter_saver.put("RSI", RSI);
