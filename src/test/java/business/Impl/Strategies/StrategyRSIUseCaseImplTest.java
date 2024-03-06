@@ -30,7 +30,7 @@ class StrategyRSIUseCaseImplTest {
 
         List<CandleData> candles = client.getHistoricalCandles(from, to, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_1_MIN);
 
-        var parameters = strategyRSIUseCaseImpl.getStrategyParametersForCandles(candles, from, to, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_1_MIN);
+        var parameters = strategyRSIUseCaseImpl.getStrategyParametersForCandles(candles, from, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_1_MIN);
         assertEquals(candles.size(), parameters.size());
     }
 }

@@ -12,6 +12,5 @@ public interface StrategyFactoryUseCase {
     List<StrategyUseCase> getStrategies(List<String> strategyNames);
     List<CandleStrategiesParams> getCandlesStrategiesParameters(List<String> strategyNames,
                                                                 List<CandleData> candles,
-                                                                Instant from, Instant to,
-                                                                String figi, CandleInterval interval);
+                                                                Instant from, String figi, CandleInterval interval);
 }

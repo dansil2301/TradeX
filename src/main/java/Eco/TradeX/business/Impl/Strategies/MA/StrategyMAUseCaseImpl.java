@@ -89,7 +89,7 @@ public class StrategyMAUseCaseImpl implements StrategyUseCase {
     }
 
     @Override
-    public List<ParameterContainer> getStrategyParametersForCandles(List<CandleData> candles, Instant from, Instant to, String figi, CandleInterval interval) {
+    public List<ParameterContainer> getStrategyParametersForCandles(List<CandleData> candles, Instant from, String figi, CandleInterval interval) {
         if (extraCandlesContainer == null) {
             extraCandlesContainer = clientAPIRepository.getExtraHistoricalCandlesFromCertainTime(from, figi, interval, extraCandlesNeeded);
         }

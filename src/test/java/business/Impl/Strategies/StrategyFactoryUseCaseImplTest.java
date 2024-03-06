@@ -42,7 +42,7 @@ class StrategyFactoryUseCaseImplTest {
         strategyNames.add("RSI");
         strategyNames.add("MA");
 
-        var allParams = strategyFactoryUseCase.getCandlesStrategiesParameters(strategyNames, candles, from, to, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_1_MIN);
+        var allParams = strategyFactoryUseCase.getCandlesStrategiesParameters(strategyNames, candles, from, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_1_MIN);
         assertEquals(candles.size(), allParams.size());
     }
 }

@@ -66,8 +66,8 @@ public class StrategyFactoryUseCaseImpl implements StrategyFactoryUseCase {
     @Override
     public List<CandleStrategiesParams> getCandlesStrategiesParameters(List<String> strategyNames,
                                                                        List<CandleData> candles,
-                                                                       Instant from, Instant to,
-                                                                       String figi, CandleInterval interval) {
+                                                                       Instant from, String figi,
+                                                                       CandleInterval interval) {
         List<StrategyUseCase> strategies = getStrategies(strategyNames);
         initializeStrategiesExtraCandles(strategies, from, figi, interval);
         Map<String, List<ParameterContainer>> allParameters = new HashMap<>();
@@ -75,7 +75,7 @@ public class StrategyFactoryUseCaseImpl implements StrategyFactoryUseCase {
         // get all needed parameters
         for (var strategy : strategies) {
             allParameters.put(strategy.getStrategyName(), strategy.getStrategyParametersForCandles(candles,
-                    from, to, figi, interval));
+                    from, figi, interval));
         }
 
         //pack into future jon format
