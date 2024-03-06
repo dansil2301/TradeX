@@ -51,7 +51,7 @@ public class ClientTinkoffAPIImpl implements ClientAPIRepository {
                     .build()).toList();
         } catch (Exception e) {
             LOGGER.error("Error fetching historical candles: " + e.getLocalizedMessage());
-            throw new RuntimeException("Error fetching historical candles");
+            throw new RuntimeException("Error fetching historical candles: " + e.getMessage());
         }
     }
 
