@@ -57,7 +57,7 @@ class ClientTinkoffAPIImplTest {
                 () -> client.getHistoricalCandles(from, to, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_1_MIN)
         );
 
-        String expectedMessage = "Error fetching historical candles";
+        String expectedMessage = "Error fetching historical candles: Превышен максимальный период запроса для данного интервала свечи. Укажите корректный интервал.";
         String actualMessage = exception.getMessage();
         assertEquals(expectedMessage, actualMessage);
     }
