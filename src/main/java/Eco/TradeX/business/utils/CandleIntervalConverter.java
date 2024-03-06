@@ -9,8 +9,8 @@ public class CandleIntervalConverter {
             case CANDLE_INTERVAL_2_MIN -> 120;
             case CANDLE_INTERVAL_3_MIN -> 180;
             case CANDLE_INTERVAL_5_MIN -> 300;
-            case CANDLE_INTERVAL_15_MIN -> 900;
             case CANDLE_INTERVAL_10_MIN -> 600;
+            case CANDLE_INTERVAL_15_MIN -> 900;
             case CANDLE_INTERVAL_30_MIN -> 1800;
             case CANDLE_INTERVAL_HOUR -> 3600;
             case CANDLE_INTERVAL_2_HOUR -> 7200;

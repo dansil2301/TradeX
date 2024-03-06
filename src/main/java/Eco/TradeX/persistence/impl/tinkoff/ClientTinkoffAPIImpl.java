@@ -16,6 +16,7 @@ import java.time.*;
 import java.util.Collections;
 import java.util.List;
 
+import static Eco.TradeX.business.utils.CandleIntervalConverter.toSeconds;
 import static ru.tinkoff.piapi.core.utils.MapperUtils.quotationToBigDecimal;
 
 @Repository
@@ -88,15 +89,15 @@ public class ClientTinkoffAPIImpl implements ClientAPIRepository {
         // todo think what to do when there are not enough extra candles
         while (candles.size() < extraCandlesNeeded) {
             int newPeriod = extraCandlesNeeded - candles.size();
-            from = from.minusSeconds((long) CandleIntervalConverter.toSeconds(interval) * newPeriod);
+            from = from.minusSeconds((long) toSeconds(interval) * newPeriod);
 
             ZonedDateTime zonedDateTime = from.atZone(ZoneOffset.UTC);
             int hourFrom = zonedDateTime.getHour(); int minuteFrom = zonedDateTime.getMinute();
             if (from.compareTo(stopDate) < 0) {
                 break;
             }
-            if ((hourFrom >= 22 || (hourFrom == 21 && minuteFrom >= 50)) || (hourFrom <= 7 || (hourFrom == 7 && minuteFrom <= 55)) ||
-                    checkOpenOrClosedHolidays(from)) {
+            if (((hourFrom >= 22 || (hourFrom == 21 && minuteFrom >= 50)) || (hourFrom <= 7 || (hourFrom == 7 && minuteFrom <= 55)) ||
+                    checkOpenOrClosedHolidays(from)) && (toSeconds(interval) < 86400)) {
                 continue;
             }
 
