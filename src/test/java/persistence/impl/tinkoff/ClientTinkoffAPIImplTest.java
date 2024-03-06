@@ -94,4 +94,15 @@ class ClientTinkoffAPIImplTest {
         var candles = client.getExtraHistoricalCandlesFromCertainTime(from, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_MONTH, 2);
         assertEquals(2, candles.size());
     }
+
+    @Test
+    void getExtraHistoricalCandlesFromCertainTime1MonthCandleOutOfBounds() {
+        TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
+        ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
+
+        Instant from = LocalDate.of(2000, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant();
+
+        var candles = client.getExtraHistoricalCandlesFromCertainTime(from, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_MONTH, 2);
+        assertEquals(0, candles.size());
+    }
 }

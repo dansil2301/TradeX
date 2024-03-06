@@ -54,7 +54,7 @@ public class StrategyFactoryUseCaseImpl implements StrategyFactoryUseCase {
         List<StrategyUseCase> strategies = getStrategies(strategyNames);
         Map<String, List<ParameterContainer>> allParameters = new HashMap<>();
 
-        // get all needed parameters
+        // get all needed parameters and initialize
         for (var strategy : strategies) {
             allParameters.put(strategy.getStrategyName(), strategy.getStrategyParametersForCandles(candles,
                     from, to, figi, interval));
