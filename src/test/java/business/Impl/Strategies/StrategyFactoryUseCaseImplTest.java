@@ -32,7 +32,7 @@ class StrategyFactoryUseCaseImplTest {
         strategies.add(strategyMAUseCase);
         strategies.add(strategyRSIUseCase);
 
-        StrategyFactoryUseCaseImpl strategyFactoryUseCase = new StrategyFactoryUseCaseImpl(strategies);
+        StrategyFactoryUseCaseImpl strategyFactoryUseCase = new StrategyFactoryUseCaseImpl(strategies, client);
 
         Instant to = LocalDate.of(2023, 2, 2).atStartOfDay(ZoneId.systemDefault()).toInstant();
         Instant from = to.minus(Duration.ofDays(1));

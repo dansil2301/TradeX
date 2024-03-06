@@ -6,6 +6,8 @@ import Eco.TradeX.business.StrategyUseCase;
 import Eco.TradeX.domain.CandleData;
 import Eco.TradeX.domain.StrategyParams.CandleStrategiesParams;
 import Eco.TradeX.domain.StrategyParams.StrategyNameParameter;
+import Eco.TradeX.persistence.ClientAPIRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;
 
@@ -13,12 +15,10 @@ import java.time.Instant;
 import java.util.*;
 
 @Service
+@AllArgsConstructor
 public class StrategyFactoryUseCaseImpl implements StrategyFactoryUseCase {
     private final List<StrategyUseCase> strategies;
-
-    public StrategyFactoryUseCaseImpl(List<StrategyUseCase> strategies) {
-        this.strategies = strategies;
-    }
+    private final ClientAPIRepository clientAPIRepository;
 
     @Override
     public List<String> getStrategiesNames() {
@@ -43,7 +43,24 @@ public class StrategyFactoryUseCaseImpl implements StrategyFactoryUseCase {
 
         if (toCalcStrategies.size() == getStrategiesNames().size())
         { return toCalcStrategies; }
-        else { throw new RuntimeException("No strategy with this name"); }
+        else { throw new RuntimeException("Some strategy from the list doesn't exist"); }
+    }
+
+    private void initializeStrategiesExtraCandles(List<StrategyUseCase> strategies, Instant from, String figi, CandleInterval interval) {
+        int biggestExtraCandlesLenNeeded = 0;
+        for (var strategy : strategies) {
+            if (strategy.getExtraCandlesNeeded() > biggestExtraCandlesLenNeeded) {
+                biggestExtraCandlesLenNeeded = strategy.getExtraCandlesNeeded();
+            }
+        }
+
+        List<CandleData> extraCandles = clientAPIRepository.getExtraHistoricalCandlesFromCertainTime(from, figi,
+                interval, biggestExtraCandlesLenNeeded);
+
+        for (var strategy : strategies) {
+            var subLst = extraCandles.subList(Math.max(extraCandles.size() - strategy.getExtraCandlesNeeded(), 0), extraCandles.size());
+            strategy.initializeExtraCandlesThroughFactory(subLst);
+        }
     }
 
     @Override
@@ -52,9 +69,10 @@ public class StrategyFactoryUseCaseImpl implements StrategyFactoryUseCase {
                                                                        Instant from, Instant to,
                                                                        String figi, CandleInterval interval) {
         List<StrategyUseCase> strategies = getStrategies(strategyNames);
+        initializeStrategiesExtraCandles(strategies, from, figi, interval);
         Map<String, List<ParameterContainer>> allParameters = new HashMap<>();
 
-        // get all needed parameters and initialize
+        // get all needed parameters
         for (var strategy : strategies) {
             allParameters.put(strategy.getStrategyName(), strategy.getStrategyParametersForCandles(candles,
                     from, to, figi, interval));

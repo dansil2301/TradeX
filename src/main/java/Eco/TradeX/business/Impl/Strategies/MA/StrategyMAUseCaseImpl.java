@@ -23,6 +23,7 @@ import static Eco.TradeX.business.utils.CalculationHelper.calculateAverage;
 public class StrategyMAUseCaseImpl implements StrategyUseCase {
     private ClientAPIRepository clientAPIRepository;
     private MAContainerData maContainerData;
+    private List<CandleData> extraCandlesContainer;
     private final int extraCandlesNeeded;
     private final int longMA = 20;
     private final int shortMA = 5;
@@ -35,6 +36,11 @@ public class StrategyMAUseCaseImpl implements StrategyUseCase {
     @Override
     public String getStrategyName() {
         return "MA";
+    }
+
+    @Override
+    public int getExtraCandlesNeeded() {
+        return extraCandlesNeeded;
     }
 
     @Override
@@ -78,10 +84,16 @@ public class StrategyMAUseCaseImpl implements StrategyUseCase {
                 .build();
     }
 
+    public void initializeExtraCandlesThroughFactory(List<CandleData> extraCandles) {
+        extraCandlesContainer = extraCandles;
+    }
+
     @Override
     public List<ParameterContainer> getStrategyParametersForCandles(List<CandleData> candles, Instant from, Instant to, String figi, CandleInterval interval) {
-        List<CandleData> extraCandles = clientAPIRepository.getExtraHistoricalCandlesFromCertainTime(from, figi, interval, extraCandlesNeeded);
-        maContainerData = initializeContainer(extraCandles);
+        if (extraCandlesContainer == null) {
+            extraCandlesContainer = clientAPIRepository.getExtraHistoricalCandlesFromCertainTime(from, figi, interval, extraCandlesNeeded);
+        }
+        maContainerData = initializeContainer(extraCandlesContainer);
 
         List<ParameterContainer> paramContainer = new ArrayList<>();
         for (CandleData candle : candles) {

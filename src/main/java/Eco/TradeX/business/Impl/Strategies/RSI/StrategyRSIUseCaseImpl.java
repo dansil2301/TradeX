@@ -4,6 +4,7 @@ import Eco.TradeX.business.ParameterContainer;
 import Eco.TradeX.business.StrategyUseCase;
 import Eco.TradeX.domain.CandleData;
 import Eco.TradeX.persistence.ClientAPIRepository;
+import jakarta.validation.constraints.Null;
 import org.springframework.stereotype.Service;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;
 
@@ -21,6 +22,7 @@ import static Eco.TradeX.business.utils.CalculationHelper.calculateAverage;
 public class StrategyRSIUseCaseImpl implements StrategyUseCase {
     private ClientAPIRepository clientAPIRepository;
     private RSIContainerData rsiContainerData;
+    private List<CandleData> extraCandlesContainer;
     private CandleData prevCandleSaver;
     private final int extraCandlesNeeded;
     private final int periodMA = 20;
@@ -33,6 +35,11 @@ public class StrategyRSIUseCaseImpl implements StrategyUseCase {
     @Override
     public String getStrategyName() {
         return "RSI";
+    }
+
+    @Override
+    public int getExtraCandlesNeeded() {
+        return extraCandlesNeeded;
     }
 
     @Override
@@ -113,11 +120,17 @@ public class StrategyRSIUseCaseImpl implements StrategyUseCase {
                  .build();
     }
 
+    public void initializeExtraCandlesThroughFactory(List<CandleData> extraCandles) {
+        extraCandlesContainer = extraCandles;
+    }
+
     @Override
     public List<ParameterContainer> getStrategyParametersForCandles(List<CandleData> candles, Instant from, Instant to, String figi, CandleInterval interval) {
-        List<CandleData> extraCandles = clientAPIRepository.getExtraHistoricalCandlesFromCertainTime(from, figi, interval, extraCandlesNeeded);
-        rsiContainerData = initializeContainer(extraCandles);
-        prevCandleSaver = extraCandles.get(extraCandles.size() - 1);
+        if (extraCandlesContainer == null) {
+            extraCandlesContainer = clientAPIRepository.getExtraHistoricalCandlesFromCertainTime(from, figi, interval, extraCandlesNeeded);
+        }
+        rsiContainerData = initializeContainer(extraCandlesContainer);
+        prevCandleSaver = extraCandlesContainer.get(extraCandlesContainer.size() - 1);
 
         List<ParameterContainer> paramContainer = new ArrayList<>();
         for (CandleData candle : candles) {
