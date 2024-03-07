@@ -1,0 +1,23 @@
+@startuml Basic Sample
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(trader, "Trader")
+Person(traderPlus, "Trader+")
+Person(admin, "Admin")
+
+System_Boundary(c2, "") {
+    Container(singlePage, "Single-page application", "Container: Java Script & React", "Provides market data visualization and user data management")
+    Container(web_app, "Web Application", "Container: Java Spring Boot & REST", "Provides all the business rules to manipulate the data in the DB with JSON/HTTP API")
+    Container(db, "DataBase", "Container: MySQL", "stores users and market candles")
+}
+
+System(tinkoffAPI, "tinkoff API")
+
+Rel(trader, singlePage, "Views limited data visualization", "HTTP")
+Rel(traderPlus, singlePage, "Views all data visualization", "HTTP")
+Rel(admin, singlePage, "Manages users", "HTTP")
+
+Rel(singlePage, web_app, "Gets market data from", "HTTP")
+Rel(web_app, tinkoffAPI, "Gets market data from", "HTTPS")
+Rel(web_app, db, "Gets market data from", "HTTP")
+@enduml

@@ -1,0 +1,140 @@
+@startuml
+class Eco.TradeX.controller.StrategiesController {
+- StrategyFactoryUseCase strategyFactoryUseCase
+- GetCandlesAPIInformationUseCase getCandlesAPIInformationUseCase
++ ResponseEntity<GetStrategiesNamesResponse> getStrategyNames()
++ ResponseEntity<GetStrategiesParametersResponse> getPeriodStrategyParams(Instant,Instant,String,CandleInterval,List<String>)
++ ResponseEntity<GetStrategiesParametersResponse> getPeriodStrategyParamsWithCandles(String,CandleInterval,List<CandleData>,List<String>)
+}
+
+
+interface Eco.TradeX.business.GetCandlesAPIInformationUseCase {
+~ List<CandleData> getHistoricalCandlesAPI(Instant,Instant,String,CandleInterval)
+}
+
+class Eco.TradeX.business.Impl.GetCandlesAPIInformationUseCaseImpl {
+- ClientAPIRepository clientAPIRepository
++ List<CandleData> getHistoricalCandlesAPI(Instant,Instant,String,CandleInterval)
+}
+
+
+interface Eco.TradeX.business.StrategyUseCase {
+~ String getStrategyName()
+~ int getExtraCandlesNeeded()
+~ void initializeContainerForCandleLiveStreaming(String,CandleInterval)
+~ ParameterContainer calculateParametersForCandle(CandleData)
+~ void initializeExtraCandlesThroughFactory(List<CandleData>)
+~ List<ParameterContainer> getStrategyParametersForCandles(List<CandleData>,Instant,String,CandleInterval)
+}
+
+interface Eco.TradeX.business.ParameterContainer {
+}
+
+interface Eco.TradeX.persistence.TokenManagerRepository {
+~ String readTokenLocally()
+}
+
+class Eco.TradeX.persistence.impl.tinkoff.ClientTinkoffAPIImpl {
+- {static} Logger LOGGER
+- {static} String figi
+- InvestApi investApi
++ List<CandleData> getHistoricalCandles(Instant,Instant,String,CandleInterval)
+- String getUidByFigi(String)
++ Instant getLastAvailableDate(String)
+- Boolean checkOpenOrClosedHolidays(Instant)
++ List<CandleData> getExtraHistoricalCandlesFromCertainTime(Instant,String,CandleInterval,int)
++ Candle getStreamServiceCandle(String,CandleInterval)
+}
+
+
+class Eco.TradeX.persistence.impl.tinkoff.TokenManagerTinkoffImpl {
+- {static} String TOKEN_FILE_PATH
+- {static} Logger LOGGER
++ String readTokenLocally()
+}
+
+class Eco.TradeX.business.Impl.Strategies.MA.MAParameterContainer {
+- BigDecimal longMA
+- BigDecimal shortMA
+}
+
+class Eco.TradeX.business.Impl.Strategies.RSI.RSIParameterContainer {
+- BigDecimal RSI
+}
+
+class Eco.TradeX.business.Impl.Strategies.StrategyFactoryUseCaseImpl {
+- List<StrategyUseCase> strategies
+- ClientAPIRepository clientAPIRepository
++ List<String> getStrategiesNames()
++ List<StrategyUseCase> getStrategies(List<String>)
+- void initializeStrategiesExtraCandles(List<StrategyUseCase>,Instant,String,CandleInterval)
++ List<CandleStrategiesParams> getCandlesStrategiesParameters(List<String>,List<CandleData>,Instant,String,CandleInterval)
+}Para
+
+
+class Eco.TradeX.controller.CandlesController {
+- GetCandlesAPIInformationUseCase getCandlesAPIInformationUseCase
++ ResponseEntity<GetPeriodCandlesResponse> getCandles(Instant,Instant,String,CandleInterval)
+}
+
+
+class Eco.TradeX.business.Impl.Strategies.RSI.StrategyRSIUseCaseImpl {
+- ClientAPIRepository clientAPIRepository
+- RSIContainerData rsiContainerData
+- List<CandleData> extraCandlesContainer
+- CandleData prevCandleSaver
+- int extraCandlesNeeded
+- int periodMA
++ String getStrategyName()
++ int getExtraCandlesNeeded()
++ void initializeContainerForCandleLiveStreaming(String,CandleInterval)
+- RSIContainerData initializeContainer(List<CandleData>)
+- List<BigDecimal> getGainLossCurrentCandle(CandleData,CandleData)
++ ParameterContainer calculateParametersForCandle(CandleData)
++ void initializeExtraCandlesThroughFactory(List<CandleData>)
++ List<ParameterContainer> getStrategyParametersForCandles(List<CandleData>,Instant,String,CandleInterval)
+}
+
+
+interface Eco.TradeX.persistence.ClientAPIRepository {
+~ List<CandleData> getHistoricalCandles(Instant,Instant,String,CandleInterval)
+~ List<CandleData> getExtraHistoricalCandlesFromCertainTime(Instant,String,CandleInterval,int)
+~ Candle getStreamServiceCandle(String,CandleInterval)
+}
+
+
+class Eco.TradeX.business.Impl.Strategies.MA.StrategyMAUseCaseImpl {
+- ClientAPIRepository clientAPIRepository
+- MAContainerData maContainerData
+- List<CandleData> extraCandlesContainer
+- int extraCandlesNeeded
+- int longMA
+- int shortMA
++ String getStrategyName()
++ int getExtraCandlesNeeded()
++ void initializeContainerForCandleLiveStreaming(String,CandleInterval)
+- MAContainerData initializeContainer(List<CandleData>)
+- void getMovingSum(List<CandleData>,List<BigDecimal>,int,BigDecimal,int)
++ ParameterContainer calculateParametersForCandle(CandleData)
++ void initializeExtraCandlesThroughFactory(List<CandleData>)
++ List<ParameterContainer> getStrategyParametersForCandles(List<CandleData>,Instant,String,CandleInterval)
+}
+
+interface Eco.TradeX.business.StrategyFactoryUseCase {
+~ List<String> getStrategiesNames()
+~ List<StrategyUseCase> getStrategies(List<String>)
+~ List<CandleStrategiesParams> getCandlesStrategiesParameters(List<String>,List<CandleData>,Instant,String,CandleInterval)
+}
+
+Eco.TradeX.controller <|..... Eco.TradeX.business
+Eco.TradeX.business <|...... Eco.TradeX.persistence
+
+Eco.TradeX.business.GetCandlesAPIInformationUseCase <|.. Eco.TradeX.business.Impl.GetCandlesAPIInformationUseCaseImpl
+Eco.TradeX.persistence.ClientAPIRepository <|.. Eco.TradeX.persistence.impl.tinkoff.ClientTinkoffAPIImpl
+Eco.TradeX.persistence.TokenManagerRepository <|.. Eco.TradeX.persistence.impl.tinkoff.TokenManagerTinkoffImpl
+Eco.TradeX.business.ParameterContainer <|.. Eco.TradeX.business.Impl.Strategies.MA.MAParameterContainer
+Eco.TradeX.business.ParameterContainer <|.. Eco.TradeX.business.Impl.Strategies.RSI.RSIParameterContainer
+Eco.TradeX.business.StrategyFactoryUseCase <|.. Eco.TradeX.business.Impl.Strategies.StrategyFactoryUseCaseImpl
+Eco.TradeX.business.StrategyUseCase <|.. Eco.TradeX.business.Impl.Strategies.RSI.StrategyRSIUseCaseImpl
+Eco.TradeX.business.StrategyUseCase <|.. Eco.TradeX.business.Impl.Strategies.MA.StrategyMAUseCaseImpl
+@enduml

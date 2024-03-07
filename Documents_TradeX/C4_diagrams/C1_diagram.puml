@@ -1,35 +1,19 @@
-@startuml
+@startuml Basic Sample
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 
-!define ACTOR_BORDER_COLOR #000000
-!define ACTOR_BACKGROUND_COLOR #FFFFFF
+Person(trader, "Trader")
+Person(traderPlus, "Trader+")
+Person(admin, "Admin")
 
-!define SYSTEM_BORDER_COLOR #000000
-!define SYSTEM_BACKGROUND_COLOR #F5F5F5
-
-actor Trader as Trader
-actor "Trader+" as TraderPlus
-actor Admin as Admin
-
-package "System" {
-    skinparam package {
-        BorderColor SYSTEM_BORDER_COLOR
-        BackgroundColor SYSTEM_BACKGROUND_COLOR
-        FontColor SYSTEM_BORDER_COLOR
-    }
-
-    rectangle "Your System" {
-        skinparam {
-            BackgroundColor SYSTEM_BACKGROUND_COLOR
-            BorderColor SYSTEM_BORDER_COLOR
-            FontStyle bold
-            Shadowing false
-            RoundCorner 10
-        }
-    }
+System_Boundary(c1, "") {
+    Container(web_app, "Web Application", "Software system", "Allows traders to view trading indicators and approach them as strategies")
 }
 
-Trader --> "Your System" : Uses
-TraderPlus --> "Your System" : Uses
-Admin --> "Your System" : Manages
+System(tinkoffAPI, "tinkoff API")
 
+Rel(trader, web_app, "Views limited data visualization", "HTTP")
+Rel(traderPlus, web_app, "Views all data visualization", "HTTP")
+Rel(admin, web_app, "Manages users", "HTTP")
+
+Rel(web_app, tinkoffAPI, "Gets market data from", "HTTPS")
 @enduml
