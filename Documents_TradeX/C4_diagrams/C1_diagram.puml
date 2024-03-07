@@ -1,11 +1,35 @@
 @startuml
-'https://plantuml.com/sequence-diagram
 
-autonumber
+!define ACTOR_BORDER_COLOR #000000
+!define ACTOR_BACKGROUND_COLOR #FFFFFF
 
-Alice -> Bob: Authentication Request
-Bob --> Alice: Authentication Response
+!define SYSTEM_BORDER_COLOR #000000
+!define SYSTEM_BACKGROUND_COLOR #F5F5F5
 
-Alice -> Bob: Another authentication Request
-Alice <-- Bob: another authentication Response
+actor Trader as Trader
+actor "Trader+" as TraderPlus
+actor Admin as Admin
+
+package "System" {
+    skinparam package {
+        BorderColor SYSTEM_BORDER_COLOR
+        BackgroundColor SYSTEM_BACKGROUND_COLOR
+        FontColor SYSTEM_BORDER_COLOR
+    }
+
+    rectangle "Your System" {
+        skinparam {
+            BackgroundColor SYSTEM_BACKGROUND_COLOR
+            BorderColor SYSTEM_BORDER_COLOR
+            FontStyle bold
+            Shadowing false
+            RoundCorner 10
+        }
+    }
+}
+
+Trader --> "Your System" : Uses
+TraderPlus --> "Your System" : Uses
+Admin --> "Your System" : Manages
+
 @enduml
