@@ -14,6 +14,8 @@ import ru.tinkoff.piapi.contract.v1.CandleInterval;
 import java.time.Instant;
 import java.util.*;
 
+import static Eco.TradeX.business.utils.PackCandleStrategyParams.packCandles;
+
 @Service
 @AllArgsConstructor
 public class StrategyFactoryUseCaseImpl implements StrategyFactoryUseCase {
@@ -78,25 +80,6 @@ public class StrategyFactoryUseCaseImpl implements StrategyFactoryUseCase {
                     from, figi, interval));
         }
 
-        //pack into future jon format
-        List<CandleStrategiesParams> candleStrategiesParams = new ArrayList<>();
-        for (int candleIndex = 0; candleIndex < candles.size(); candleIndex++) {
-            List<StrategyNameParameter> strategyNameParametersLst = new ArrayList<>();
-            for (Map.Entry<String, List<ParameterContainer>> strategyNameParameters : allParameters.entrySet()) {
-                String strategyName = strategyNameParameters.getKey();
-                List<ParameterContainer> parameterContainers = strategyNameParameters.getValue();
-
-                strategyNameParametersLst.add(StrategyNameParameter.builder()
-                        .strategyName(strategyName)
-                        .parameters(parameterContainers.get(candleIndex))
-                        .build());
-            }
-            candleStrategiesParams.add(CandleStrategiesParams.builder()
-                    .candle(candles.get(candleIndex))
-                    .strategyNameParameters(strategyNameParametersLst)
-                    .build());
-        }
-
-        return candleStrategiesParams;
+        return packCandles(candles, allParameters);
     }
 }
