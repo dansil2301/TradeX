@@ -1,6 +1,7 @@
 package business.Impl.Strategies;
 
 import Eco.TradeX.business.Impl.Strategies.RSI.StrategyRSIUseCaseImpl;
+import Eco.TradeX.business.utils.CandlesSeparationAndInitiation;
 import Eco.TradeX.domain.CandleData;
 import Eco.TradeX.persistence.impl.tinkoff.ClientTinkoffAPIImpl;
 import Eco.TradeX.persistence.impl.tinkoff.TokenManagerTinkoffImpl;
@@ -23,7 +24,8 @@ class StrategyRSIUseCaseImplTest {
     void getStrategyParametersForCandles() {
         TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
         ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
-        StrategyRSIUseCaseImpl strategyRSIUseCaseImpl = new StrategyRSIUseCaseImpl(client);
+        CandlesSeparationAndInitiation candlesSeparationAndInitiation = new CandlesSeparationAndInitiation(client);
+        StrategyRSIUseCaseImpl strategyRSIUseCaseImpl = new StrategyRSIUseCaseImpl(client, candlesSeparationAndInitiation);
 
         Instant to = LocalDate.of(2023, 2, 2).atStartOfDay(ZoneId.systemDefault()).toInstant();
         Instant from = to.minus(Duration.ofDays(1));

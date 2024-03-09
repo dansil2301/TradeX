@@ -4,6 +4,7 @@ import Eco.TradeX.business.Impl.Strategies.MA.StrategyMAUseCaseImpl;
 import Eco.TradeX.business.Impl.Strategies.RSI.StrategyRSIUseCaseImpl;
 import Eco.TradeX.business.Impl.Strategies.StrategyFactoryUseCaseImpl;
 import Eco.TradeX.business.StrategyUseCase;
+import Eco.TradeX.business.utils.CandlesSeparationAndInitiation;
 import Eco.TradeX.domain.CandleData;
 import Eco.TradeX.persistence.impl.tinkoff.ClientTinkoffAPIImpl;
 import Eco.TradeX.persistence.impl.tinkoff.TokenManagerTinkoffImpl;
@@ -25,8 +26,9 @@ class StrategyFactoryUseCaseImplTest {
     void getCandlesStrategiesParameters() {
         TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
         ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
-        StrategyMAUseCaseImpl strategyMAUseCase = new StrategyMAUseCaseImpl(client);
-        StrategyRSIUseCaseImpl strategyRSIUseCase = new StrategyRSIUseCaseImpl(client);
+        CandlesSeparationAndInitiation candlesSeparationAndInitiation = new CandlesSeparationAndInitiation(client);
+        StrategyMAUseCaseImpl strategyMAUseCase = new StrategyMAUseCaseImpl(client, candlesSeparationAndInitiation);
+        StrategyRSIUseCaseImpl strategyRSIUseCase = new StrategyRSIUseCaseImpl(client, candlesSeparationAndInitiation);
 
         List<StrategyUseCase> strategies = new ArrayList<>();
         strategies.add(strategyMAUseCase);
@@ -43,6 +45,32 @@ class StrategyFactoryUseCaseImplTest {
         strategyNames.add("MA");
 
         var allParams = strategyFactoryUseCase.getCandlesStrategiesParameters(strategyNames, candles, from, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_1_MIN);
+        assertEquals(candles.size(), allParams.size());
+    }
+
+    @Test
+    void getCandlesStrategiesParametersNotEnoughExtraCandles() {
+        TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
+        ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
+        CandlesSeparationAndInitiation candlesSeparationAndInitiation = new CandlesSeparationAndInitiation(client);
+        StrategyMAUseCaseImpl strategyMAUseCase = new StrategyMAUseCaseImpl(client, candlesSeparationAndInitiation);
+        StrategyRSIUseCaseImpl strategyRSIUseCase = new StrategyRSIUseCaseImpl(client, candlesSeparationAndInitiation);
+
+        List<StrategyUseCase> strategies = new ArrayList<>();
+        strategies.add(strategyMAUseCase);
+        strategies.add(strategyRSIUseCase);
+
+        StrategyFactoryUseCaseImpl strategyFactoryUseCase = new StrategyFactoryUseCaseImpl(strategies, client);
+
+        Instant to = LocalDate.of(2002, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant();
+        Instant from = to.minus(Duration.ofDays(720));
+        List<CandleData> candles = client.getHistoricalCandles(from, to, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_MONTH);
+
+        List<String> strategyNames = new ArrayList<>();
+        strategyNames.add("RSI");
+        strategyNames.add("MA");
+
+        var allParams = strategyFactoryUseCase.getCandlesStrategiesParameters(strategyNames, candles, from, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_MONTH);
         assertEquals(candles.size(), allParams.size());
     }
 }

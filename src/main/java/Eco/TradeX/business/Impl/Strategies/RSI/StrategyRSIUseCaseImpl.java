@@ -2,6 +2,8 @@ package Eco.TradeX.business.Impl.Strategies.RSI;
 
 import Eco.TradeX.business.ParameterContainer;
 import Eco.TradeX.business.StrategyUseCase;
+import Eco.TradeX.business.exceptions.CandlesExceptions;
+import Eco.TradeX.business.utils.CandlesSeparationAndInitiation;
 import Eco.TradeX.domain.CandleData;
 import Eco.TradeX.persistence.ClientAPIRepository;
 import jakarta.validation.constraints.Null;
@@ -21,14 +23,16 @@ import static Eco.TradeX.business.utils.CalculationHelper.calculateAverage;
 @Service
 public class StrategyRSIUseCaseImpl implements StrategyUseCase {
     private ClientAPIRepository clientAPIRepository;
+    private CandlesSeparationAndInitiation candlesSeparationAndInitiation;
     private RSIContainerData rsiContainerData;
     private List<CandleData> extraCandlesContainer;
     private CandleData prevCandleSaver;
     private final int extraCandlesNeeded;
     private final int periodMA = 20;
 
-    public StrategyRSIUseCaseImpl(ClientAPIRepository clientAPIRepository) {
+    public StrategyRSIUseCaseImpl(ClientAPIRepository clientAPIRepository, CandlesSeparationAndInitiation candlesSeparationAndInitiation) {
         this.clientAPIRepository = clientAPIRepository;
+        this.candlesSeparationAndInitiation = candlesSeparationAndInitiation;
         this.extraCandlesNeeded = this.periodMA + 1;
     }
 
@@ -124,15 +128,34 @@ public class StrategyRSIUseCaseImpl implements StrategyUseCase {
         extraCandlesContainer = extraCandles;
     }
 
+    private List<ParameterContainer> initParamContainerInExtraCandlesShortageCase(List<ParameterContainer> paramContainer, int fillGaps) {
+        for(int i = 0; i < fillGaps; i ++) {
+            paramContainer.add(RSIParameterContainer.builder()
+                    .RSI(null)
+                    .build());
+        }
+
+        return paramContainer;
+    }
+
     @Override
     public List<ParameterContainer> getStrategyParametersForCandles(List<CandleData> candles, Instant from, String figi, CandleInterval interval) {
-        if (extraCandlesContainer == null) {
-            extraCandlesContainer = clientAPIRepository.getExtraHistoricalCandlesFromCertainTime(from, figi, interval, extraCandlesNeeded);
+        if (candles == null) {
+            throw new CandlesExceptions("No candles found for this period");
         }
+
+        int initialCandlesLen = candles.size();
+        var newCandlesSep = candlesSeparationAndInitiation.initiateCandlesProperly(candles, extraCandlesContainer, extraCandlesNeeded, from, figi, interval);
+        extraCandlesContainer = newCandlesSep.get(0);
+        candles = newCandlesSep.get(1);
+
         rsiContainerData = initializeContainer(extraCandlesContainer);
         prevCandleSaver = extraCandlesContainer.get(extraCandlesContainer.size() - 1);
 
         List<ParameterContainer> paramContainer = new ArrayList<>();
+        if (initialCandlesLen != candles.size()) {
+            paramContainer = initParamContainerInExtraCandlesShortageCase(paramContainer, initialCandlesLen - candles.size());
+        }
         for (CandleData candle : candles) {
             var params = calculateParametersForCandle(candle);
             paramContainer.add(params);

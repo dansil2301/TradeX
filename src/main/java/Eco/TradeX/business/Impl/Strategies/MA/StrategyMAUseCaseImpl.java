@@ -1,7 +1,10 @@
 package Eco.TradeX.business.Impl.Strategies.MA;
 
+import Eco.TradeX.business.Impl.Strategies.RSI.RSIParameterContainer;
 import Eco.TradeX.business.ParameterContainer;
 import Eco.TradeX.business.StrategyUseCase;
+import Eco.TradeX.business.exceptions.CandlesExceptions;
+import Eco.TradeX.business.utils.CandlesSeparationAndInitiation;
 import Eco.TradeX.domain.CandleData;
 import Eco.TradeX.persistence.ClientAPIRepository;
 import org.springframework.context.annotation.Primary;
@@ -22,14 +25,16 @@ import static Eco.TradeX.business.utils.CalculationHelper.calculateAverage;
 @Primary
 public class StrategyMAUseCaseImpl implements StrategyUseCase {
     private ClientAPIRepository clientAPIRepository;
+    private CandlesSeparationAndInitiation candlesSeparationAndInitiation;
     private MAContainerData maContainerData;
     private List<CandleData> extraCandlesContainer;
     private final int extraCandlesNeeded;
     private final int longMA = 20;
     private final int shortMA = 5;
 
-    public StrategyMAUseCaseImpl(ClientAPIRepository clientAPIRepository) {
+    public StrategyMAUseCaseImpl(ClientAPIRepository clientAPIRepository, CandlesSeparationAndInitiation candlesSeparationAndInitiation) {
         this.clientAPIRepository = clientAPIRepository;
+        this.candlesSeparationAndInitiation = candlesSeparationAndInitiation;
         this.extraCandlesNeeded = this.longMA;
     }
 
@@ -84,18 +89,39 @@ public class StrategyMAUseCaseImpl implements StrategyUseCase {
                 .build();
     }
 
+    @Override
     public void initializeExtraCandlesThroughFactory(List<CandleData> extraCandles) {
         extraCandlesContainer = extraCandles;
     }
 
+    private List<ParameterContainer> initParamContainerInExtraCandlesShortageCase(List<ParameterContainer> paramContainer, int fillGaps) {
+        for(int i = 0; i < fillGaps; i ++) {
+            paramContainer.add(MAParameterContainer.builder()
+                    .longMA(null)
+                    .shortMA(null)
+                    .build());
+        }
+
+        return paramContainer;
+    }
+
     @Override
     public List<ParameterContainer> getStrategyParametersForCandles(List<CandleData> candles, Instant from, String figi, CandleInterval interval) {
-        if (extraCandlesContainer == null) {
-            extraCandlesContainer = clientAPIRepository.getExtraHistoricalCandlesFromCertainTime(from, figi, interval, extraCandlesNeeded);
+        if (candles == null) {
+            throw new CandlesExceptions("No candles found for this period");
         }
+
+        int initialCandlesLen = candles.size();
+        var newCandlesSep = candlesSeparationAndInitiation.initiateCandlesProperly(candles, extraCandlesContainer, extraCandlesNeeded, from, figi, interval);
+        extraCandlesContainer = newCandlesSep.get(0);
+        candles = newCandlesSep.get(1);
+
         maContainerData = initializeContainer(extraCandlesContainer);
 
         List<ParameterContainer> paramContainer = new ArrayList<>();
+        if (initialCandlesLen != candles.size()) {
+            paramContainer = initParamContainerInExtraCandlesShortageCase(paramContainer, initialCandlesLen - candles.size());
+        }
         for (CandleData candle : candles) {
             var params = calculateParametersForCandle(candle);
             paramContainer.add(params);

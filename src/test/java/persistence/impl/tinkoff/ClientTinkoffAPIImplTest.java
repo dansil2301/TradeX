@@ -44,7 +44,7 @@ class ClientTinkoffAPIImplTest {
     }
 
     @Test
-    void getHistoricalCandles1MinuteError() {
+    void getHistoricalCandles1MinuteLengthLimitError() {
         TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
         ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
 
@@ -57,7 +57,7 @@ class ClientTinkoffAPIImplTest {
                 () -> client.getHistoricalCandles(from, to, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_1_MIN)
         );
 
-        String expectedMessage = "Error fetching historical candles: Превышен максимальный период запроса для данного интервала свечи. Укажите корректный интервал.";
+        String expectedMessage = "500 INTERNAL_SERVER_ERROR \"Candles Error: Превышен максимальный период запроса для данного интервала свечи. Укажите корректный интервал.\"";
         String actualMessage = exception.getMessage();
         assertEquals(expectedMessage, actualMessage);
     }

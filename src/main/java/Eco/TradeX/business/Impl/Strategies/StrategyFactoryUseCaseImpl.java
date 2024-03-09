@@ -3,6 +3,8 @@ package Eco.TradeX.business.Impl.Strategies;
 import Eco.TradeX.business.ParameterContainer;
 import Eco.TradeX.business.StrategyFactoryUseCase;
 import Eco.TradeX.business.StrategyUseCase;
+import Eco.TradeX.business.exceptions.CandlesExceptions;
+import Eco.TradeX.business.exceptions.StrategyExceptions;
 import Eco.TradeX.domain.CandleData;
 import Eco.TradeX.domain.StrategyParams.CandleStrategiesParams;
 import Eco.TradeX.domain.StrategyParams.StrategyNameParameter;
@@ -45,7 +47,7 @@ public class StrategyFactoryUseCaseImpl implements StrategyFactoryUseCase {
 
         if (toCalcStrategies.size() == getStrategiesNames().size())
         { return toCalcStrategies; }
-        else { throw new RuntimeException("Some strategy from the list doesn't exist"); }
+        else { throw new StrategyExceptions("Some strategy names from the list don't exist"); }
     }
 
     private void initializeStrategiesExtraCandles(List<StrategyUseCase> strategies, Instant from, String figi, CandleInterval interval) {
@@ -70,6 +72,10 @@ public class StrategyFactoryUseCaseImpl implements StrategyFactoryUseCase {
                                                                        List<CandleData> candles,
                                                                        Instant from, String figi,
                                                                        CandleInterval interval) {
+        if (candles == null) {
+            throw new CandlesExceptions("No candles found for this period");
+        }
+
         List<StrategyUseCase> strategies = getStrategies(strategyNames);
         initializeStrategiesExtraCandles(strategies, from, figi, interval);
         Map<String, List<ParameterContainer>> allParameters = new HashMap<>();

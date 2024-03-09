@@ -1,16 +1,13 @@
 package Eco.TradeX.persistence.impl.tinkoff;
 
+import Eco.TradeX.business.exceptions.TokenExceptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import Eco.TradeX.persistence.TokenManagerRepository;
 import org.springframework.util.ResourceUtils;
-import org.springframework.core.io.Resource;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -31,7 +28,7 @@ public class TokenManagerTinkoffImpl implements TokenManagerRepository {
             }
             reader.close();
         } catch (IOException e) {
-            throw new RuntimeException("Error reading tinkoff token: " + e.getMessage(), e);
+            throw new TokenExceptions(e.getMessage());
         }
         return token.toString();
     }

@@ -1,12 +1,10 @@
 package Eco.TradeX.persistence.impl.tinkoff;
 
-import Eco.TradeX.business.utils.CandleIntervalConverter;
+import Eco.TradeX.business.exceptions.CandlesExceptions;
 import Eco.TradeX.domain.CandleData;
 import com.google.protobuf.Timestamp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import Eco.TradeX.persistence.ClientAPIRepository;
 import ru.tinkoff.piapi.contract.v1.*;
@@ -51,7 +49,7 @@ public class ClientTinkoffAPIImpl implements ClientAPIRepository {
                     .build()).toList();
         } catch (Exception e) {
             LOGGER.error("Error fetching historical candles: " + e.getLocalizedMessage());
-            throw new RuntimeException("Error fetching historical candles: " + e.getMessage());
+            throw new CandlesExceptions(e.getMessage());
         }
     }
 
@@ -86,7 +84,6 @@ public class ClientTinkoffAPIImpl implements ClientAPIRepository {
         List<CandleData> candles = Collections.emptyList();
         var stopDate = getLastAvailableDate(figi);
 
-        // todo think what to do when there are not enough extra candles
         while (candles.size() < extraCandlesNeeded) {
             int newPeriod = extraCandlesNeeded - candles.size();
             from = from.minusSeconds((long) toSeconds(interval) * newPeriod);
