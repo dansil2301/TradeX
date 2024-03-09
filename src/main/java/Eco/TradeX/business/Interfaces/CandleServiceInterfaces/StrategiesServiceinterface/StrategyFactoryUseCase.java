@@ -1,4 +1,4 @@
-package Eco.TradeX.business;
+package Eco.TradeX.business.Interfaces.CandleServiceInterfaces.StrategiesServiceinterface;
 
 import Eco.TradeX.domain.CandleData;
 import Eco.TradeX.domain.StrategyParams.CandleStrategiesParams;

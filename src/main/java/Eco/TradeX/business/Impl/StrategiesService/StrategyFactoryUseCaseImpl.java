@@ -1,13 +1,12 @@
-package Eco.TradeX.business.Impl.Strategies;
+package Eco.TradeX.business.Impl.StrategiesService;
 
-import Eco.TradeX.business.ParameterContainer;
-import Eco.TradeX.business.StrategyFactoryUseCase;
-import Eco.TradeX.business.StrategyUseCase;
+import Eco.TradeX.business.Interfaces.CandleServiceInterfaces.StrategiesServiceinterface.ParameterContainer;
+import Eco.TradeX.business.Interfaces.CandleServiceInterfaces.StrategiesServiceinterface.StrategyFactoryUseCase;
+import Eco.TradeX.business.Interfaces.CandleServiceInterfaces.StrategiesServiceinterface.StrategyUseCase;
 import Eco.TradeX.business.exceptions.CandlesExceptions;
 import Eco.TradeX.business.exceptions.StrategyExceptions;
 import Eco.TradeX.domain.CandleData;
 import Eco.TradeX.domain.StrategyParams.CandleStrategiesParams;
-import Eco.TradeX.domain.StrategyParams.StrategyNameParameter;
 import Eco.TradeX.persistence.ClientAPIRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

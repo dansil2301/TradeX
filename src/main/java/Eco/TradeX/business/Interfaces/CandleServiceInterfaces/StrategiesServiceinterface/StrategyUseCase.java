@@ -1,12 +1,10 @@
-package Eco.TradeX.business;
+package Eco.TradeX.business.Interfaces.CandleServiceInterfaces.StrategiesServiceinterface;
 
 import Eco.TradeX.domain.CandleData;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
-import java.util.Map;
 
 public interface StrategyUseCase {
     String getStrategyName();

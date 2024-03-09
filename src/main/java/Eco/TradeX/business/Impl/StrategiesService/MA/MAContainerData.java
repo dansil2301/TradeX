@@ -1,4 +1,4 @@
-package Eco.TradeX.business.Impl.Strategies.MA;
+package Eco.TradeX.business.Impl.StrategiesService.MA;
 
 import lombok.Builder;
 import lombok.Getter;

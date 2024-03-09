@@ -1,6 +1,6 @@
 package business.Impl.Strategies;
 
-import Eco.TradeX.business.Impl.Strategies.RSI.StrategyRSIUseCaseImpl;
+import Eco.TradeX.business.Impl.StrategiesService.RSI.StrategyRSIUseCaseImpl;
 import Eco.TradeX.business.utils.CandlesSeparationAndInitiation;
 import Eco.TradeX.domain.CandleData;
 import Eco.TradeX.persistence.impl.tinkoff.ClientTinkoffAPIImpl;
@@ -8,13 +8,11 @@ import Eco.TradeX.persistence.impl.tinkoff.TokenManagerTinkoffImpl;
 import org.junit.jupiter.api.Test;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;
 
-import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,6 +1,6 @@
 package Eco.TradeX.controller;
 
-import Eco.TradeX.business.GetCandlesAPIInformationUseCase;
+import Eco.TradeX.business.Interfaces.CandleServiceInterfaces.GetCandlesAPIInformationUseCase;
 import Eco.TradeX.domain.CandleData;
 import Eco.TradeX.domain.Response.GetPeriodCandlesResponse;
 import lombok.AllArgsConstructor;

@@ -1,6 +1,6 @@
 package business.Impl;
 
-import Eco.TradeX.business.Impl.GetCandlesAPIInformationUseCaseImpl;
+import Eco.TradeX.business.Impl.CandleService.GetCandlesAPIInformationUseCaseImpl;
 import Eco.TradeX.persistence.impl.tinkoff.ClientTinkoffAPIImpl;
 import Eco.TradeX.persistence.impl.tinkoff.TokenManagerTinkoffImpl;
 import org.junit.jupiter.api.Test;

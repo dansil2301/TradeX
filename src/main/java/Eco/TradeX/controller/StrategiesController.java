@@ -1,7 +1,7 @@
 package Eco.TradeX.controller;
 
-import Eco.TradeX.business.GetCandlesAPIInformationUseCase;
-import Eco.TradeX.business.StrategyFactoryUseCase;
+import Eco.TradeX.business.Interfaces.CandleServiceInterfaces.GetCandlesAPIInformationUseCase;
+import Eco.TradeX.business.Interfaces.CandleServiceInterfaces.StrategiesServiceinterface.StrategyFactoryUseCase;
 import Eco.TradeX.domain.CandleData;
 import Eco.TradeX.domain.Response.GetStrategiesNamesResponse;
 import Eco.TradeX.domain.Response.GetStrategiesParametersResponse;
@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;
-import ru.tinkoff.piapi.contract.v1.GetStrategiesResponse;
 
 import java.time.Instant;
 import java.util.List;

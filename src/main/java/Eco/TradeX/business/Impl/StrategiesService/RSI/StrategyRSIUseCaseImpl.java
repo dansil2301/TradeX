@@ -1,12 +1,11 @@
-package Eco.TradeX.business.Impl.Strategies.RSI;
+package Eco.TradeX.business.Impl.StrategiesService.RSI;
 
-import Eco.TradeX.business.ParameterContainer;
-import Eco.TradeX.business.StrategyUseCase;
+import Eco.TradeX.business.Interfaces.CandleServiceInterfaces.StrategiesServiceinterface.ParameterContainer;
+import Eco.TradeX.business.Interfaces.CandleServiceInterfaces.StrategiesServiceinterface.StrategyUseCase;
 import Eco.TradeX.business.exceptions.CandlesExceptions;
 import Eco.TradeX.business.utils.CandlesSeparationAndInitiation;
 import Eco.TradeX.domain.CandleData;
 import Eco.TradeX.persistence.ClientAPIRepository;
-import jakarta.validation.constraints.Null;
 import org.springframework.stereotype.Service;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;
 
@@ -14,9 +13,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static Eco.TradeX.business.utils.CalculationHelper.calculateAverage;
 

@@ -1,6 +1,5 @@
-package Eco.TradeX.business.Impl.Strategies.RSI;
+package Eco.TradeX.business.Impl.StrategiesService.RSI;
 
-import Eco.TradeX.domain.CandleData;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

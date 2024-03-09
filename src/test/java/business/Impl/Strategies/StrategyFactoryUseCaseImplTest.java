@@ -1,9 +1,9 @@
 package business.Impl.Strategies;
 
-import Eco.TradeX.business.Impl.Strategies.MA.StrategyMAUseCaseImpl;
-import Eco.TradeX.business.Impl.Strategies.RSI.StrategyRSIUseCaseImpl;
-import Eco.TradeX.business.Impl.Strategies.StrategyFactoryUseCaseImpl;
-import Eco.TradeX.business.StrategyUseCase;
+import Eco.TradeX.business.Impl.StrategiesService.MA.StrategyMAUseCaseImpl;
+import Eco.TradeX.business.Impl.StrategiesService.RSI.StrategyRSIUseCaseImpl;
+import Eco.TradeX.business.Impl.StrategiesService.StrategyFactoryUseCaseImpl;
+import Eco.TradeX.business.Interfaces.CandleServiceInterfaces.StrategiesServiceinterface.StrategyUseCase;
 import Eco.TradeX.business.utils.CandlesSeparationAndInitiation;
 import Eco.TradeX.domain.CandleData;
 import Eco.TradeX.persistence.impl.tinkoff.ClientTinkoffAPIImpl;

@@ -1,6 +1,6 @@
-package Eco.TradeX.business.Impl;
+package Eco.TradeX.business.Impl.CandleService;
 
-import Eco.TradeX.business.GetCandlesAPIInformationUseCase;
+import Eco.TradeX.business.Interfaces.CandleServiceInterfaces.GetCandlesAPIInformationUseCase;
 import Eco.TradeX.domain.CandleData;
 
 import org.springframework.stereotype.Service;
