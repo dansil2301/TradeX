@@ -8,6 +8,8 @@ plugins {
 group = 'Eco'
 version = '0.0.1-SNAPSHOT'
 
+archivesBaseName = 'tradex'
+
 java {
 	sourceCompatibility = '17'
 }
