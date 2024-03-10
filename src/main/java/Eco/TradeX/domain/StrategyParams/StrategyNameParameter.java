@@ -1,6 +1,6 @@
 package Eco.TradeX.domain.StrategyParams;
 
-import Eco.TradeX.business.Interfaces.CandleServiceInterfaces.StrategiesServiceinterface.ParameterContainer;
+import Eco.TradeX.business.Interfaces.StrategiesServiceinterface.ParameterContainer;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

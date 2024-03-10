@@ -1,7 +1,7 @@
 package Eco.TradeX.business.Impl.StrategiesService.RSI;
 
-import Eco.TradeX.business.Interfaces.CandleServiceInterfaces.StrategiesServiceinterface.ParameterContainer;
-import Eco.TradeX.business.Interfaces.CandleServiceInterfaces.StrategiesServiceinterface.StrategyUseCase;
+import Eco.TradeX.business.Interfaces.StrategiesServiceinterface.ParameterContainer;
+import Eco.TradeX.business.Interfaces.StrategiesServiceinterface.StrategyUseCase;
 import Eco.TradeX.business.exceptions.CandlesExceptions;
 import Eco.TradeX.business.utils.CandlesSeparationAndInitiation;
 import Eco.TradeX.domain.CandleData;

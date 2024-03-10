@@ -1,4 +1,4 @@
-package Eco.TradeX.business.Interfaces.CandleServiceInterfaces.StrategiesServiceinterface;
+package Eco.TradeX.business.Interfaces.StrategiesServiceinterface;
 
 import Eco.TradeX.domain.CandleData;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;

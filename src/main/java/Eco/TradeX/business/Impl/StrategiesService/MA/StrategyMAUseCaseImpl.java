@@ -1,7 +1,6 @@
 package Eco.TradeX.business.Impl.StrategiesService.MA;
 
-import Eco.TradeX.business.Interfaces.CandleServiceInterfaces.StrategiesServiceinterface.ParameterContainer;
-import Eco.TradeX.business.Interfaces.CandleServiceInterfaces.StrategiesServiceinterface.StrategyUseCase;
+import Eco.TradeX.business.Interfaces.StrategiesServiceinterface.ParameterContainer;
 import Eco.TradeX.business.exceptions.CandlesExceptions;
 import Eco.TradeX.business.utils.CandlesSeparationAndInitiation;
 import Eco.TradeX.domain.CandleData;
@@ -15,6 +14,8 @@ import java.math.RoundingMode;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+
+import Eco.TradeX.business.Interfaces.StrategiesServiceinterface.StrategyUseCase;
 
 import static Eco.TradeX.business.utils.CalculationHelper.calculateAverage;
 
@@ -62,14 +63,6 @@ public class StrategyMAUseCaseImpl implements StrategyUseCase {
                 .build();
 
         return maContainerData;
-    }
-
-    private void getMovingSum(List<CandleData> allCandles, List<BigDecimal> averageMALong, int i, BigDecimal sumLong, int longMA) {
-        for (int j = i; j >= i - (longMA - 1); j--) {
-            sumLong = sumLong.add(allCandles.get(j).getClose());
-        }
-        BigDecimal averageLong = sumLong.divide(BigDecimal.valueOf(longMA), 2, BigDecimal.ROUND_HALF_UP);
-        averageMALong.add(averageLong);
     }
 
     @Override

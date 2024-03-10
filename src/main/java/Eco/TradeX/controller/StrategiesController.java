@@ -1,7 +1,7 @@
 package Eco.TradeX.controller;
 
 import Eco.TradeX.business.Interfaces.CandleServiceInterfaces.GetCandlesAPIInformationUseCase;
-import Eco.TradeX.business.Interfaces.CandleServiceInterfaces.StrategiesServiceinterface.StrategyFactoryUseCase;
+import Eco.TradeX.business.Interfaces.StrategiesServiceinterface.StrategyFactoryUseCase;
 import Eco.TradeX.domain.CandleData;
 import Eco.TradeX.domain.Response.GetStrategiesNamesResponse;
 import Eco.TradeX.domain.Response.GetStrategiesParametersResponse;

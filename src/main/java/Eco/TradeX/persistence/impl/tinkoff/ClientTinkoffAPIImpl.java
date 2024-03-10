@@ -59,9 +59,14 @@ public class ClientTinkoffAPIImpl implements ClientAPIRepository {
     }
 
     public Instant getLastAvailableDate(String figi) {
-        var instrument = investApi.getInstrumentsService().getInstrumentByFigiSync(figi);
-        Timestamp first1MinCandleTimestamp = instrument.getFirst1MinCandleDate();
-        return Instant.ofEpochSecond(first1MinCandleTimestamp.getSeconds(), first1MinCandleTimestamp.getNanos());
+        try {
+            var instrument = investApi.getInstrumentsService().getInstrumentByFigiSync(figi);
+            Timestamp first1MinCandleTimestamp = instrument.getFirst1MinCandleDate();
+            return Instant.ofEpochSecond(first1MinCandleTimestamp.getSeconds(), first1MinCandleTimestamp.getNanos());
+        }
+        catch (Exception e) {
+            throw new CandlesExceptions(e.getMessage());
+        }
     }
 
     private Boolean checkOpenOrClosedHolidays(Instant from) {

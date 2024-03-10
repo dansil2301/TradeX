@@ -1,8 +1,8 @@
 package Eco.TradeX.business.Impl.StrategiesService;
 
-import Eco.TradeX.business.Interfaces.CandleServiceInterfaces.StrategiesServiceinterface.ParameterContainer;
-import Eco.TradeX.business.Interfaces.CandleServiceInterfaces.StrategiesServiceinterface.StrategyFactoryUseCase;
-import Eco.TradeX.business.Interfaces.CandleServiceInterfaces.StrategiesServiceinterface.StrategyUseCase;
+import Eco.TradeX.business.Interfaces.StrategiesServiceinterface.ParameterContainer;
+import Eco.TradeX.business.Interfaces.StrategiesServiceinterface.StrategyFactoryUseCase;
+import Eco.TradeX.business.Interfaces.StrategiesServiceinterface.StrategyUseCase;
 import Eco.TradeX.business.exceptions.CandlesExceptions;
 import Eco.TradeX.business.exceptions.StrategyExceptions;
 import Eco.TradeX.domain.CandleData;
@@ -44,7 +44,7 @@ public class StrategyFactoryUseCaseImpl implements StrategyFactoryUseCase {
             }
         }
 
-        if (toCalcStrategies.size() == getStrategiesNames().size())
+        if (toCalcStrategies.size() == strategyNames.size())
         { return toCalcStrategies; }
         else { throw new StrategyExceptions("Some strategy names from the list don't exist"); }
     }
@@ -71,7 +71,7 @@ public class StrategyFactoryUseCaseImpl implements StrategyFactoryUseCase {
                                                                        List<CandleData> candles,
                                                                        Instant from, String figi,
                                                                        CandleInterval interval) {
-        if (candles == null) {
+        if (candles == null || candles.isEmpty()) {
             throw new CandlesExceptions("No candles found for this period");
         }
 

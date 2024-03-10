@@ -1,4 +1,4 @@
-package business.Impl;
+package business.Impl.CandleService;
 
 import Eco.TradeX.business.Impl.CandleService.GetCandlesAPIInformationUseCaseImpl;
 import Eco.TradeX.persistence.impl.tinkoff.ClientTinkoffAPIImpl;

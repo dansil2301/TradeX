@@ -1,5 +1,6 @@
 package Eco.TradeX.business.utils;
 
+import Eco.TradeX.business.exceptions.StrategyExceptions;
 import Eco.TradeX.domain.CandleData;
 import Eco.TradeX.persistence.impl.tinkoff.ClientTinkoffAPIImpl;
 import lombok.AllArgsConstructor;

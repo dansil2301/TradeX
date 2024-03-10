@@ -1,6 +1,6 @@
 package Eco.TradeX.business.utils;
 
-import Eco.TradeX.business.Interfaces.CandleServiceInterfaces.StrategiesServiceinterface.ParameterContainer;
+import Eco.TradeX.business.Interfaces.StrategiesServiceinterface.ParameterContainer;
 import Eco.TradeX.domain.CandleData;
 import Eco.TradeX.domain.StrategyParams.CandleStrategiesParams;
 import Eco.TradeX.domain.StrategyParams.StrategyNameParameter;

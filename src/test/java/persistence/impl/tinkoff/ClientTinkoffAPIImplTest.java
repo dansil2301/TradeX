@@ -105,4 +105,30 @@ class ClientTinkoffAPIImplTest {
         var candles = client.getExtraHistoricalCandlesFromCertainTime(from, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_MONTH, 2);
         assertEquals(0, candles.size());
     }
+
+    @Test
+    void getLastAvailableDateTestCorrect() {
+        TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
+        ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
+
+        var lastDate = client.getLastAvailableDate("BBG004730N88");
+        Instant testDate = Instant.ofEpochSecond(1520447580);
+
+        assertEquals(testDate, lastDate);
+    }
+
+    @Test
+    void getLastAvailableDateTestError() {
+        TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
+        ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
+
+        RuntimeException exception = assertThrows(
+                RuntimeException.class,
+                () -> client.getLastAvailableDate("Error")
+        );
+
+        String expectedMessage = "500 INTERNAL_SERVER_ERROR \"Candles Error: Инструмент не найден.Укажите корректный идентификатор инструмента.\"";
+        String actualMessage = exception.getMessage();
+        assertEquals(expectedMessage, actualMessage);
+    }
 }
