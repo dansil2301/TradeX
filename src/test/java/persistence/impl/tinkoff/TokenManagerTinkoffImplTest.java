@@ -1,6 +1,6 @@
 package persistence.impl.tinkoff;
 
-import Eco.TradeX.persistence.impl.tinkoff.TokenManagerTinkoffImpl;
+import Eco.TradeX.persistence.impl.tinkoff.CandleRepository.TokenManagerTinkoffImpl;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

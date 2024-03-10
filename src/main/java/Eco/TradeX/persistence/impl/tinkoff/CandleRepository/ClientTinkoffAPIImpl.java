@@ -1,4 +1,4 @@
-package Eco.TradeX.persistence.impl.tinkoff;
+package Eco.TradeX.persistence.impl.tinkoff.CandleRepository;
 
 import Eco.TradeX.business.exceptions.CandlesExceptions;
 import Eco.TradeX.domain.CandleData;
@@ -6,7 +6,7 @@ import com.google.protobuf.Timestamp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
-import Eco.TradeX.persistence.ClientAPIRepository;
+import Eco.TradeX.persistence.Interfaces.CandleRepositoryInterfaces.ClientAPIRepository;
 import ru.tinkoff.piapi.contract.v1.*;
 import ru.tinkoff.piapi.core.InvestApi;
 

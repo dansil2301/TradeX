@@ -1,10 +1,10 @@
-package Eco.TradeX.persistence.impl.tinkoff;
+package Eco.TradeX.persistence.impl.tinkoff.CandleRepository;
 
 import Eco.TradeX.business.exceptions.TokenExceptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
-import Eco.TradeX.persistence.TokenManagerRepository;
+import Eco.TradeX.persistence.Interfaces.CandleRepositoryInterfaces.TokenManagerRepository;
 import org.springframework.util.ResourceUtils;
 
 import java.io.BufferedReader;

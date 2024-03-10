@@ -1,11 +1,11 @@
-package business.Impl.StrategiesService.Strategies.MA;
+package business.Impl.StrategiesService.RSI;
 
-import Eco.TradeX.business.Impl.StrategiesService.MA.MAParameterContainer;
-import Eco.TradeX.business.Impl.StrategiesService.MA.StrategyMAUseCaseImpl;
+import Eco.TradeX.business.Impl.StrategiesService.RSI.RSIParameterContainer;
+import Eco.TradeX.business.Impl.StrategiesService.RSI.StrategyRSIUseCaseImpl;
 import Eco.TradeX.business.utils.CandlesSeparationAndInitiation;
 import Eco.TradeX.domain.CandleData;
-import Eco.TradeX.persistence.impl.tinkoff.ClientTinkoffAPIImpl;
-import Eco.TradeX.persistence.impl.tinkoff.TokenManagerTinkoffImpl;
+import Eco.TradeX.persistence.impl.tinkoff.CandleRepository.ClientTinkoffAPIImpl;
+import Eco.TradeX.persistence.impl.tinkoff.CandleRepository.TokenManagerTinkoffImpl;
 import org.junit.jupiter.api.Test;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;
 
@@ -19,14 +19,14 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class StrategyMAUseCaseImplTest {
+class StrategyRSIUseCaseImplTest {
 
     @Test
     void getStrategyParametersForCandles1MinCandle1DaysLongMA() {
         TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
         ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
         CandlesSeparationAndInitiation candlesSeparationAndInitiation = new CandlesSeparationAndInitiation(client);
-        StrategyMAUseCaseImpl strategyMAUseCase = new StrategyMAUseCaseImpl(client, candlesSeparationAndInitiation);
+        StrategyRSIUseCaseImpl strategyMAUseCase = new StrategyRSIUseCaseImpl(client, candlesSeparationAndInitiation);
 
         Instant to = LocalDate.of(2023, 2, 2).atStartOfDay(ZoneId.systemDefault()).toInstant();
         Instant from = to.minus(Duration.ofDays(1));
@@ -42,7 +42,7 @@ class StrategyMAUseCaseImplTest {
         TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
         ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
         CandlesSeparationAndInitiation candlesSeparationAndInitiation = new CandlesSeparationAndInitiation(client);
-        StrategyMAUseCaseImpl strategyMAUseCase = new StrategyMAUseCaseImpl(client, candlesSeparationAndInitiation);
+        StrategyRSIUseCaseImpl strategyMAUseCase = new StrategyRSIUseCaseImpl(client, candlesSeparationAndInitiation);
 
         Instant to = LocalDate.of(2023, 2, 2).atStartOfDay(ZoneId.systemDefault()).toInstant();
         Instant from = to.minus(Duration.ofDays(1));
@@ -58,7 +58,7 @@ class StrategyMAUseCaseImplTest {
         TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
         ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
         CandlesSeparationAndInitiation candlesSeparationAndInitiation = new CandlesSeparationAndInitiation(client);
-        StrategyMAUseCaseImpl strategyMAUseCase = new StrategyMAUseCaseImpl(client, candlesSeparationAndInitiation);
+        StrategyRSIUseCaseImpl strategyMAUseCase = new StrategyRSIUseCaseImpl(client, candlesSeparationAndInitiation);
 
         Instant to = LocalDate.of(2023, 2, 2).atStartOfDay(ZoneId.systemDefault()).toInstant();
         Instant from = to.minus(Duration.ofDays(14));
@@ -74,7 +74,7 @@ class StrategyMAUseCaseImplTest {
         TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
         ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
         CandlesSeparationAndInitiation candlesSeparationAndInitiation = new CandlesSeparationAndInitiation(client);
-        StrategyMAUseCaseImpl strategyMAUseCase = new StrategyMAUseCaseImpl(client, candlesSeparationAndInitiation);
+        StrategyRSIUseCaseImpl strategyMAUseCase = new StrategyRSIUseCaseImpl(client, candlesSeparationAndInitiation);
 
         Instant to = LocalDate.of(2002, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant();
         Instant from = to.minus(Duration.ofDays(720));
@@ -82,12 +82,12 @@ class StrategyMAUseCaseImplTest {
         List<CandleData> candles = client.getHistoricalCandles(from, to, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_MONTH);
 
         var parameters = strategyMAUseCase.getStrategyParametersForCandles(candles, from,"BBG004730N88", CandleInterval.CANDLE_INTERVAL_MONTH);
-        var parameterNull = (MAParameterContainer)parameters.get(19);
-        var parameterNotNull = (MAParameterContainer)parameters.get(20);
+        var parameterNull = (RSIParameterContainer)parameters.get(20);
+        var parameterNotNull = (RSIParameterContainer)parameters.get(21);
         assertEquals(candles.size(), parameters.size());
-        assertNull(parameterNull.getLongMA());
-        assertEquals(new BigDecimal(1.07).setScale(2, BigDecimal.ROUND_HALF_UP)
-                , parameterNotNull.getLongMA().setScale(2, BigDecimal.ROUND_HALF_UP));
+        assertNull(parameterNull.getRSI());
+        assertEquals(new BigDecimal(44).setScale(2, BigDecimal.ROUND_HALF_UP)
+                , parameterNotNull.getRSI().setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 
     @Test
@@ -95,7 +95,7 @@ class StrategyMAUseCaseImplTest {
         TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
         ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
         CandlesSeparationAndInitiation candlesSeparationAndInitiation = new CandlesSeparationAndInitiation(client);
-        StrategyMAUseCaseImpl strategyMAUseCase = new StrategyMAUseCaseImpl(client, candlesSeparationAndInitiation);
+        StrategyRSIUseCaseImpl strategyMAUseCase = new StrategyRSIUseCaseImpl(client, candlesSeparationAndInitiation);
 
         Instant to = LocalDate.of(2000, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant();
         Instant from = to.minus(Duration.ofDays(1));
@@ -117,7 +117,7 @@ class StrategyMAUseCaseImplTest {
         TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
         ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
         CandlesSeparationAndInitiation candlesSeparationAndInitiation = new CandlesSeparationAndInitiation(client);
-        StrategyMAUseCaseImpl strategyMAUseCase = new StrategyMAUseCaseImpl(client, candlesSeparationAndInitiation);
+        StrategyRSIUseCaseImpl strategyMAUseCase = new StrategyRSIUseCaseImpl(client, candlesSeparationAndInitiation);
 
         strategyMAUseCase.initializeExtraCandlesThroughFactory(new ArrayList<>());
 
@@ -135,7 +135,7 @@ class StrategyMAUseCaseImplTest {
         TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
         ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
         CandlesSeparationAndInitiation candlesSeparationAndInitiation = new CandlesSeparationAndInitiation(client);
-        StrategyMAUseCaseImpl strategyMAUseCase = new StrategyMAUseCaseImpl(client, candlesSeparationAndInitiation);
+        StrategyRSIUseCaseImpl strategyMAUseCase = new StrategyRSIUseCaseImpl(client, candlesSeparationAndInitiation);
 
         strategyMAUseCase.initializeContainerForCandleLiveStreaming("BBG004730N88", CandleInterval.CANDLE_INTERVAL_1_MIN);
 
@@ -154,7 +154,7 @@ class StrategyMAUseCaseImplTest {
         TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
         ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
         CandlesSeparationAndInitiation candlesSeparationAndInitiation = new CandlesSeparationAndInitiation(client);
-        StrategyMAUseCaseImpl strategyMAUseCase = new StrategyMAUseCaseImpl(client, candlesSeparationAndInitiation);
+        StrategyRSIUseCaseImpl strategyMAUseCase = new StrategyRSIUseCaseImpl(client, candlesSeparationAndInitiation);
 
         strategyMAUseCase.initializeContainerForCandleLiveStreaming("BBG004730N88", CandleInterval.CANDLE_INTERVAL_5_MIN);
 
@@ -173,7 +173,7 @@ class StrategyMAUseCaseImplTest {
         TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
         ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
         CandlesSeparationAndInitiation candlesSeparationAndInitiation = new CandlesSeparationAndInitiation(client);
-        StrategyMAUseCaseImpl strategyMAUseCase = new StrategyMAUseCaseImpl(client, candlesSeparationAndInitiation);
+        StrategyRSIUseCaseImpl strategyMAUseCase = new StrategyRSIUseCaseImpl(client, candlesSeparationAndInitiation);
 
         strategyMAUseCase.initializeContainerForCandleLiveStreaming("BBG004730N88", CandleInterval.CANDLE_INTERVAL_WEEK);
 

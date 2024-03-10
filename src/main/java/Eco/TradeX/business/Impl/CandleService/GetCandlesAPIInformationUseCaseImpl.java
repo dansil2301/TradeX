@@ -4,7 +4,7 @@ import Eco.TradeX.business.Interfaces.CandleServiceInterfaces.GetCandlesAPIInfor
 import Eco.TradeX.domain.CandleData;
 
 import org.springframework.stereotype.Service;
-import Eco.TradeX.persistence.ClientAPIRepository;
+import Eco.TradeX.persistence.Interfaces.CandleRepositoryInterfaces.ClientAPIRepository;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;
 
 import java.time.Instant;

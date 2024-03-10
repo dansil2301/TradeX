@@ -1,11 +1,11 @@
 package Eco.TradeX.business.Impl.StrategiesService.RSI;
 
-import Eco.TradeX.business.Interfaces.StrategiesServiceinterface.ParameterContainer;
-import Eco.TradeX.business.Interfaces.StrategiesServiceinterface.StrategyUseCase;
+import Eco.TradeX.business.Interfaces.StrategiesServiceinterfaces.ParameterContainer;
+import Eco.TradeX.business.Interfaces.StrategiesServiceinterfaces.StrategyUseCase;
 import Eco.TradeX.business.exceptions.CandlesExceptions;
 import Eco.TradeX.business.utils.CandlesSeparationAndInitiation;
 import Eco.TradeX.domain.CandleData;
-import Eco.TradeX.persistence.ClientAPIRepository;
+import Eco.TradeX.persistence.Interfaces.CandleRepositoryInterfaces.ClientAPIRepository;
 import org.springframework.stereotype.Service;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;
 

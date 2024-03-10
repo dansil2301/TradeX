@@ -1,7 +1,7 @@
 package persistence.impl.tinkoff;
 
-import Eco.TradeX.persistence.impl.tinkoff.ClientTinkoffAPIImpl;
-import Eco.TradeX.persistence.impl.tinkoff.TokenManagerTinkoffImpl;
+import Eco.TradeX.persistence.impl.tinkoff.CandleRepository.ClientTinkoffAPIImpl;
+import Eco.TradeX.persistence.impl.tinkoff.CandleRepository.TokenManagerTinkoffImpl;
 import org.junit.jupiter.api.Test;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;
 

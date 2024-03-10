@@ -1,10 +1,8 @@
 package Eco.TradeX.business.utils;
 
-import Eco.TradeX.business.exceptions.StrategyExceptions;
 import Eco.TradeX.domain.CandleData;
-import Eco.TradeX.persistence.impl.tinkoff.ClientTinkoffAPIImpl;
+import Eco.TradeX.persistence.impl.tinkoff.CandleRepository.ClientTinkoffAPIImpl;
 import lombok.AllArgsConstructor;
-import org.hibernate.annotations.Comment;
 import org.springframework.stereotype.Component;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;
 

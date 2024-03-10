@@ -1,4 +1,4 @@
-package Eco.TradeX.persistence;
+package Eco.TradeX.persistence.Interfaces.CandleRepositoryInterfaces;
 
 import Eco.TradeX.domain.CandleData;
 import ru.tinkoff.piapi.contract.v1.Candle;
