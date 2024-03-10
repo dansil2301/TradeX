@@ -8,8 +8,6 @@ plugins {
 group = 'Eco'
 version = '0.0.1-SNAPSHOT'
 
-archivesBaseName = 'tradex'
-
 java {
 	sourceCompatibility = '17'
 }
@@ -44,6 +42,11 @@ jacoco {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+bootJar {
+	archiveFileName = "tradex.jar" // Set the name of the JAR file
+	destinationDirectory = file("$buildDir/docker") // Set the directory where the JAR will be placed
 }
 
 project.jacocoTestReport {

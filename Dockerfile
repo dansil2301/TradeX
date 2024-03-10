@@ -1,4 +1,3 @@
-FROM openjdk
-EXPOSE 8080
-ADD target/tradex tradex.jar
-ENTRYPOINT ["java", "-jar", "/tradex.jar"]
+FROM openjdk:17-jdk-slim
+COPY build/docker/tradex.jar /app/tradex.jar
+CMD ["java", "-jar", "/app/tradex.jar"]
