@@ -1,9 +1,12 @@
 package business.Impl.CandleService;
 
+import Eco.TradeX.TradeXApplication;
 import Eco.TradeX.business.Impl.CandleService.GetCandlesAPIInformationUseCaseImpl;
 import Eco.TradeX.persistence.impl.tinkoff.CandleRepository.ClientTinkoffAPIImpl;
 import Eco.TradeX.persistence.impl.tinkoff.CandleRepository.TokenManagerTinkoffImpl;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;
 
 import java.math.BigDecimal;
@@ -14,11 +17,13 @@ import java.time.ZoneId;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest(classes = TradeXApplication.class)
 class GetCandlesAPIInformationUseCaseImplTest {
+    @Autowired
+    private TokenManagerTinkoffImpl tokenManager;
 
     @Test
     void getHistoricalCandlesAPI1Minute() {
-        TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
         ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
         GetCandlesAPIInformationUseCaseImpl getCandlesAPIInformationUseCase = new GetCandlesAPIInformationUseCaseImpl(client);
 
@@ -33,7 +38,6 @@ class GetCandlesAPIInformationUseCaseImplTest {
 
     @Test
     void getHistoricalCandles1MinuteNoCandles() {
-        TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
         ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
         GetCandlesAPIInformationUseCaseImpl getCandlesAPIInformationUseCase = new GetCandlesAPIInformationUseCaseImpl(client);
 
@@ -47,7 +51,6 @@ class GetCandlesAPIInformationUseCaseImplTest {
 
     @Test
     void getHistoricalCandles1MinuteLengthLimitError() {
-        TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
         ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
         GetCandlesAPIInformationUseCaseImpl getCandlesAPIInformationUseCase = new GetCandlesAPIInformationUseCaseImpl(client);
 

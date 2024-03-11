@@ -1,6 +1,8 @@
 package business.utils;
 
+import Eco.TradeX.TradeXApplication;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -11,6 +13,7 @@ import java.util.List;
 import static Eco.TradeX.business.utils.CalculationHelper.calculateAverage;
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest(classes = TradeXApplication.class)
 class CalculationHelperTest {
 
     @Test

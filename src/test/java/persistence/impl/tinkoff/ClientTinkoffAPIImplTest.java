@@ -1,8 +1,11 @@
 package persistence.impl.tinkoff;
 
+import Eco.TradeX.TradeXApplication;
 import Eco.TradeX.persistence.impl.tinkoff.CandleRepository.ClientTinkoffAPIImpl;
 import Eco.TradeX.persistence.impl.tinkoff.CandleRepository.TokenManagerTinkoffImpl;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;
 
 import java.math.BigDecimal;
@@ -14,14 +17,13 @@ import java.time.ZoneId;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-
+@SpringBootTest(classes = TradeXApplication.class)
 class ClientTinkoffAPIImplTest {
+    @Autowired
+    private ClientTinkoffAPIImpl client;
+
     @Test
     void getHistoricalCandles1MinuteCorrect() {
-        TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
-        ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
-
-        // period _from _to
         Instant to = LocalDate.of(2023, 1, 2).atStartOfDay(ZoneId.systemDefault()).toInstant();
         Instant from = to.minus(Duration.ofDays(1));
 
@@ -32,10 +34,6 @@ class ClientTinkoffAPIImplTest {
 
     @Test
     void getHistoricalCandles1MinuteNoCandles() {
-        TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
-        ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
-
-        // period _from _to
         Instant to = LocalDate.of(2023, 1, 2).atStartOfDay(ZoneId.systemDefault()).toInstant();
         Instant from = to.minusSeconds(1);
 
@@ -45,10 +43,6 @@ class ClientTinkoffAPIImplTest {
 
     @Test
     void getHistoricalCandles1MinuteLengthLimitError() {
-        TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
-        ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
-
-        // period _from _to
         Instant to = LocalDate.of(2023, 1, 2).atStartOfDay(ZoneId.systemDefault()).toInstant();
         Instant from = to.minus(Duration.ofDays(500));
 
@@ -64,9 +58,6 @@ class ClientTinkoffAPIImplTest {
 
     @Test
     void getExtraHistoricalCandlesFromCertainTime1MinCandle() {
-        TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
-        ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
-
         Instant from = LocalDate.of(2023, 12, 11).atStartOfDay(ZoneId.systemDefault()).toInstant();
 
         var candles = client.getExtraHistoricalCandlesFromCertainTime(from, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_1_MIN, 20);
@@ -75,9 +66,6 @@ class ClientTinkoffAPIImplTest {
 
     @Test
     void getExtraHistoricalCandlesFromCertainTime1DayCandle() {
-        TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
-        ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
-
         Instant from = LocalDate.of(2023, 12, 11).atStartOfDay(ZoneId.systemDefault()).toInstant();
 
         var candles = client.getExtraHistoricalCandlesFromCertainTime(from, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_DAY, 5);
@@ -86,9 +74,6 @@ class ClientTinkoffAPIImplTest {
 
     @Test
     void getExtraHistoricalCandlesFromCertainTime1MonthCandle() {
-        TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
-        ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
-
         Instant from = LocalDate.of(2023, 12, 11).atStartOfDay(ZoneId.systemDefault()).toInstant();
 
         var candles = client.getExtraHistoricalCandlesFromCertainTime(from, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_MONTH, 2);
@@ -97,9 +82,6 @@ class ClientTinkoffAPIImplTest {
 
     @Test
     void getExtraHistoricalCandlesFromCertainTime1MonthCandleOutOfBounds() {
-        TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
-        ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
-
         Instant from = LocalDate.of(2000, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant();
 
         var candles = client.getExtraHistoricalCandlesFromCertainTime(from, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_MONTH, 2);
@@ -108,9 +90,6 @@ class ClientTinkoffAPIImplTest {
 
     @Test
     void getLastAvailableDateTestCorrect() {
-        TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
-        ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
-
         var lastDate = client.getLastAvailableDate("BBG004730N88");
         Instant testDate = Instant.ofEpochSecond(1520447580);
 
@@ -119,9 +98,6 @@ class ClientTinkoffAPIImplTest {
 
     @Test
     void getLastAvailableDateTestError() {
-        TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
-        ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
-
         RuntimeException exception = assertThrows(
                 RuntimeException.class,
                 () -> client.getLastAvailableDate("Error")

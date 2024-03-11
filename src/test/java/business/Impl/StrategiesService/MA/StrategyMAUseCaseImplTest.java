@@ -1,5 +1,6 @@
 package business.Impl.StrategiesService.MA;
 
+import Eco.TradeX.TradeXApplication;
 import Eco.TradeX.business.Impl.StrategiesService.MA.MAParameterContainer;
 import Eco.TradeX.business.Impl.StrategiesService.MA.StrategyMAUseCaseImpl;
 import Eco.TradeX.business.utils.CandlesSeparationAndInitiation;
@@ -7,6 +8,8 @@ import Eco.TradeX.domain.CandleData;
 import Eco.TradeX.persistence.impl.tinkoff.CandleRepository.ClientTinkoffAPIImpl;
 import Eco.TradeX.persistence.impl.tinkoff.CandleRepository.TokenManagerTinkoffImpl;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;
 
 import java.math.BigDecimal;
@@ -19,11 +22,13 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest(classes = TradeXApplication.class)
 class StrategyMAUseCaseImplTest {
+    @Autowired
+    private TokenManagerTinkoffImpl tokenManager;
 
     @Test
     void getStrategyParametersForCandles1MinCandle1DaysLongMA() {
-        TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
         ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
         CandlesSeparationAndInitiation candlesSeparationAndInitiation = new CandlesSeparationAndInitiation(client);
         StrategyMAUseCaseImpl strategyMAUseCase = new StrategyMAUseCaseImpl(client, candlesSeparationAndInitiation);
@@ -39,7 +44,6 @@ class StrategyMAUseCaseImplTest {
 
     @Test
     void getStrategyParametersForCandles5MinCandle1DaysLongMA() {
-        TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
         ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
         CandlesSeparationAndInitiation candlesSeparationAndInitiation = new CandlesSeparationAndInitiation(client);
         StrategyMAUseCaseImpl strategyMAUseCase = new StrategyMAUseCaseImpl(client, candlesSeparationAndInitiation);
@@ -55,7 +59,6 @@ class StrategyMAUseCaseImplTest {
 
     @Test
     void getStrategyParametersForCandlesWeekCandle1DaysLongMA() {
-        TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
         ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
         CandlesSeparationAndInitiation candlesSeparationAndInitiation = new CandlesSeparationAndInitiation(client);
         StrategyMAUseCaseImpl strategyMAUseCase = new StrategyMAUseCaseImpl(client, candlesSeparationAndInitiation);
@@ -71,7 +74,6 @@ class StrategyMAUseCaseImplTest {
 
     @Test
     void getStrategyParametersForCandles1MonthCandle1DaysLongMANotEnoughExtraCandlesCase() {
-        TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
         ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
         CandlesSeparationAndInitiation candlesSeparationAndInitiation = new CandlesSeparationAndInitiation(client);
         StrategyMAUseCaseImpl strategyMAUseCase = new StrategyMAUseCaseImpl(client, candlesSeparationAndInitiation);
@@ -92,7 +94,6 @@ class StrategyMAUseCaseImplTest {
 
     @Test
     void getStrategyParametersForCandles1MonthCandle1DaysLongMANoCandlesCase() {
-        TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
         ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
         CandlesSeparationAndInitiation candlesSeparationAndInitiation = new CandlesSeparationAndInitiation(client);
         StrategyMAUseCaseImpl strategyMAUseCase = new StrategyMAUseCaseImpl(client, candlesSeparationAndInitiation);
@@ -114,7 +115,6 @@ class StrategyMAUseCaseImplTest {
 
     @Test
     void initializeExtraCandlesThroughFactorySimpleTest() {
-        TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
         ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
         CandlesSeparationAndInitiation candlesSeparationAndInitiation = new CandlesSeparationAndInitiation(client);
         StrategyMAUseCaseImpl strategyMAUseCase = new StrategyMAUseCaseImpl(client, candlesSeparationAndInitiation);
@@ -132,7 +132,6 @@ class StrategyMAUseCaseImplTest {
 
     @Test
     void calculateParametersForCandle1MinTest() {
-        TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
         ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
         CandlesSeparationAndInitiation candlesSeparationAndInitiation = new CandlesSeparationAndInitiation(client);
         StrategyMAUseCaseImpl strategyMAUseCase = new StrategyMAUseCaseImpl(client, candlesSeparationAndInitiation);
@@ -151,7 +150,6 @@ class StrategyMAUseCaseImplTest {
 
     @Test
     void calculateParametersForCandle5MinTest() {
-        TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
         ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
         CandlesSeparationAndInitiation candlesSeparationAndInitiation = new CandlesSeparationAndInitiation(client);
         StrategyMAUseCaseImpl strategyMAUseCase = new StrategyMAUseCaseImpl(client, candlesSeparationAndInitiation);
@@ -170,7 +168,6 @@ class StrategyMAUseCaseImplTest {
 
     @Test
     void calculateParametersForCandleWeekTest() {
-        TokenManagerTinkoffImpl tokenManager = new TokenManagerTinkoffImpl();
         ClientTinkoffAPIImpl client = new ClientTinkoffAPIImpl(tokenManager);
         CandlesSeparationAndInitiation candlesSeparationAndInitiation = new CandlesSeparationAndInitiation(client);
         StrategyMAUseCaseImpl strategyMAUseCase = new StrategyMAUseCaseImpl(client, candlesSeparationAndInitiation);
