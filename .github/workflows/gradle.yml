@@ -31,6 +31,7 @@ jobs:
       run: ./gradlew test
 
     - name: Build & push Docker image
+      if: ${{ job.status == 'success' }}
       uses: mr-smithers-excellent/docker-build-push@v6
       with:
         image: dansil2301/tradex
