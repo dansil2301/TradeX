@@ -12,9 +12,5 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 @EntityScan("Eco.TradeX.persistence.impl.TraderRepository")
 public class TradeXApplication {
-
-	public static void main(String[] args) {
-		SpringApplication.run(TradeXApplication.class, args);
-	}
-
+	public static void main(String[] args) {SpringApplication.run(TradeXApplication.class, args);}
 }
