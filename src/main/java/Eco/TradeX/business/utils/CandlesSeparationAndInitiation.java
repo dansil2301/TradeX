@@ -1,7 +1,7 @@
 package Eco.TradeX.business.utils;
 
 import Eco.TradeX.domain.CandleData;
-import Eco.TradeX.persistence.impl.tinkoff.CandleRepository.ClientTinkoffAPIImpl;
+import Eco.TradeX.persistence.impl.CandleRepository.tinkoff.ClientTinkoffAPIImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;

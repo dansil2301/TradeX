@@ -1,4 +1,4 @@
-package Eco.TradeX.persistence.impl.tinkoff.CandleRepository;
+package Eco.TradeX.persistence.impl.CandleRepository.tinkoff;
 
 import Eco.TradeX.business.exceptions.CandlesExceptions;
 import Eco.TradeX.domain.CandleData;

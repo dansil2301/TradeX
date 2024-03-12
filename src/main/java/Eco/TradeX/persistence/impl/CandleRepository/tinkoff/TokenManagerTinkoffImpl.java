@@ -1,4 +1,4 @@
-package Eco.TradeX.persistence.impl.tinkoff.CandleRepository;
+package Eco.TradeX.persistence.impl.CandleRepository.tinkoff;
 
 import Eco.TradeX.business.exceptions.TokenExceptions;
 import org.slf4j.Logger;
@@ -14,7 +14,7 @@ import java.util.Properties;
 
 @Component
 public class TokenManagerTinkoffImpl {
-    @Value("${token}")
+    @Value("${tinkoffToken}")
     private String token;
 
     public String readTokenLocally() {
