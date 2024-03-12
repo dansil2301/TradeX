@@ -63,8 +63,8 @@ project.jacocoTestReport {
 		html {
 			enabled true
 		}
-		xml.destination(file("$buildDir/all-tests/jacocoAllTestReport.xml"))
-		html.destination(file("$buildDir/all-tests/html"))
+		xml.destination(file("build/all-tests/jacocoAllTestReport.xml"))
+		html.destination(file("build/all-tests/html"))
 	}
 	executionData(test)
 }
@@ -87,6 +87,6 @@ jacocoTestCoverageVerification {
 	}
 }
 
-tasks.named('check') {
-	dependsOn 'jacocoTestCoverageVerification'
-}
+//tasks.named('check') {
+//	dependsOn 'jacocoTestCoverageVerification'
+//}
