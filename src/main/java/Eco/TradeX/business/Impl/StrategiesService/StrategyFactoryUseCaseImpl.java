@@ -15,7 +15,7 @@ import ru.tinkoff.piapi.contract.v1.CandleInterval;
 import java.time.Instant;
 import java.util.*;
 
-import static Eco.TradeX.business.utils.PackCandleStrategyParams.packCandles;
+import static Eco.TradeX.business.utils.CandleUtils.PackCandleStrategyParams.packCandles;
 
 @Service
 @AllArgsConstructor

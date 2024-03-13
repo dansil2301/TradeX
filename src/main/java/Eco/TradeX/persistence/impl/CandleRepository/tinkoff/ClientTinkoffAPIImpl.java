@@ -14,7 +14,7 @@ import java.time.*;
 import java.util.Collections;
 import java.util.List;
 
-import static Eco.TradeX.business.utils.CandleIntervalConverter.toSeconds;
+import static Eco.TradeX.business.utils.CandleUtils.CandleIntervalConverter.toSeconds;
 import static ru.tinkoff.piapi.core.utils.MapperUtils.quotationToBigDecimal;
 
 @Repository

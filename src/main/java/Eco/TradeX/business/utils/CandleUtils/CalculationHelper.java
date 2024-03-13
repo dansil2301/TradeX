@@ -1,4 +1,4 @@
-package Eco.TradeX.business.utils;
+package Eco.TradeX.business.utils.CandleUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

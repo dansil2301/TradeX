@@ -1,4 +1,4 @@
-package Eco.TradeX.domain.Response;
+package Eco.TradeX.domain.Response.StrategiesResponse;
 
 import lombok.Builder;
 import lombok.Data;

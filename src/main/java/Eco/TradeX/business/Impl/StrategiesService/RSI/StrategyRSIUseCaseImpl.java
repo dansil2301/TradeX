@@ -3,7 +3,7 @@ package Eco.TradeX.business.Impl.StrategiesService.RSI;
 import Eco.TradeX.business.Interfaces.StrategiesServiceinterfaces.ParameterContainer;
 import Eco.TradeX.business.Interfaces.StrategiesServiceinterfaces.StrategyUseCase;
 import Eco.TradeX.business.exceptions.CandlesExceptions;
-import Eco.TradeX.business.utils.CandlesSeparationAndInitiation;
+import Eco.TradeX.business.utils.CandleUtils.CandlesSeparationAndInitiation;
 import Eco.TradeX.domain.CandleData;
 import Eco.TradeX.persistence.Interfaces.CandleRepositoryInterfaces.ClientAPIRepository;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-import static Eco.TradeX.business.utils.CalculationHelper.calculateAverage;
+import static Eco.TradeX.business.utils.CandleUtils.CalculationHelper.calculateAverage;
 
 @Service
 public class StrategyRSIUseCaseImpl implements StrategyUseCase {

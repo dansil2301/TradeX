@@ -3,10 +3,11 @@ package business.Impl.StrategiesService.MA;
 import Eco.TradeX.TradeXApplication;
 import Eco.TradeX.business.Impl.StrategiesService.MA.MAParameterContainer;
 import Eco.TradeX.business.Impl.StrategiesService.MA.StrategyMAUseCaseImpl;
-import Eco.TradeX.business.utils.CandlesSeparationAndInitiation;
+import Eco.TradeX.business.utils.CandleUtils.CandlesSeparationAndInitiation;
 import Eco.TradeX.domain.CandleData;
 import Eco.TradeX.persistence.impl.CandleRepository.tinkoff.ClientTinkoffAPIImpl;
 import Eco.TradeX.persistence.impl.CandleRepository.tinkoff.TokenManagerTinkoffImpl;
+import TestConfigs.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,7 +24,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = TradeXApplication.class)
-class StrategyMAUseCaseImplTest {
+class StrategyMAUseCaseImplTest extends BaseTest {
     @Autowired
     private TokenManagerTinkoffImpl tokenManager;
 

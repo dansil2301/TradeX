@@ -1,4 +1,4 @@
-package Eco.TradeX.business.utils;
+package Eco.TradeX.business.utils.CandleUtils;
 
 import ru.tinkoff.piapi.contract.v1.CandleInterval;
 

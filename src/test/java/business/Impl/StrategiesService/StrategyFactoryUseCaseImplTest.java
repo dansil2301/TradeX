@@ -7,11 +7,12 @@ import Eco.TradeX.business.Impl.StrategiesService.RSI.RSIParameterContainer;
 import Eco.TradeX.business.Impl.StrategiesService.RSI.StrategyRSIUseCaseImpl;
 import Eco.TradeX.business.Impl.StrategiesService.StrategyFactoryUseCaseImpl;
 import Eco.TradeX.business.Interfaces.StrategiesServiceinterfaces.StrategyUseCase;
-import Eco.TradeX.business.utils.CandlesSeparationAndInitiation;
+import Eco.TradeX.business.utils.CandleUtils.CandlesSeparationAndInitiation;
 import Eco.TradeX.domain.CandleData;
 import Eco.TradeX.domain.StrategyParams.CandleStrategiesParams;
 import Eco.TradeX.persistence.impl.CandleRepository.tinkoff.ClientTinkoffAPIImpl;
 import Eco.TradeX.persistence.impl.CandleRepository.tinkoff.TokenManagerTinkoffImpl;
+import TestConfigs.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,7 +28,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = TradeXApplication.class)
-class StrategyFactoryUseCaseImplTest {
+class StrategyFactoryUseCaseImplTest extends BaseTest {
     @Autowired
     private TokenManagerTinkoffImpl tokenManager;
 

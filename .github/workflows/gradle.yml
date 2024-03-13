@@ -1,4 +1,4 @@
-name: TradeX CI build
+name: TradeX CI/CD
 
 on:
   push:

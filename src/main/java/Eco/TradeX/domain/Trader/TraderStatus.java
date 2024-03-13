@@ -1,4 +1,4 @@
-package Eco.TradeX.persistence.impl.TraderRepository;
+package Eco.TradeX.domain.Trader;
 
 public enum TraderStatus {
     TRADER_BASIC,

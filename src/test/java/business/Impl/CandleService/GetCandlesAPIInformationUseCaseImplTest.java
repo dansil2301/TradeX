@@ -4,6 +4,7 @@ import Eco.TradeX.TradeXApplication;
 import Eco.TradeX.business.Impl.CandleService.GetCandlesAPIInformationUseCaseImpl;
 import Eco.TradeX.persistence.impl.CandleRepository.tinkoff.ClientTinkoffAPIImpl;
 import Eco.TradeX.persistence.impl.CandleRepository.tinkoff.TokenManagerTinkoffImpl;
+import TestConfigs.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
@@ -19,7 +20,7 @@ import java.time.ZoneId;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = TradeXApplication.class)
-class GetCandlesAPIInformationUseCaseImplTest {
+class GetCandlesAPIInformationUseCaseImplTest extends BaseTest {
     @Autowired
     private TokenManagerTinkoffImpl tokenManager;
 

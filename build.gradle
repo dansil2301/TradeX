@@ -33,20 +33,21 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.security:spring-security-test'
+	//testImplementation 'org.springframework.security:spring-security-test'
 }
 
 jacoco {
 	toolVersion = "0.8.7"
 }
 
-tasks.named('test') {
+test {
 	useJUnitPlatform()
+	finalizedBy jacocoTestReport
 }
 
 bootJar {
-	archiveFileName = "tradex.jar" // Set the name of the JAR file
-	destinationDirectory = file("$buildDir/docker") // Set the directory where the JAR will be placed
+	archiveFileName = "tradex.jar"
+	destinationDirectory = file("$buildDir/docker")
 }
 
 project.jacocoTestReport {

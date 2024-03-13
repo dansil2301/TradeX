@@ -2,6 +2,7 @@ package persistence.impl.tinkoff;
 
 import Eco.TradeX.TradeXApplication;
 import Eco.TradeX.persistence.impl.CandleRepository.tinkoff.ClientTinkoffAPIImpl;
+import TestConfigs.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest(classes = TradeXApplication.class)
-class ClientTinkoffAPIImplTest {
+class ClientTinkoffAPIImplTest extends BaseTest {
     @Autowired
     private ClientTinkoffAPIImpl client;
 

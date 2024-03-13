@@ -2,7 +2,7 @@ package Eco.TradeX.controller;
 
 import Eco.TradeX.business.Interfaces.CandleServiceInterfaces.GetCandlesAPIInformationUseCase;
 import Eco.TradeX.domain.CandleData;
-import Eco.TradeX.domain.Response.GetPeriodCandlesResponse;
+import Eco.TradeX.domain.Response.CandlesResponse.GetPeriodCandlesResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

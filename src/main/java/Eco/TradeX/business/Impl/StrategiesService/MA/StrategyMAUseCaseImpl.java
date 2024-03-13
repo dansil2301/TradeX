@@ -2,7 +2,7 @@ package Eco.TradeX.business.Impl.StrategiesService.MA;
 
 import Eco.TradeX.business.Interfaces.StrategiesServiceinterfaces.ParameterContainer;
 import Eco.TradeX.business.exceptions.CandlesExceptions;
-import Eco.TradeX.business.utils.CandlesSeparationAndInitiation;
+import Eco.TradeX.business.utils.CandleUtils.CandlesSeparationAndInitiation;
 import Eco.TradeX.domain.CandleData;
 import Eco.TradeX.persistence.Interfaces.CandleRepositoryInterfaces.ClientAPIRepository;
 import org.springframework.context.annotation.Primary;
@@ -17,7 +17,7 @@ import java.util.List;
 
 import Eco.TradeX.business.Interfaces.StrategiesServiceinterfaces.StrategyUseCase;
 
-import static Eco.TradeX.business.utils.CalculationHelper.calculateAverage;
+import static Eco.TradeX.business.utils.CandleUtils.CalculationHelper.calculateAverage;
 
 @Service
 @Primary

@@ -1,15 +1,16 @@
 package business.utils;
 
 import Eco.TradeX.TradeXApplication;
+import TestConfigs.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;
 
-import static Eco.TradeX.business.utils.CandleIntervalConverter.toSeconds;
+import static Eco.TradeX.business.utils.CandleUtils.CandleIntervalConverter.toSeconds;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = TradeXApplication.class)
-class CandleIntervalConverterTest {
+class CandleIntervalConverterTest extends BaseTest {
 
     @Test
     void toSecondsTest1Min() {

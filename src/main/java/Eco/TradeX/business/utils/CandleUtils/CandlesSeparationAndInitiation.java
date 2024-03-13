@@ -1,4 +1,4 @@
-package Eco.TradeX.business.utils;
+package Eco.TradeX.business.utils.CandleUtils;
 
 import Eco.TradeX.domain.CandleData;
 import Eco.TradeX.persistence.impl.CandleRepository.tinkoff.ClientTinkoffAPIImpl;

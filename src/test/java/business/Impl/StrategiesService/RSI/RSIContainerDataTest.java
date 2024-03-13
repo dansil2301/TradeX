@@ -2,6 +2,7 @@ package business.Impl.StrategiesService.RSI;
 
 import Eco.TradeX.TradeXApplication;
 import Eco.TradeX.business.Impl.StrategiesService.RSI.RSIContainerData;
+import TestConfigs.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -12,7 +13,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = TradeXApplication.class)
-class RSIContainerDataTest {
+class RSIContainerDataTest extends BaseTest {
 
     @Test
     void moveByOneTest11to22() {
