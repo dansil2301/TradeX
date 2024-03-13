@@ -1,7 +1,7 @@
 package persistence.impl.tinkoff;
 
 import Eco.TradeX.TradeXApplication;
-import Eco.TradeX.persistence.impl.CandleRepository.tinkoff.TokenManagerTinkoffImpl;
+import Eco.TradeX.persistence.Impl.CandleRepository.tinkoff.TokenManagerTinkoffImpl;
 import TestConfigs.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,7 +2,7 @@ package Eco.TradeX.business.utils.TraderUtils;
 
 import Eco.TradeX.business.exceptions.TraderExceptions;
 import Eco.TradeX.domain.Trader.TraderData;
-import Eco.TradeX.persistence.impl.TraderRepository.TraderEntity;
+import Eco.TradeX.persistence.Impl.TraderRepository.TraderEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

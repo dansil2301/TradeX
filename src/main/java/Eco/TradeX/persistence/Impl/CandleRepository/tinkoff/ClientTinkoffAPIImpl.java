@@ -1,4 +1,4 @@
-package Eco.TradeX.persistence.impl.CandleRepository.tinkoff;
+package Eco.TradeX.persistence.Impl.CandleRepository.tinkoff;
 
 import Eco.TradeX.business.exceptions.CandlesExceptions;
 import Eco.TradeX.domain.CandleData;
@@ -19,13 +19,11 @@ import static ru.tinkoff.piapi.core.utils.MapperUtils.quotationToBigDecimal;
 
 @Repository
 public class ClientTinkoffAPIImpl implements ClientAPIRepository {
-    // should make it more flexible
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientAPIRepository.class);
-    private static final String figi = "BBG004730N88";
     private final InvestApi investApi;
 
-    public ClientTinkoffAPIImpl(TokenManagerTinkoffImpl tokenManager){
-        this.investApi = InvestApi.createReadonly(tokenManager.readTokenLocally());
+    public ClientTinkoffAPIImpl(InvestApi investApi){
+        this.investApi = investApi;
     }
 
     @Override
