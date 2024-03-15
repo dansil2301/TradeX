@@ -32,7 +32,7 @@ public class TradersController {
 
     @GetMapping()
     public ResponseEntity<GetTradersResponse> getTraders() {
-        var response = GetTradersResponse.builder()
+        GetTradersResponse response = GetTradersResponse.builder()
                 .traders(getTradersMethodsUseCase.getAllTraders())
                 .build();
         return ResponseEntity.ok().body(response);
@@ -40,7 +40,7 @@ public class TradersController {
 
     @PostMapping("/create-trader")
     public ResponseEntity<CreateTraderResponse> createTrader(@RequestBody @Valid CreateTraderRequest request, HttpServletRequest servletRequest) {
-        var id = createTraderUseCase.createTrader(request);
+        Long id = createTraderUseCase.createTrader(request);
         String URL = getServerURL(servletRequest) + "/api/traders/get-trader-by-id?id=" + id;
         return ResponseEntity.status(HttpStatus.CREATED).body(CreateTraderResponse.builder()
                 .requestForNewTrader(URL)
