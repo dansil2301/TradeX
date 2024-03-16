@@ -1,6 +1,7 @@
 package persistence.impl.tinkoff;
 
 import Eco.TradeX.TradeXApplication;
+import Eco.TradeX.business.exceptions.CandlesExceptions;
 import Eco.TradeX.domain.CandleData;
 import Eco.TradeX.persistence.Impl.CandleRepository.tinkoff.ClientTinkoffAPIImpl;
 import TestConfigs.BaseTest;
@@ -12,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;
 import ru.tinkoff.piapi.contract.v1.HistoricCandle;
+import ru.tinkoff.piapi.contract.v1.Instrument;
 import ru.tinkoff.piapi.contract.v1.Quotation;
+import ru.tinkoff.piapi.core.InstrumentsService;
 import ru.tinkoff.piapi.core.InvestApi;
 import ru.tinkoff.piapi.core.MarketDataService;
 
@@ -27,6 +30,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -35,11 +39,14 @@ class ClientTinkoffAPIImplTest extends BaseTest {
     @Mock
     InvestApi investApiMock;
 
-    @InjectMocks
-    ClientTinkoffAPIImpl clientTinkoffAPI;
+    @Mock
+    InstrumentsService getInstrumentsServiceMock;
 
     @Mock
     MarketDataService marketDataServiceMock;
+
+    @InjectMocks
+    ClientTinkoffAPIImpl clientTinkoffAPI;
 
     @Autowired
     ClientTinkoffAPIImpl client;
@@ -78,16 +85,6 @@ class ClientTinkoffAPIImplTest extends BaseTest {
     }
 
     @Test
-    void getHistoricalCandles1MinuteCorrect() {
-        Instant to = LocalDate.of(2023, 1, 2).atStartOfDay(ZoneId.systemDefault()).toInstant();
-        Instant from = to.minus(Duration.ofDays(1));
-
-        var candles = client.getHistoricalCandles(from, to, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_1_MIN);
-        var close = candles.get(0).getClose();
-        assertEquals(new BigDecimal("141.060000000"), close);
-    }
-
-    @Test
     void testGetHistoricalCandlesMockNoCandles() {
         Instant from = Instant.now();
         Instant to = Instant.now();
@@ -102,77 +99,118 @@ class ClientTinkoffAPIImplTest extends BaseTest {
     }
 
     @Test
-    void getHistoricalCandles1MinuteNoCandles() {
-        Instant to = LocalDate.of(2023, 1, 2).atStartOfDay(ZoneId.systemDefault()).toInstant();
-        Instant from = to.minusSeconds(1);
+    void testGetHistoricalCandlesMockLengthLimitError() {
+        Instant from = Instant.now();
+        Instant to = Instant.now();
 
-        var candles = client.getHistoricalCandles(from, to, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_1_MIN);
-        assertEquals(null, candles);
-    }
-
-    @Test
-    void getHistoricalCandles1MinuteLengthLimitError() {
-        Instant to = LocalDate.of(2023, 1, 2).atStartOfDay(ZoneId.systemDefault()).toInstant();
-        Instant from = to.minus(Duration.ofDays(500));
+        when(investApiMock.getMarketDataService()).thenReturn(marketDataServiceMock);
+        when(marketDataServiceMock.getCandlesSync("testFigi", from, to, CandleInterval.CANDLE_INTERVAL_1_MIN))
+                .thenThrow(new RuntimeException("Error"));
 
         RuntimeException exception = assertThrows(
                 RuntimeException.class,
-                () -> client.getHistoricalCandles(from, to, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_1_MIN)
+                () -> clientTinkoffAPI.getHistoricalCandles(from, to, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN)
         );
 
-        String expectedMessage = "500 INTERNAL_SERVER_ERROR \"Candles Error: Превышен максимальный период запроса для данного интервала свечи. Укажите корректный интервал.\"";
+        String expectedMessage = "500 INTERNAL_SERVER_ERROR \"Candles Error: Error\"";
         String actualMessage = exception.getMessage();
         assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
-    void getExtraHistoricalCandlesFromCertainTime1MinCandle() {
-        Instant from = LocalDate.of(2023, 12, 11).atStartOfDay(ZoneId.systemDefault()).toInstant();
+    public void getExtraHistoricalCandlesFromCertainTimeCandleMock() {
+        Instant from = Instant.now();
+        Timestamp timestamp2007 = Timestamp.newBuilder()
+                .setSeconds(java.time.Year.of(2007).atDay(1).atStartOfDay(java.time.ZoneOffset.UTC).toEpochSecond())
+                .build();
 
-        var candles = client.getExtraHistoricalCandlesFromCertainTime(from, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_1_MIN, 20);
-        assertEquals(20, candles.size());
+        List<HistoricCandle> mockCandles = new ArrayList<>();
+        HistoricCandle mockCandle = mock(HistoricCandle.class);
+        mockCandles.add(createCandlesWithMock(mockCandle));
+
+        when(investApiMock.getMarketDataService()).thenReturn(marketDataServiceMock);
+        when(investApiMock.getInstrumentsService()).thenReturn(getInstrumentsServiceMock);
+
+        Instrument instrumentMock = mock(Instrument.class);
+        when(getInstrumentsServiceMock.getInstrumentByFigiSync("testFigi")).thenReturn(instrumentMock);
+
+        when(instrumentMock.getFirst1MinCandleDate()).thenReturn(timestamp2007);
+
+        when(marketDataServiceMock.getCandlesSync(eq("testFigi"), any(Instant.class), any(Instant.class), eq(CandleInterval.CANDLE_INTERVAL_1_MIN)))
+                .thenReturn(mockCandles);
+
+        List<CandleData> candles = clientTinkoffAPI.getExtraHistoricalCandlesFromCertainTime(from, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN, 1);
+        assertEquals(1, candles.size());
     }
 
     @Test
-    void getExtraHistoricalCandlesFromCertainTime1DayCandle() {
-        Instant from = LocalDate.of(2023, 12, 11).atStartOfDay(ZoneId.systemDefault()).toInstant();
+    public void getExtraHistoricalCandlesFromCertainTimeCandleInstrumentErrorMock() {
+        Instant from = Instant.now();
+        Timestamp timestamp2007 = Timestamp.newBuilder()
+                .setSeconds(java.time.Year.of(2007).atDay(1).atStartOfDay(java.time.ZoneOffset.UTC).toEpochSecond())
+                .build();
 
-        var candles = client.getExtraHistoricalCandlesFromCertainTime(from, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_DAY, 5);
-        assertEquals(5, candles.size());
+        when(investApiMock.getMarketDataService()).thenReturn(marketDataServiceMock);
+        when(investApiMock.getInstrumentsService()).thenReturn(getInstrumentsServiceMock);
+
+        Instrument instrumentMock = mock(Instrument.class);
+        when(getInstrumentsServiceMock.getInstrumentByFigiSync("testFigi"))
+                .thenThrow(new RuntimeException("Error"));
+
+        when(instrumentMock.getFirst1MinCandleDate()).thenReturn(timestamp2007);
+
+        RuntimeException exception = assertThrows(
+                RuntimeException.class,
+                () ->         clientTinkoffAPI.getExtraHistoricalCandlesFromCertainTime(from, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN, 1)
+        );
+
+        String expectedMessage = "500 INTERNAL_SERVER_ERROR \"Candles Error: Error\"";
+        String actualMessage = exception.getMessage();
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
-    void getExtraHistoricalCandlesFromCertainTime1MonthCandle() {
-        Instant from = LocalDate.of(2023, 12, 11).atStartOfDay(ZoneId.systemDefault()).toInstant();
+    void getLastAvailableDateTestCorrectMock() {
+        Timestamp timestamp2007 = Timestamp.newBuilder()
+                .setSeconds(java.time.Year.of(2007).atDay(1).atStartOfDay(java.time.ZoneOffset.UTC).toEpochSecond())
+                .build();
 
-        var candles = client.getExtraHistoricalCandlesFromCertainTime(from, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_MONTH, 2);
-        assertEquals(2, candles.size());
-    }
+        when(investApiMock.getInstrumentsService()).thenReturn(getInstrumentsServiceMock);
 
-    @Test
-    void getExtraHistoricalCandlesFromCertainTime1MonthCandleOutOfBounds() {
-        Instant from = LocalDate.of(2000, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant();
+        Instrument instrumentMock = mock(Instrument.class);
+        when(getInstrumentsServiceMock.getInstrumentByFigiSync("testFigi"))
+                .thenReturn(instrumentMock);
 
-        var candles = client.getExtraHistoricalCandlesFromCertainTime(from, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_MONTH, 2);
-        assertEquals(0, candles.size());
-    }
+        when(instrumentMock.getFirst1MinCandleDate()).thenReturn(timestamp2007);
 
-    @Test
-    void getLastAvailableDateTestCorrect() {
-        var lastDate = client.getLastAvailableDate("BBG004730N88");
-        Instant testDate = Instant.ofEpochSecond(1520447580);
+        var lastDate = clientTinkoffAPI.getLastAvailableDate("testFigi");
+
+        Instant testDate = Instant.ofEpochSecond(timestamp2007.getSeconds(), timestamp2007.getNanos());
 
         assertEquals(testDate, lastDate);
     }
 
     @Test
-    void getLastAvailableDateTestError() {
-        RuntimeException exception = assertThrows(
-                RuntimeException.class,
-                () -> client.getLastAvailableDate("Error")
+    void getLastAvailableDateTestErrorMock() {
+        Timestamp timestamp2007 = Timestamp.newBuilder()
+                .setSeconds(java.time.Year.of(2007).atDay(1).atStartOfDay(java.time.ZoneOffset.UTC).toEpochSecond())
+                .build();
+
+        when(investApiMock.getInstrumentsService()).thenReturn(getInstrumentsServiceMock);
+
+        Instrument instrumentMock = mock(Instrument.class);
+        when(getInstrumentsServiceMock.getInstrumentByFigiSync("testFigi"))
+                .thenReturn(instrumentMock);
+
+        when(instrumentMock.getFirst1MinCandleDate())
+                .thenThrow(new RuntimeException("Error"));
+
+        CandlesExceptions exception = assertThrows(
+                CandlesExceptions.class,
+                () -> clientTinkoffAPI.getLastAvailableDate("testFigi")
         );
 
-        String expectedMessage = "500 INTERNAL_SERVER_ERROR \"Candles Error: Инструмент не найден.Укажите корректный идентификатор инструмента.\"";
+        String expectedMessage = "500 INTERNAL_SERVER_ERROR \"Candles Error: Error\"";
         String actualMessage = exception.getMessage();
         assertEquals(expectedMessage, actualMessage);
     }

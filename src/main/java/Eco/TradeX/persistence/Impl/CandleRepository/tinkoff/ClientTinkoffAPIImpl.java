@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import Eco.TradeX.persistence.Interfaces.CandleRepositoryInterfaces.ClientAPIRepository;
 import ru.tinkoff.piapi.contract.v1.*;
+import ru.tinkoff.piapi.core.InstrumentsService;
 import ru.tinkoff.piapi.core.InvestApi;
 
 import java.time.*;
@@ -52,13 +53,13 @@ public class ClientTinkoffAPIImpl implements ClientAPIRepository {
     }
 
     private String getUidByFigi(String figi) {
-        var instrument = investApi.getInstrumentsService().getInstrumentByFigiSync(figi);
+        Instrument instrument = investApi.getInstrumentsService().getInstrumentByFigiSync(figi);
         return instrument.getUid();
     }
 
     public Instant getLastAvailableDate(String figi) {
         try {
-            var instrument = investApi.getInstrumentsService().getInstrumentByFigiSync(figi);
+            Instrument instrument = investApi.getInstrumentsService().getInstrumentByFigiSync(figi);
             Timestamp first1MinCandleTimestamp = instrument.getFirst1MinCandleDate();
             return Instant.ofEpochSecond(first1MinCandleTimestamp.getSeconds(), first1MinCandleTimestamp.getNanos());
         }

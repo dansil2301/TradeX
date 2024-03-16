@@ -25,12 +25,12 @@ public class TradersController {
     private final GetTradersMethodsUseCase getTradersMethodsUseCase;
     private final CreateTraderUseCase createTraderUseCase;
 
-    @GetMapping()
-    public ResponseEntity<TraderData> getTrader(@RequestParam(value = "id") Long id) {
+    @GetMapping("{id}")
+    public ResponseEntity<TraderData> getTrader(@PathVariable(value = "id") final Long id) {
         return ResponseEntity.ok().body(getTradersMethodsUseCase.getTraderById(id));
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<GetTradersResponse> getTraders() {
         GetTradersResponse response = GetTradersResponse.builder()
                 .traders(getTradersMethodsUseCase.getAllTraders())
