@@ -18,7 +18,7 @@ import java.util.List;
 @RequestMapping("/api/strategies")
 @AllArgsConstructor
 public class StrategiesController {
-    private StrategyFactoryUseCase strategyFactoryUseCase;
+    private final StrategyFactoryUseCase strategyFactoryUseCase;
     private final GetCandlesAPIInformationUseCase getCandlesAPIInformationUseCase;
 
     @GetMapping("/get-strategies-names")

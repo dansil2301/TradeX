@@ -22,8 +22,8 @@ import static Eco.TradeX.business.utils.ServerURLResolver.getServerURL;
 @RequestMapping("/api/traders")
 @AllArgsConstructor
 public class TradersController {
-    GetTradersMethodsUseCase getTradersMethodsUseCase;
-    CreateTraderUseCase createTraderUseCase;
+    private final GetTradersMethodsUseCase getTradersMethodsUseCase;
+    private final CreateTraderUseCase createTraderUseCase;
 
     @GetMapping()
     public ResponseEntity<TraderData> getTrader(@RequestParam(value = "id") Long id) {
