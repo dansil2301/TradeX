@@ -53,15 +53,15 @@ class StrategyRSIUseCaseImplTest extends BaseTest {
         Instant to = LocalDate.of(2023, 1, 2).atStartOfDay(ZoneId.systemDefault()).toInstant();
         Instant from = to.minus(Duration.ofDays(1));
 
-        List<CandleData> mockCandles = createCandlesDataFake.createCandles(30);
+        List<CandleData> mockCandles = createCandlesDataFake.createCandles(31);
         when(clientMock.getHistoricalCandlesAPI(from, to, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN))
                 .thenReturn(mockCandles);
 
         List<CandleData> candles = clientMock.getHistoricalCandlesAPI(from, to, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN);
         List<List<CandleData>> LstCandleData = new ArrayList<>();
-        LstCandleData.add(mockCandles.subList(0, 20));
+        LstCandleData.add(mockCandles.subList(0, 21));
         LstCandleData.add(mockCandles);
-        when(candlesSeparationAndInitiationMock.initiateCandlesProperly(candles, null, 20, from, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN))
+        when(candlesSeparationAndInitiationMock.initiateCandlesProperly(candles, null, 21, from, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN))
                 .thenReturn(LstCandleData);
 
         List<ParameterContainer> parameters = strategyRSIUseCaseMock.getStrategyParametersForCandles(candles, from, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN);
@@ -73,23 +73,23 @@ class StrategyRSIUseCaseImplTest extends BaseTest {
         Instant to = LocalDate.of(2023, 1, 2).atStartOfDay(ZoneId.systemDefault()).toInstant();
         Instant from = to.minus(Duration.ofDays(1));
 
-        List<CandleData> mockCandles = createCandlesDataFake.createCandles(30);
+        List<CandleData> mockCandles = createCandlesDataFake.createCandles(31);
         when(clientMock.getHistoricalCandlesAPI(from, to, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN))
                 .thenReturn(mockCandles);
 
         List<CandleData> candles = clientMock.getHistoricalCandlesAPI(from, to, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN);
         List<List<CandleData>> LstCandleData = new ArrayList<>();
-        LstCandleData.add(mockCandles.subList(0, 20));
-        LstCandleData.add(mockCandles.subList(20, 30));
-        when(candlesSeparationAndInitiationMock.initiateCandlesProperly(candles, null, 20, from, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN))
+        LstCandleData.add(mockCandles.subList(0, 21));
+        LstCandleData.add(mockCandles.subList(21, 30));
+        when(candlesSeparationAndInitiationMock.initiateCandlesProperly(candles, null, 21, from, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN))
                 .thenReturn(LstCandleData);
 
         List<ParameterContainer> parameters = strategyRSIUseCaseMock.getStrategyParametersForCandles(candles, from, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN);
-        var parameterNull = (MAParameterContainer)parameters.get(19);
-        var parameterNotNull = (MAParameterContainer)parameters.get(20);
+        var parameterNull = (RSIParameterContainer)parameters.get(21);
+        var parameterNotNull = (RSIParameterContainer)parameters.get(22);
         assertEquals(candles.size(), parameters.size());
-        assertNull(parameterNull.getLongMA());
-        assertNotNull(parameterNotNull.getLongMA());
+        assertNull(parameterNull.getRSI());
+        assertNotNull(parameterNotNull.getRSI());
     }
 
     @Test
@@ -117,16 +117,16 @@ class StrategyRSIUseCaseImplTest extends BaseTest {
         Instant to = LocalDate.of(2023, 1, 2).atStartOfDay(ZoneId.systemDefault()).toInstant();
         Instant from = to.minus(Duration.ofDays(1));
 
-        List<CandleData> mockCandles = createCandlesDataFake.createCandles(30);
+        List<CandleData> mockCandles = createCandlesDataFake.createCandles(31);
         when(clientMock.getHistoricalCandlesAPI(from, to, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN))
                 .thenReturn(mockCandles);
 
         List<CandleData> candles = clientMock.getHistoricalCandlesAPI(from, to, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN);
         List<List<CandleData>> LstCandleData = new ArrayList<>();
-        LstCandleData.add(mockCandles.subList(0, 20));
-        strategyRSIUseCaseMock.initializeExtraCandlesThroughFactory(mockCandles.subList(0, 20));
-        LstCandleData.add(mockCandles.subList(20, 30));
-        when(candlesSeparationAndInitiationMock.initiateCandlesProperly(candles, mockCandles.subList(0, 20), 20, from, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN))
+        LstCandleData.add(mockCandles.subList(0, 21));
+        strategyRSIUseCaseMock.initializeExtraCandlesThroughFactory(mockCandles.subList(0, 21));
+        LstCandleData.add(mockCandles.subList(21, 30));
+        when(candlesSeparationAndInitiationMock.initiateCandlesProperly(candles, mockCandles.subList(0, 21), 21, from, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN))
                 .thenReturn(LstCandleData);
 
         List<ParameterContainer> parameters = strategyRSIUseCaseMock.getStrategyParametersForCandles(candles, from, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN);
