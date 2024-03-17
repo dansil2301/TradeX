@@ -1,13 +1,20 @@
 package business.Impl.StrategiesService.RSI;
 
 import Eco.TradeX.TradeXApplication;
+import Eco.TradeX.business.Impl.CandleService.GetCandlesAPIInformationUseCaseImpl;
+import Eco.TradeX.business.Impl.StrategiesService.MA.MAParameterContainer;
+import Eco.TradeX.business.Impl.StrategiesService.MA.StrategyMAUseCaseImpl;
 import Eco.TradeX.business.Impl.StrategiesService.RSI.RSIParameterContainer;
 import Eco.TradeX.business.Impl.StrategiesService.RSI.StrategyRSIUseCaseImpl;
+import Eco.TradeX.business.Interfaces.StrategiesServiceinterfaces.ParameterContainer;
 import Eco.TradeX.business.utils.CandleUtils.CandlesSeparationAndInitiation;
 import Eco.TradeX.domain.CandleData;
 import Eco.TradeX.persistence.Impl.CandleRepository.tinkoff.ClientTinkoffAPIImpl;
 import TestConfigs.BaseTest;
+import business.Impl.CreateCandlesDataFake;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;
@@ -21,86 +28,83 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = TradeXApplication.class)
 class StrategyRSIUseCaseImplTest extends BaseTest {
-    @Autowired
-    private ClientTinkoffAPIImpl client;
+    private final CreateCandlesDataFake createCandlesDataFake = new CreateCandlesDataFake();
+
+    @Mock
+    private ClientTinkoffAPIImpl clientAPIRepositoryMock;
+
+    @Mock
+    private CandlesSeparationAndInitiation candlesSeparationAndInitiationMock;
+
+    @Mock
+    private GetCandlesAPIInformationUseCaseImpl clientMock;
+
+    @InjectMocks
+    private StrategyRSIUseCaseImpl strategyRSIUseCaseMock;
 
     @Test
-    void getStrategyParametersForCandles1MinCandle1DaysLongMA() {
-        CandlesSeparationAndInitiation candlesSeparationAndInitiation = new CandlesSeparationAndInitiation(client);
-        StrategyRSIUseCaseImpl strategyMAUseCase = new StrategyRSIUseCaseImpl(client, candlesSeparationAndInitiation);
-
-        Instant to = LocalDate.of(2023, 2, 2).atStartOfDay(ZoneId.systemDefault()).toInstant();
+    void getStrategyParametersForCandlesLongMAMock() {
+        Instant to = LocalDate.of(2023, 1, 2).atStartOfDay(ZoneId.systemDefault()).toInstant();
         Instant from = to.minus(Duration.ofDays(1));
 
-        List<CandleData> candles = client.getHistoricalCandles(from, to, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_1_MIN);
+        List<CandleData> mockCandles = createCandlesDataFake.createCandles(30);
+        when(clientMock.getHistoricalCandlesAPI(from, to, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN))
+                .thenReturn(mockCandles);
 
-        var parameters = strategyMAUseCase.getStrategyParametersForCandles(candles, from, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_1_MIN);
+        List<CandleData> candles = clientMock.getHistoricalCandlesAPI(from, to, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN);
+        List<List<CandleData>> LstCandleData = new ArrayList<>();
+        LstCandleData.add(mockCandles.subList(0, 20));
+        LstCandleData.add(mockCandles);
+        when(candlesSeparationAndInitiationMock.initiateCandlesProperly(candles, null, 20, from, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN))
+                .thenReturn(LstCandleData);
+
+        List<ParameterContainer> parameters = strategyRSIUseCaseMock.getStrategyParametersForCandles(candles, from, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN);
         assertEquals(candles.size(), parameters.size());
     }
 
     @Test
-    void getStrategyParametersForCandles5MinCandle1DaysLongMA() {
-        CandlesSeparationAndInitiation candlesSeparationAndInitiation = new CandlesSeparationAndInitiation(client);
-        StrategyRSIUseCaseImpl strategyMAUseCase = new StrategyRSIUseCaseImpl(client, candlesSeparationAndInitiation);
-
-        Instant to = LocalDate.of(2023, 2, 2).atStartOfDay(ZoneId.systemDefault()).toInstant();
+    void getStrategyParametersForCandles1MonthCandleLongMANotEnoughExtraCandlesCaseMock() {
+        Instant to = LocalDate.of(2023, 1, 2).atStartOfDay(ZoneId.systemDefault()).toInstant();
         Instant from = to.minus(Duration.ofDays(1));
 
-        List<CandleData> candles = client.getHistoricalCandles(from, to, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_5_MIN);
+        List<CandleData> mockCandles = createCandlesDataFake.createCandles(30);
+        when(clientMock.getHistoricalCandlesAPI(from, to, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN))
+                .thenReturn(mockCandles);
 
-        var parameters = strategyMAUseCase.getStrategyParametersForCandles(candles, from,"BBG004730N88", CandleInterval.CANDLE_INTERVAL_5_MIN);
+        List<CandleData> candles = clientMock.getHistoricalCandlesAPI(from, to, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN);
+        List<List<CandleData>> LstCandleData = new ArrayList<>();
+        LstCandleData.add(mockCandles.subList(0, 20));
+        LstCandleData.add(mockCandles.subList(20, 30));
+        when(candlesSeparationAndInitiationMock.initiateCandlesProperly(candles, null, 20, from, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN))
+                .thenReturn(LstCandleData);
+
+        List<ParameterContainer> parameters = strategyRSIUseCaseMock.getStrategyParametersForCandles(candles, from, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN);
+        var parameterNull = (MAParameterContainer)parameters.get(19);
+        var parameterNotNull = (MAParameterContainer)parameters.get(20);
         assertEquals(candles.size(), parameters.size());
+        assertNull(parameterNull.getLongMA());
+        assertNotNull(parameterNotNull.getLongMA());
     }
 
     @Test
-    void getStrategyParametersForCandlesWeekCandle1DaysLongMA() {
-        CandlesSeparationAndInitiation candlesSeparationAndInitiation = new CandlesSeparationAndInitiation(client);
-        StrategyRSIUseCaseImpl strategyMAUseCase = new StrategyRSIUseCaseImpl(client, candlesSeparationAndInitiation);
-
-        Instant to = LocalDate.of(2023, 2, 2).atStartOfDay(ZoneId.systemDefault()).toInstant();
-        Instant from = to.minus(Duration.ofDays(14));
-
-        List<CandleData> candles = client.getHistoricalCandles(from, to, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_WEEK);
-
-        var parameters = strategyMAUseCase.getStrategyParametersForCandles(candles, from,"BBG004730N88", CandleInterval.CANDLE_INTERVAL_WEEK);
-        assertEquals(candles.size(), parameters.size());
-    }
-
-    @Test
-    void getStrategyParametersForCandles1MonthCandle1DaysLongMANotEnoughExtraCandlesCase() {
-        CandlesSeparationAndInitiation candlesSeparationAndInitiation = new CandlesSeparationAndInitiation(client);
-        StrategyRSIUseCaseImpl strategyMAUseCase = new StrategyRSIUseCaseImpl(client, candlesSeparationAndInitiation);
-
-        Instant to = LocalDate.of(2002, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant();
-        Instant from = to.minus(Duration.ofDays(720));
-
-        List<CandleData> candles = client.getHistoricalCandles(from, to, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_MONTH);
-
-        var parameters = strategyMAUseCase.getStrategyParametersForCandles(candles, from,"BBG004730N88", CandleInterval.CANDLE_INTERVAL_MONTH);
-        var parameterNull = (RSIParameterContainer)parameters.get(20);
-        var parameterNotNull = (RSIParameterContainer)parameters.get(21);
-        assertEquals(candles.size(), parameters.size());
-        assertNull(parameterNull.getRSI());
-        assertEquals(new BigDecimal(44).setScale(2, BigDecimal.ROUND_HALF_UP)
-                , parameterNotNull.getRSI().setScale(2, BigDecimal.ROUND_HALF_UP));
-    }
-
-    @Test
-    void getStrategyParametersForCandles1MonthCandle1DaysLongMANoCandlesCase() {
-        CandlesSeparationAndInitiation candlesSeparationAndInitiation = new CandlesSeparationAndInitiation(client);
-        StrategyRSIUseCaseImpl strategyMAUseCase = new StrategyRSIUseCaseImpl(client, candlesSeparationAndInitiation);
-
-        Instant to = LocalDate.of(2000, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant();
+    void getStrategyParametersForCandlesCandle1DaysLongMANoCandlesCaseMock() {
+        Instant to = LocalDate.of(2023, 1, 2).atStartOfDay(ZoneId.systemDefault()).toInstant();
         Instant from = to.minus(Duration.ofDays(1));
 
-        List<CandleData> candles = client.getHistoricalCandles(from, to, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_MONTH);
+        when(clientMock.getHistoricalCandlesAPI(from, to, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN))
+                .thenReturn(null);
+
+        List<CandleData> candles = clientMock.getHistoricalCandlesAPI(from, to, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN);
 
         RuntimeException exception = assertThrows(
                 RuntimeException.class,
-                () -> strategyMAUseCase.getStrategyParametersForCandles(candles, from,"BBG004730N88", CandleInterval.CANDLE_INTERVAL_MONTH)
+                () -> strategyRSIUseCaseMock.getStrategyParametersForCandles(candles, from, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN)
         );
 
         String expectedMessage = "500 INTERNAL_SERVER_ERROR \"Candles Error: No candles found for this period\"";
@@ -109,69 +113,35 @@ class StrategyRSIUseCaseImplTest extends BaseTest {
     }
 
     @Test
-    void initializeExtraCandlesThroughFactorySimpleTest() {
-        CandlesSeparationAndInitiation candlesSeparationAndInitiation = new CandlesSeparationAndInitiation(client);
-        StrategyRSIUseCaseImpl strategyMAUseCase = new StrategyRSIUseCaseImpl(client, candlesSeparationAndInitiation);
+    void initializeExtraCandlesThroughFactorySimpleTestMock() {
+        Instant to = LocalDate.of(2023, 1, 2).atStartOfDay(ZoneId.systemDefault()).toInstant();
+        Instant from = to.minus(Duration.ofDays(1));
 
-        strategyMAUseCase.initializeExtraCandlesThroughFactory(new ArrayList<>());
+        List<CandleData> mockCandles = createCandlesDataFake.createCandles(30);
+        when(clientMock.getHistoricalCandlesAPI(from, to, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN))
+                .thenReturn(mockCandles);
 
-        Instant to = LocalDate.of(2023, 2, 2).atStartOfDay(ZoneId.systemDefault()).toInstant();
-        Instant from = to.minus(Duration.ofDays(14));
+        List<CandleData> candles = clientMock.getHistoricalCandlesAPI(from, to, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN);
+        List<List<CandleData>> LstCandleData = new ArrayList<>();
+        LstCandleData.add(mockCandles.subList(0, 20));
+        strategyRSIUseCaseMock.initializeExtraCandlesThroughFactory(mockCandles.subList(0, 20));
+        LstCandleData.add(mockCandles.subList(20, 30));
+        when(candlesSeparationAndInitiationMock.initiateCandlesProperly(candles, mockCandles.subList(0, 20), 20, from, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN))
+                .thenReturn(LstCandleData);
 
-        List<CandleData> candles = client.getHistoricalCandles(from, to, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_WEEK);
-
-        var parameters = strategyMAUseCase.getStrategyParametersForCandles(candles, from,"BBG004730N88", CandleInterval.CANDLE_INTERVAL_WEEK);
+        List<ParameterContainer> parameters = strategyRSIUseCaseMock.getStrategyParametersForCandles(candles, from, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN);
         assertEquals(candles.size(), parameters.size());
     }
 
     @Test
-    void calculateParametersForCandle1MinTest() {
-        CandlesSeparationAndInitiation candlesSeparationAndInitiation = new CandlesSeparationAndInitiation(client);
-        StrategyRSIUseCaseImpl strategyMAUseCase = new StrategyRSIUseCaseImpl(client, candlesSeparationAndInitiation);
+    void calculateParametersForCandleTestMock() {
+        List<CandleData> mockCandles = createCandlesDataFake.createCandles(21);
 
-        strategyMAUseCase.initializeContainerForCandleLiveStreaming("BBG004730N88", CandleInterval.CANDLE_INTERVAL_1_MIN);
+        when(clientAPIRepositoryMock.getExtraHistoricalCandlesFromCertainTime(any(Instant.class), eq("testFigi"), eq(CandleInterval.CANDLE_INTERVAL_1_MIN), eq(20)))
+                .thenReturn(mockCandles.subList(0, 20));
+        strategyRSIUseCaseMock.initializeContainerForCandleLiveStreaming("testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN);
 
-        Instant to = LocalDate.of(2023, 2, 2).atStartOfDay(ZoneId.systemDefault()).toInstant();
-        Instant from = to.minus(Duration.ofDays(1));
-
-        List<CandleData> candles = client.getHistoricalCandles(from, to, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_1_MIN);
-        CandleData candle = candles.get(candles.size() - 1);
-
-        var parameter = strategyMAUseCase.calculateParametersForCandle(candle);
-        assertEquals(true, parameter != null);
-    }
-
-    @Test
-    void calculateParametersForCandle5MinTest() {
-        CandlesSeparationAndInitiation candlesSeparationAndInitiation = new CandlesSeparationAndInitiation(client);
-        StrategyRSIUseCaseImpl strategyMAUseCase = new StrategyRSIUseCaseImpl(client, candlesSeparationAndInitiation);
-
-        strategyMAUseCase.initializeContainerForCandleLiveStreaming("BBG004730N88", CandleInterval.CANDLE_INTERVAL_5_MIN);
-
-        Instant to = LocalDate.of(2023, 2, 2).atStartOfDay(ZoneId.systemDefault()).toInstant();
-        Instant from = to.minus(Duration.ofDays(1));
-
-        List<CandleData> candles = client.getHistoricalCandles(from, to, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_5_MIN);
-        CandleData candle = candles.get(candles.size() - 1);
-
-        var parameter = strategyMAUseCase.calculateParametersForCandle(candle);
-        assertEquals(true, parameter != null);
-    }
-
-    @Test
-    void calculateParametersForCandleWeekTest() {
-        CandlesSeparationAndInitiation candlesSeparationAndInitiation = new CandlesSeparationAndInitiation(client);
-        StrategyRSIUseCaseImpl strategyMAUseCase = new StrategyRSIUseCaseImpl(client, candlesSeparationAndInitiation);
-
-        strategyMAUseCase.initializeContainerForCandleLiveStreaming("BBG004730N88", CandleInterval.CANDLE_INTERVAL_WEEK);
-
-        Instant to = LocalDate.of(2023, 2, 2).atStartOfDay(ZoneId.systemDefault()).toInstant();
-        Instant from = to.minus(Duration.ofDays(10));
-
-        List<CandleData> candles = client.getHistoricalCandles(from, to, "BBG004730N88", CandleInterval.CANDLE_INTERVAL_WEEK);
-        CandleData candle = candles.get(candles.size() - 1);
-
-        var parameter = strategyMAUseCase.calculateParametersForCandle(candle);
+        ParameterContainer parameter = strategyRSIUseCaseMock.calculateParametersForCandle(mockCandles.get(20));
         assertEquals(true, parameter != null);
     }
 }

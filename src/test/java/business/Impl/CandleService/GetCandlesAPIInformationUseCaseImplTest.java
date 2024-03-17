@@ -6,6 +6,7 @@ import Eco.TradeX.domain.CandleData;
 import Eco.TradeX.persistence.Impl.CandleRepository.tinkoff.ClientTinkoffAPIImpl;
 import Eco.TradeX.persistence.Interfaces.CandleRepositoryInterfaces.ClientAPIRepository;
 import TestConfigs.BaseTest;
+import business.Impl.CreateCandlesDataFake;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -28,46 +29,24 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = TradeXApplication.class)
 class GetCandlesAPIInformationUseCaseImplTest extends BaseTest {
-    private static final Random random = new Random();
+    private final CreateCandlesDataFake createCandlesDataFake = new CreateCandlesDataFake();
 
     @Mock
     ClientTinkoffAPIImpl clientAPIRepositoryMock;
 
     @InjectMocks
-    private GetCandlesAPIInformationUseCaseImpl client;
-
-    private BigDecimal generateRandomBigDecimal() {
-        return BigDecimal.valueOf(random.nextDouble() * 100);
-    }
-
-    private List<CandleData> createCandles() {
-        List<CandleData> candlesFake = new ArrayList<>();
-
-        for (int i = 0; i < 30; i++) {
-            CandleData candleFake = CandleData.builder()
-                    .low(generateRandomBigDecimal())
-                    .high(generateRandomBigDecimal())
-                    .open(generateRandomBigDecimal())
-                    .close(generateRandomBigDecimal())
-                    .time(LocalDate.of(2023, 1, 2).atStartOfDay(ZoneId.systemDefault()).toInstant())
-                    .volume(450)
-                    .build();
-            candlesFake.add(candleFake);
-        }
-
-        return candlesFake;
-    }
+    private GetCandlesAPIInformationUseCaseImpl clientMock;
 
     @Test
     void getHistoricalCandlesAPIMock() {
         Instant to = LocalDate.of(2023, 1, 2).atStartOfDay(ZoneId.systemDefault()).toInstant();
         Instant from = to.minus(Duration.ofDays(1));
 
-        List<CandleData> mockCandles = createCandles();
+        List<CandleData> mockCandles = createCandlesDataFake.createCandles(30);
         when(clientAPIRepositoryMock.getHistoricalCandles(from, to, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN))
                 .thenReturn(mockCandles);
 
-        List<CandleData> candles = client.getHistoricalCandlesAPI(from, to, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN);
+        List<CandleData> candles = clientMock.getHistoricalCandlesAPI(from, to, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN);
         assertEquals(30, candles.size());
     }
 
@@ -79,7 +58,7 @@ class GetCandlesAPIInformationUseCaseImplTest extends BaseTest {
         when(clientAPIRepositoryMock.getHistoricalCandles(from, to, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN))
                 .thenReturn(null);
 
-        List<CandleData> candles = client.getHistoricalCandlesAPI(from, to, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN);
+        List<CandleData> candles = clientMock.getHistoricalCandlesAPI(from, to, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN);
         assertEquals(null, candles);
     }
 
@@ -93,7 +72,7 @@ class GetCandlesAPIInformationUseCaseImplTest extends BaseTest {
 
         RuntimeException exception = assertThrows(
                 RuntimeException.class,
-                () -> client.getHistoricalCandlesAPI(from, to, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN)
+                () -> clientMock.getHistoricalCandlesAPI(from, to, "testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN)
         );
 
         String expectedMessage = "Error";
