@@ -48,9 +48,6 @@ class ClientTinkoffAPIImplTest extends BaseTest {
     @InjectMocks
     ClientTinkoffAPIImpl clientTinkoffAPI;
 
-    @Autowired
-    ClientTinkoffAPIImpl client;
-
     private HistoricCandle createCandlesWithMock(HistoricCandle mockCandle) {
         when(mockCandle.getOpen()).thenAnswer(invocation -> Quotation.newBuilder().setUnits(10).setNano(100000000).build());
         when(mockCandle.getClose()).thenAnswer(invocation -> Quotation.newBuilder().setUnits(10).setNano(100000000).build());
@@ -192,10 +189,6 @@ class ClientTinkoffAPIImplTest extends BaseTest {
 
     @Test
     void getLastAvailableDateTestErrorMock() {
-        Timestamp timestamp2007 = Timestamp.newBuilder()
-                .setSeconds(java.time.Year.of(2007).atDay(1).atStartOfDay(java.time.ZoneOffset.UTC).toEpochSecond())
-                .build();
-
         when(investApiMock.getInstrumentsService()).thenReturn(getInstrumentsServiceMock);
 
         Instrument instrumentMock = mock(Instrument.class);
