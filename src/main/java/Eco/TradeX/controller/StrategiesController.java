@@ -61,4 +61,21 @@ public class StrategiesController {
                 .strategiesParams(parameters)
                 .build());
     }
+
+    @GetMapping("/get-strategy-params-fixed-length-candles")
+    public ResponseEntity<GetStrategiesParametersResponse> getFixedLengthCandles(@RequestParam(value = "from") Instant from,
+                                                                                   @RequestParam(value = "figi") String figi,
+                                                                                   @RequestParam(value = "interval") CandleInterval interval,
+                                                                                   @RequestParam(value = "candleLength") int candleLength,
+                                                                                   @RequestParam(value = "strategiesNames") List<String> strategiesNames) {
+        List<CandleData> candles = getCandlesAPIInformationUseCase.getFixedLengthHistoricalCandlesFromAPI(from, figi, interval, candleLength);
+        List<CandleStrategiesParams> parameters = strategyFactoryUseCase.getCandlesStrategiesParameters(strategiesNames, candles, from, figi, interval);
+        return ResponseEntity.ok().body(GetStrategiesParametersResponse.builder()
+                .to(from)
+                .from(candles.get(0).getTime())
+                .figi(figi)
+                .interval(interval)
+                .strategiesParams(parameters)
+                .build());
+    }
 }

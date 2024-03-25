@@ -22,4 +22,9 @@ public class GetCandlesAPIInformationUseCaseImpl implements GetCandlesAPIInforma
     public List<CandleData> getHistoricalCandlesAPI(Instant _from, Instant _to, String figi, CandleInterval interval) {
         return clientAPIRepository.getHistoricalCandles(_from, _to, figi, interval);
     }
+
+    @Override
+    public List<CandleData> getFixedLengthHistoricalCandlesFromAPI(Instant _from, String figi, CandleInterval interval, int candlesLength) {
+        return clientAPIRepository.getExtraHistoricalCandlesFromCertainTime(_from, figi, interval, candlesLength);
+    }
 }

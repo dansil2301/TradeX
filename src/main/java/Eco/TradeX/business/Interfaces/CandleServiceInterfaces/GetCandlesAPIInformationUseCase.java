@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface GetCandlesAPIInformationUseCase {
     List<CandleData> getHistoricalCandlesAPI(Instant _from, Instant _to, String figi, CandleInterval interval);
+    List<CandleData> getFixedLengthHistoricalCandlesFromAPI(Instant _from, String figi, CandleInterval interval, int candlesLength);
 }
