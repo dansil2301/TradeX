@@ -15,6 +15,7 @@ import java.time.*;
 import java.util.Collections;
 import java.util.List;
 
+import static Eco.TradeX.business.utils.CandleUtils.CandleIntervalConverter.toMaximumFetchPeriod;
 import static Eco.TradeX.business.utils.CandleUtils.CandleIntervalConverter.toSeconds;
 import static ru.tinkoff.piapi.core.utils.MapperUtils.quotationToBigDecimal;
 
@@ -68,38 +69,16 @@ public class ClientTinkoffAPIImpl implements ClientAPIRepository {
         }
     }
 
-    private Boolean checkOpenOrClosedHolidays(Instant from) {
-        Instant january9_2022 = Instant.parse("2022-01-09T00:00:00Z");
-        if (from.isAfter(january9_2022)) {
-            int hour = LocalDateTime.ofInstant(from, ZoneOffset.UTC).getHour();
-            int minute = LocalDateTime.ofInstant(from, ZoneOffset.UTC).getMinute();
-
-            // Check if 'from' is within the night period
-            if ((hour >= 18 || (hour == 17 && minute >= 10)) || (hour <= 9 || (hour == 9 && minute <= 55))) {
-                // 'from' is within the night period
-                return true;
-            }
-        }
-        return false;
-    }
-
     public List<CandleData> getExtraHistoricalCandlesFromCertainTime(Instant _from, String figi, CandleInterval interval, int extraCandlesNeeded){
         Instant from = _from;
         List<CandleData> candles = Collections.emptyList();
-        var stopDate = getLastAvailableDate(figi);
+        Instant stopDate = getLastAvailableDate(figi);
 
         while (candles.size() < extraCandlesNeeded) {
-            int newPeriod = extraCandlesNeeded - candles.size();
-            from = from.minusSeconds((long) toSeconds(interval) * newPeriod);
+            from = from.minusSeconds(toMaximumFetchPeriod(interval));
 
-            ZonedDateTime zonedDateTime = from.atZone(ZoneOffset.UTC);
-            int hourFrom = zonedDateTime.getHour(); int minuteFrom = zonedDateTime.getMinute();
             if (from.compareTo(stopDate) < 0) {
                 break;
-            }
-            if (((hourFrom >= 22 || (hourFrom == 21 && minuteFrom >= 50)) || (hourFrom <= 7 || (hourFrom == 7 && minuteFrom <= 55)) ||
-                    checkOpenOrClosedHolidays(from)) && (toSeconds(interval) < 86400)) {
-                continue;
             }
 
             candles = getHistoricalCandles(from, _from, figi, interval);
