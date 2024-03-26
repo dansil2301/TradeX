@@ -2,27 +2,35 @@
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 
 Container(singlePage, "Single-page application", "Container: Java Script & React", "Provides market data visualization and user data management")
-System_Boundary(c2, "") {
+System_Boundary(c3, "") {
     Container(candleController, "Candle Controller", "Component: Spring Rest Controller", "")
     Container(strategyController, "Strategy Controller", "Component: Spring Rest Controller", "")
+    Container(tradersController, "Trader Controller", "Component: Spring Rest Controller", "")
 
     Container(strategyComponent, "Strategy Factory Component", "Component: Spring Bean", "")
     Container(candleComponent, "Candle Component", "Component: Spring Bean", "")
+    Container(traderComponent, "Trader Component", "Component: Spring Bean", "")
 
     Container(candleRepository, "Candle Repository", "Component: Spring Repository", "")
+    Container(traderRepository, "trader Repository", "Component: Spring Repository", "")
 }
 Container(db, "DataBase", "Container: MySQL", "stores users and market candles")
+Container(tinkoffAPI, "Tinkoff API", "Container: 3d party API", "stores market candles")
 
 
 Rel(singlePage, candleController, "Makes API calls to", "HTTP")
 Rel(singlePage, strategyController, "Makes API calls to", "HTTP")
+Rel(singlePage, tradersController, "Makes API calls to", "HTTP")
 
 Rel(strategyController, strategyComponent, "Uses")
 Rel(strategyController, candleComponent, "Uses")
 Rel(candleController, candleComponent, "Uses")
+Rel(tradersController, traderComponent, "Uses")
 
 Rel(strategyComponent, candleRepository, "Uses")
 Rel(candleComponent, candleRepository, "Uses")
+Rel(traderComponent, traderRepository, "Uses")
 
-Rel(candleRepository, db, "Gets market data from", "HTTPS")
+Rel(candleRepository, tinkoffAPI, "Gets market data from", "HTTPS")
+Rel(traderRepository, db, "Gets user data from", "HTTPS")
 @enduml
