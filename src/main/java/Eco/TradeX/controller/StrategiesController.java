@@ -35,7 +35,7 @@ public class StrategiesController {
                                                                                    @RequestParam(value = "interval") CandleInterval interval,
                                                                                    @RequestParam(value = "strategiesNames") List<String> strategiesNames) {
         List<CandleData> candles = getCandlesAPIInformationUseCase.getHistoricalCandlesAPI(from, to, figi, interval);
-        List<CandleStrategiesParams> parameters = strategyFactoryUseCase.getCandlesStrategiesParameters(strategiesNames, candles, from, figi, interval);
+        List<CandleStrategiesParams> parameters = strategyFactoryUseCase.getCandlesStrategiesParameters(strategiesNames, candles, candles.get(0).getTime(), figi, interval);
         return ResponseEntity.ok().body(GetStrategiesParametersResponse.builder()
                 .to(to)
                 .from(from)
@@ -69,7 +69,7 @@ public class StrategiesController {
                                                                                    @RequestParam(value = "candleLength") int candleLength,
                                                                                    @RequestParam(value = "strategiesNames") List<String> strategiesNames) {
         List<CandleData> candles = getCandlesAPIInformationUseCase.getFixedLengthHistoricalCandlesFromAPI(from, figi, interval, candleLength);
-        List<CandleStrategiesParams> parameters = strategyFactoryUseCase.getCandlesStrategiesParameters(strategiesNames, candles, from, figi, interval);
+        List<CandleStrategiesParams> parameters = strategyFactoryUseCase.getCandlesStrategiesParameters(strategiesNames, candles, candles.get(0).getTime(), figi, interval);
         return ResponseEntity.ok().body(GetStrategiesParametersResponse.builder()
                 .to(from)
                 .from(candles.get(0).getTime())

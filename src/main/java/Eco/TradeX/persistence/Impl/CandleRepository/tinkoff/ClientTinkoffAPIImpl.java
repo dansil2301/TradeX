@@ -70,12 +70,12 @@ public class ClientTinkoffAPIImpl implements ClientAPIRepository {
 
     public List<CandleData> getExtraHistoricalCandlesFromCertainTime(Instant _from, String figi, CandleInterval interval, int extraCandlesNeeded){
         Instant from = _from;
-        Instant to;
+        Instant to = null;
         List<CandleData> candles = new ArrayList<>();
         Instant stopDate = getLastAvailableDate(figi);
 
         while (candles.size() < extraCandlesNeeded) {
-            to = from.minusSeconds(toSeconds(interval));
+            to = to == null ? from : from.minusSeconds(toSeconds(interval));
             from = from.minusSeconds(toMaximumFetchPeriod(interval));
 
             if (from.compareTo(stopDate) < 0) {
@@ -83,7 +83,7 @@ public class ClientTinkoffAPIImpl implements ClientAPIRepository {
             }
 
             candles.addAll(0, getHistoricalCandles(from, to, figi, interval));
-            candles = (candles == null) ? new ArrayList<>() : candles;
+            candles = candles == null ? new ArrayList<>() : candles;
         }
 
         if (extraCandlesNeeded != candles.size()) {
@@ -96,7 +96,6 @@ public class ClientTinkoffAPIImpl implements ClientAPIRepository {
     // todo build for future socket
     @Override
     public Candle getStreamServiceCandle(String figi, CandleInterval interval) {
-
         return null;
     }
 }
