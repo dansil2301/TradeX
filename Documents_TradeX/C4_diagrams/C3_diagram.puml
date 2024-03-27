@@ -7,12 +7,12 @@ System_Boundary(c3, "") {
     Container(strategyController, "Strategy Controller", "Component: Spring Rest Controller", "")
     Container(tradersController, "Trader Controller", "Component: Spring Rest Controller", "")
 
-    Container(strategyComponent, "Strategy Factory Component", "Component: Spring Bean", "")
+    Container(strategyComponent, "Strategy Component", "Component: Spring Bean", "")
     Container(candleComponent, "Candle Component", "Component: Spring Bean", "")
     Container(traderComponent, "Trader Component", "Component: Spring Bean", "")
 
     Container(candleRepository, "Candle Repository", "Component: Spring Repository", "")
-    Container(traderRepository, "trader Repository", "Component: Spring Repository", "")
+    Container(traderRepository, "Trader Repository", "Component: Spring Repository", "")
 }
 Container(db, "DataBase", "Container: MySQL", "stores users and market candles")
 Container(tinkoffAPI, "Tinkoff API", "Container: 3d party API", "stores market candles")
