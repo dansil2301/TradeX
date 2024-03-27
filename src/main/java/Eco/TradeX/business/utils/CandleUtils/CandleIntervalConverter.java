@@ -34,9 +34,9 @@ public class CandleIntervalConverter {
             case CANDLE_INTERVAL_HOUR -> 604800;
             case CANDLE_INTERVAL_2_HOUR -> 2629746;
             case CANDLE_INTERVAL_4_HOUR -> 604800;
-            case CANDLE_INTERVAL_DAY -> 604800;
-            case CANDLE_INTERVAL_WEEK -> 2629746;
-            case CANDLE_INTERVAL_MONTH -> 2629746;
+            case CANDLE_INTERVAL_DAY -> 31536000;
+            case CANDLE_INTERVAL_WEEK -> 31536000;
+            case CANDLE_INTERVAL_MONTH -> 31536000;
             default -> 80000;
         };
     }

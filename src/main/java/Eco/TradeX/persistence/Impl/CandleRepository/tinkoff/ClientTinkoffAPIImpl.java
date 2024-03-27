@@ -12,8 +12,7 @@ import ru.tinkoff.piapi.core.InstrumentsService;
 import ru.tinkoff.piapi.core.InvestApi;
 
 import java.time.*;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static Eco.TradeX.business.utils.CandleUtils.CandleIntervalConverter.toMaximumFetchPeriod;
 import static Eco.TradeX.business.utils.CandleUtils.CandleIntervalConverter.toSeconds;
@@ -71,18 +70,20 @@ public class ClientTinkoffAPIImpl implements ClientAPIRepository {
 
     public List<CandleData> getExtraHistoricalCandlesFromCertainTime(Instant _from, String figi, CandleInterval interval, int extraCandlesNeeded){
         Instant from = _from;
-        List<CandleData> candles = Collections.emptyList();
+        Instant to;
+        List<CandleData> candles = new ArrayList<>();
         Instant stopDate = getLastAvailableDate(figi);
 
         while (candles.size() < extraCandlesNeeded) {
+            to = from.minusSeconds(toSeconds(interval));
             from = from.minusSeconds(toMaximumFetchPeriod(interval));
 
             if (from.compareTo(stopDate) < 0) {
                 break;
             }
 
-            candles = getHistoricalCandles(from, _from, figi, interval);
-            candles = (candles == null) ? Collections.emptyList() : candles;
+            candles.addAll(0, getHistoricalCandles(from, to, figi, interval));
+            candles = (candles == null) ? new ArrayList<>() : candles;
         }
 
         if (extraCandlesNeeded != candles.size()) {
