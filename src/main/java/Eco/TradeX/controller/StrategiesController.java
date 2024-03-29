@@ -67,8 +67,14 @@ public class StrategiesController {
                                                                                    @RequestParam(value = "figi") String figi,
                                                                                    @RequestParam(value = "interval") CandleInterval interval,
                                                                                    @RequestParam(value = "candleLength") int candleLength,
-                                                                                   @RequestParam(value = "strategiesNames") List<String> strategiesNames) {
-        List<CandleData> candles = getCandlesAPIInformationUseCase.getFixedLengthHistoricalCandlesFromAPI(from, figi, interval, candleLength);
+                                                                                   @RequestParam(value = "strategiesNames") List<String> strategiesNames,
+                                                                                   @RequestParam(value = "isToFuture", required = false) Boolean isToFuture ) {
+        List<CandleData> candles;
+        if (isToFuture == null || !isToFuture)
+        { candles = getCandlesAPIInformationUseCase.getFixedLengthHistoricalCandlesFromAPI(from, figi, interval, candleLength); }
+        else
+        { candles = getCandlesAPIInformationUseCase.getFixedLengthHistoricalCandlesFromAPIFuture(from, figi, interval, candleLength); }
+
         List<CandleStrategiesParams> parameters = strategyFactoryUseCase.getCandlesStrategiesParameters(strategiesNames, candles, candles.get(0).getTime(), figi, interval);
         return ResponseEntity.ok().body(GetStrategiesParametersResponse.builder()
                 .to(from)

@@ -68,7 +68,7 @@ public class ClientTinkoffAPIImpl implements ClientAPIRepository {
         }
     }
 
-    public List<CandleData> getExtraHistoricalCandlesFromCertainTime(Instant _from, String figi, CandleInterval interval, int extraCandlesNeeded){
+    public List<CandleData> getExtraHistoricalCandlesFromCertainTime(Instant _from, String figi, CandleInterval interval, int extraCandlesNeeded) {
         Instant from = _from;
         Instant to = null;
         List<CandleData> candles = new ArrayList<>();
@@ -83,6 +83,31 @@ public class ClientTinkoffAPIImpl implements ClientAPIRepository {
             }
 
             candles.addAll(0, getHistoricalCandles(from, to, figi, interval));
+            candles = candles == null ? new ArrayList<>() : candles;
+        }
+
+        if (extraCandlesNeeded != candles.size()) {
+            candles = candles.subList(Math.max(candles.size() - extraCandlesNeeded, 0), candles.size());
+        }
+
+        return candles;
+    }
+
+    public List<CandleData> getExtraCandlesFromCertainTimeToFuture(Instant _from, String figi, CandleInterval interval, int extraCandlesNeeded) {
+        Instant from = null;
+        Instant to = _from;
+        List<CandleData> candles = new ArrayList<>();
+        Instant stopDate = Instant.now();
+
+        while (candles.size() < extraCandlesNeeded) {
+            from = to.plusSeconds(toSeconds(interval));
+            to = to.plusSeconds(toMaximumFetchPeriod(interval));
+
+            if (to.compareTo(stopDate) > 0) {
+                break;
+            }
+
+            candles.addAll(getHistoricalCandles(from, to, figi, interval));
             candles = candles == null ? new ArrayList<>() : candles;
         }
 
