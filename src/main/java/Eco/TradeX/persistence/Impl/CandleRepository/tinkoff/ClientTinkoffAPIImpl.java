@@ -78,12 +78,12 @@ public class ClientTinkoffAPIImpl implements ClientAPIRepository {
             to = to == null ? from : from.minusSeconds(toSeconds(interval));
             from = from.minusSeconds(toMaximumFetchPeriod(interval));
 
+            candles.addAll(0, getHistoricalCandles(from, to, figi, interval));
+            candles = candles == null ? new ArrayList<>() : candles;
+
             if (from.compareTo(stopDate) < 0) {
                 break;
             }
-
-            candles.addAll(0, getHistoricalCandles(from, to, figi, interval));
-            candles = candles == null ? new ArrayList<>() : candles;
         }
 
         if (extraCandlesNeeded != candles.size()) {
@@ -103,12 +103,12 @@ public class ClientTinkoffAPIImpl implements ClientAPIRepository {
             from = to.plusSeconds(toSeconds(interval));
             to = to.plusSeconds(toMaximumFetchPeriod(interval));
 
+            candles.addAll(getHistoricalCandles(from, to, figi, interval));
+            candles = candles == null ? new ArrayList<>() : candles;
+
             if (to.compareTo(stopDate) > 0) {
                 break;
             }
-
-            candles.addAll(getHistoricalCandles(from, to, figi, interval));
-            candles = candles == null ? new ArrayList<>() : candles;
         }
 
         if (extraCandlesNeeded != candles.size()) {
