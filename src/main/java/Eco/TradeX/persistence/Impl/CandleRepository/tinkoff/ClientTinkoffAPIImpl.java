@@ -112,7 +112,7 @@ public class ClientTinkoffAPIImpl implements ClientAPIRepository {
         }
 
         if (extraCandlesNeeded != candles.size()) {
-            candles = candles.subList(Math.max(candles.size() - extraCandlesNeeded, 0), candles.size());
+            candles = candles.subList(0, extraCandlesNeeded);
         }
 
         return candles;
