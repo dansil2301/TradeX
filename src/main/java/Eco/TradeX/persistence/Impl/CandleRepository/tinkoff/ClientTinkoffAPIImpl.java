@@ -10,12 +10,15 @@ import Eco.TradeX.persistence.Interfaces.CandleRepositoryInterfaces.ClientAPIRep
 import ru.tinkoff.piapi.contract.v1.*;
 import ru.tinkoff.piapi.core.InstrumentsService;
 import ru.tinkoff.piapi.core.InvestApi;
+import ru.tinkoff.piapi.core.stream.StreamProcessor;
 
 import java.time.*;
 import java.util.*;
+import java.util.function.Consumer;
 
 import static Eco.TradeX.business.utils.CandleUtils.CandleIntervalConverter.toMaximumFetchPeriod;
 import static Eco.TradeX.business.utils.CandleUtils.CandleIntervalConverter.toSeconds;
+import static Eco.TradeX.persistence.Utils.ConvertToLocalCandleEntity.convertToCandlesData;
 import static ru.tinkoff.piapi.core.utils.MapperUtils.quotationToBigDecimal;
 
 @Repository
@@ -38,14 +41,7 @@ public class ClientTinkoffAPIImpl implements ClientAPIRepository {
                 return null;
             }
 
-            return candles.stream().map(originalCandle -> CandleData.builder()
-                    .open(quotationToBigDecimal(originalCandle.getOpen()))
-                    .close(quotationToBigDecimal(originalCandle.getClose()))
-                    .high(quotationToBigDecimal(originalCandle.getHigh()))
-                    .low(quotationToBigDecimal(originalCandle.getLow()))
-                    .volume(originalCandle.getVolume())
-                    .time(Instant.ofEpochSecond(originalCandle.getTime().getSeconds(), originalCandle.getTime().getNanos()))
-                    .build()).toList();
+            return convertToCandlesData(candles);
         } catch (Exception e) {
             LOGGER.error("Error fetching historical candles: " + e.getLocalizedMessage());
             throw new CandlesExceptions(e.getMessage());
@@ -119,8 +115,15 @@ public class ClientTinkoffAPIImpl implements ClientAPIRepository {
     }
 
     // todo build for future socket
-    @Override
     public Candle getStreamServiceCandle(String figi, CandleInterval interval) {
+        investApi.getMarketDataStreamService().newStream("candles_stream", processor, onErrorCallback).subscribeCandles(Collections.singletonList(figi));
+
         return null;
     }
+
+    Consumer<Throwable> onErrorCallback = error -> LOGGER.error(error.toString());
+
+    StreamProcessor<MarketDataResponse> processor = response -> {
+
+    };
 }
