@@ -40,7 +40,7 @@ public class GetCandlesAPIInformationUseCaseImpl implements GetCandlesAPIInforma
     }
 
     @Override
-    public void candleStreaming(String figi, StreamProcessor<MarketDataResponse> processor) {
-        candleStream.getStreamServiceCandle(figi, processor);
+    public void candleStreaming(String figi, CandleInterval interval, StreamProcessor<MarketDataResponse> processor) {
+        candleStream.getStreamServiceCandle(figi, interval, processor);
     }
 }

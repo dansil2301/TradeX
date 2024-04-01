@@ -22,7 +22,7 @@ import static Eco.TradeX.business.utils.CandleUtils.PackCandleStrategyParams.pac
 public class StrategyFactoryUseCaseImpl implements StrategyFactoryUseCase {
     private final List<StrategyUseCase> strategies;
     private final ClientAPIRepository clientAPIRepository;
-
+    // todo write two methods for live streaming (initiation and calculation)
     @Override
     public List<String> getStrategiesNames() {
         List<String> names = new ArrayList<>();
