@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import Eco.TradeX.persistence.Interfaces.CandleRepositoryInterfaces.ClientAPIRepository;
 import ru.tinkoff.piapi.contract.v1.*;
-import ru.tinkoff.piapi.core.InstrumentsService;
 import ru.tinkoff.piapi.core.InvestApi;
 import ru.tinkoff.piapi.core.stream.StreamProcessor;
 
@@ -18,8 +17,7 @@ import java.util.function.Consumer;
 
 import static Eco.TradeX.business.utils.CandleUtils.CandleIntervalConverter.toMaximumFetchPeriod;
 import static Eco.TradeX.business.utils.CandleUtils.CandleIntervalConverter.toSeconds;
-import static Eco.TradeX.persistence.Utils.ConvertToLocalCandleEntity.convertToCandlesData;
-import static ru.tinkoff.piapi.core.utils.MapperUtils.quotationToBigDecimal;
+import static Eco.TradeX.business.utils.CandleUtils.ConvertToLocalCandleEntity.convertToCandlesData;
 
 @Repository
 public class ClientTinkoffAPIImpl implements ClientAPIRepository {

@@ -11,7 +11,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
-
 public class TradeXApplication {
 	public static void main(String[] args) {SpringApplication.run(TradeXApplication.class, args);}
 }
