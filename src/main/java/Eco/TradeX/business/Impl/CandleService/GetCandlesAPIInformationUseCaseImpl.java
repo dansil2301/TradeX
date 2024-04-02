@@ -4,6 +4,7 @@ import Eco.TradeX.business.Interfaces.CandleServiceInterfaces.GetCandlesAPIInfor
 import Eco.TradeX.domain.CandleData;
 
 import Eco.TradeX.persistence.Impl.CandleRepository.tinkoff.ClientTinkoffCandleStream;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import Eco.TradeX.persistence.Interfaces.CandleRepositoryInterfaces.ClientAPIRepository;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;
@@ -15,14 +16,10 @@ import java.util.List;
 import java.util.function.Consumer;
 
 @Service
+@AllArgsConstructor
 public class GetCandlesAPIInformationUseCaseImpl implements GetCandlesAPIInformationUseCase {
     private final ClientAPIRepository clientAPIRepository;
     private final ClientTinkoffCandleStream candleStream;
-
-    public GetCandlesAPIInformationUseCaseImpl(ClientTinkoffCandleStream candleStream, ClientAPIRepository clientAPIRepository) {
-        this.clientAPIRepository = clientAPIRepository;
-        this.candleStream = candleStream;
-    }
 
     @Override
     public List<CandleData> getHistoricalCandlesAPI(Instant _from, Instant _to, String figi, CandleInterval interval) {
@@ -40,7 +37,7 @@ public class GetCandlesAPIInformationUseCaseImpl implements GetCandlesAPIInforma
     }
 
     @Override
-    public void candleStreaming(String figi, CandleInterval interval, StreamProcessor<MarketDataResponse> processor) {
-        candleStream.getStreamServiceCandle(figi, interval, processor);
+    public void candleStreaming(String figi, StreamProcessor<MarketDataResponse> processor) {
+        candleStream.getStreamServiceCandle(figi, processor);
     }
 }

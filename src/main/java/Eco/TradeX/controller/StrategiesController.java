@@ -6,7 +6,10 @@ import Eco.TradeX.domain.CandleData;
 import Eco.TradeX.domain.Response.StrategiesResponse.GetStrategiesNamesResponse;
 import Eco.TradeX.domain.Response.StrategiesResponse.GetStrategiesParametersResponse;
 import Eco.TradeX.domain.StrategyParams.CandleStrategiesParams;
+import Eco.TradeX.persistence.Interfaces.CandleRepositoryInterfaces.ClientAPIRepository;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;
@@ -18,6 +21,7 @@ import java.util.List;
 @RequestMapping("/api/strategies")
 @AllArgsConstructor
 public class StrategiesController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(StrategiesController.class);
     private final StrategyFactoryUseCase strategyFactoryUseCase;
     private final GetCandlesAPIInformationUseCase getCandlesAPIInformationUseCase;
 

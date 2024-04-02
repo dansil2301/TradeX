@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static Eco.TradeX.business.utils.CandleUtils.CalculationHelper.calculateAverage;
+import static Eco.TradeX.business.utils.CandleUtils.CandlesIntervalChecker.isCandleSwitchedToNextInterval;
 
 @Service
 public class StrategyRSIUseCaseImpl implements StrategyUseCase {
@@ -44,12 +45,11 @@ public class StrategyRSIUseCaseImpl implements StrategyUseCase {
     }
 
     @Override
-    public void initializeContainerForCandleLiveStreaming(String figi, CandleInterval interval) {
+    public void initializeContainerForCandleLiveStreaming(String figi, CandleInterval interval, Instant now) {
         rsiContainerData = RSIContainerData.builder()
                 .gain(new ArrayList<>())
                 .loss(new ArrayList<>())
                 .build();
-        Instant now = Instant.now();
         List<CandleData> extraCandles = clientAPIRepository.getExtraHistoricalCandlesFromCertainTime(now, figi, interval, extraCandlesNeeded);
         rsiContainerData = initializeContainer(extraCandles);
         prevCandleSaver = extraCandles.get(extraCandles.size() - 1);
@@ -93,9 +93,13 @@ public class StrategyRSIUseCaseImpl implements StrategyUseCase {
     }
 
     @Override
-    public ParameterContainer calculateParametersForCandle(CandleData candle) {
+    public ParameterContainer calculateParametersForCandle(CandleData candle, CandleInterval interval) {
         List<BigDecimal> gainLoss = getGainLossCurrentCandle(prevCandleSaver, candle);
-        rsiContainerData.moveByOne(gainLoss.get(0), gainLoss.get(1));
+
+        if (isCandleSwitchedToNextInterval(prevCandleSaver, candle, interval))
+        { rsiContainerData.moveByOne(gainLoss.get(0), gainLoss.get(1)); }
+        else
+        { rsiContainerData.changeLast(gainLoss.get(0), gainLoss.get(1)); }
 
         prevCandleSaver = candle;
 
@@ -123,6 +127,8 @@ public class StrategyRSIUseCaseImpl implements StrategyUseCase {
 
     public void initializeExtraCandlesThroughFactory(List<CandleData> extraCandles) {
         extraCandlesContainer = extraCandles;
+        prevCandleSaver = extraCandlesContainer.get(extraCandlesContainer.size() - 1);
+        rsiContainerData = initializeContainer(extraCandlesContainer);
     }
 
     private List<ParameterContainer> initParamContainerInExtraCandlesShortageCase(List<ParameterContainer> paramContainer, int fillGaps) {
@@ -154,7 +160,7 @@ public class StrategyRSIUseCaseImpl implements StrategyUseCase {
             paramContainer = initParamContainerInExtraCandlesShortageCase(paramContainer, initialCandlesLen - candles.size());
         }
         for (CandleData candle : candles) {
-            var params = calculateParametersForCandle(candle);
+            var params = calculateParametersForCandle(candle, interval);
             paramContainer.add(params);
         }
 

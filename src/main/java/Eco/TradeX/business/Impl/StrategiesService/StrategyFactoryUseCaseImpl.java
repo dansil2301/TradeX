@@ -7,6 +7,7 @@ import Eco.TradeX.business.exceptions.CandlesExceptions;
 import Eco.TradeX.business.exceptions.StrategyExceptions;
 import Eco.TradeX.domain.CandleData;
 import Eco.TradeX.domain.StrategyParams.CandleStrategiesParams;
+import Eco.TradeX.domain.StrategyParams.StrategyNameParameter;
 import Eco.TradeX.persistence.Interfaces.CandleRepositoryInterfaces.ClientAPIRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ import static Eco.TradeX.business.utils.CandleUtils.PackCandleStrategyParams.pac
 public class StrategyFactoryUseCaseImpl implements StrategyFactoryUseCase {
     private final List<StrategyUseCase> strategies;
     private final ClientAPIRepository clientAPIRepository;
-    // todo write two methods for live streaming (initiation and calculation)
+
     @Override
     public List<String> getStrategiesNames() {
         List<String> names = new ArrayList<>();
@@ -49,13 +50,33 @@ public class StrategyFactoryUseCaseImpl implements StrategyFactoryUseCase {
         else { throw new StrategyExceptions("Some strategy names from the list don't exist"); }
     }
 
-    private void initializeStrategiesExtraCandles(List<StrategyUseCase> strategies, Instant from, String figi, CandleInterval interval) {
-        int biggestExtraCandlesLenNeeded = 0;
+    @Override
+    public void initializeContainerForCandleLiveStreaming(List<String> strategyNames, String figi, CandleInterval interval) {
+        Instant now = Instant.now();
+        List<StrategyUseCase> strategies = getStrategies(strategyNames);
+        initializeStrategiesExtraCandles(strategies, now, figi, interval);
+    }
+
+    @Override
+    public CandleStrategiesParams calculateParametersForCandle(CandleData candle, List<String> strategyNames, CandleInterval interval) {
+        List<StrategyUseCase> strategies = getStrategies(strategyNames);
+        List<StrategyNameParameter> strategyNameParameters = new ArrayList<>();
+
         for (var strategy : strategies) {
-            if (strategy.getExtraCandlesNeeded() > biggestExtraCandlesLenNeeded) {
-                biggestExtraCandlesLenNeeded = strategy.getExtraCandlesNeeded();
-            }
+            strategyNameParameters.add(StrategyNameParameter.builder()
+                            .strategyName(strategy.getStrategyName())
+                            .parameters(strategy.calculateParametersForCandle(candle, interval))
+                            .build());
         }
+
+        return CandleStrategiesParams.builder()
+                .candle(candle)
+                .strategyNameParameters(strategyNameParameters)
+                .build();
+    }
+
+    private void initializeStrategiesExtraCandles(List<StrategyUseCase> strategies, Instant from, String figi, CandleInterval interval) {
+        int biggestExtraCandlesLenNeeded = getBiggestExtraCandlesLenNeeded(strategies);
 
         List<CandleData> extraCandles = clientAPIRepository.getExtraHistoricalCandlesFromCertainTime(from, figi,
                 interval, biggestExtraCandlesLenNeeded);
@@ -64,6 +85,16 @@ public class StrategyFactoryUseCaseImpl implements StrategyFactoryUseCase {
             var subLst = extraCandles.subList(Math.max(extraCandles.size() - strategy.getExtraCandlesNeeded(), 0), extraCandles.size());
             strategy.initializeExtraCandlesThroughFactory(subLst);
         }
+    }
+
+    private int getBiggestExtraCandlesLenNeeded(List<StrategyUseCase> strategies) {
+        int biggestExtraCandlesLenNeeded = 0;
+        for (var strategy : strategies) {
+            if (strategy.getExtraCandlesNeeded() > biggestExtraCandlesLenNeeded) {
+                biggestExtraCandlesLenNeeded = strategy.getExtraCandlesNeeded();
+            }
+        }
+        return biggestExtraCandlesLenNeeded;
     }
 
     @Override

@@ -21,4 +21,12 @@ public class RSIContainerData {
         loss.add(newLoss);
         loss.remove(0);
     }
+
+    public void changeLast(BigDecimal newGain, BigDecimal newLoss) {
+        int lastIndexGain = gain.size() - 1;
+        int lastIndexLoss = loss.size() - 1;
+
+        gain.set(lastIndexGain, newGain);
+        loss.set(lastIndexLoss, newLoss);
+    }
 }

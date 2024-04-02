@@ -22,4 +22,13 @@ public class MAContainerData {
 
         candlesCloseLong = newCandlesCloseLong;
     }
+
+    public void changeLast(BigDecimal newCloseCandle) {
+        List<BigDecimal> newCandlesCloseLong = new ArrayList<>(candlesCloseLong);
+
+        int lastIndex = candlesCloseLong.size() - 1;
+
+        newCandlesCloseLong.set(lastIndex, newCloseCandle);
+        candlesCloseLong = newCandlesCloseLong;
+    }
 }

@@ -9,5 +9,5 @@ import ru.tinkoff.piapi.core.stream.StreamProcessor;
 import java.util.function.Consumer;
 
 public interface ClientCandleStream {
-    void getStreamServiceCandle(String figi, CandleInterval interval, StreamProcessor<MarketDataResponse> processor);
+    void getStreamServiceCandle(String figi, StreamProcessor<MarketDataResponse> processor);
 }

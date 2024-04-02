@@ -18,6 +18,7 @@ import java.util.List;
 import Eco.TradeX.business.Interfaces.StrategiesServiceinterfaces.StrategyUseCase;
 
 import static Eco.TradeX.business.utils.CandleUtils.CalculationHelper.calculateAverage;
+import static Eco.TradeX.business.utils.CandleUtils.CandlesIntervalChecker.isCandleSwitchedToNextInterval;
 
 @Service
 @Primary
@@ -26,6 +27,7 @@ public class StrategyMAUseCaseImpl implements StrategyUseCase {
     private CandlesSeparationAndInitiation candlesSeparationAndInitiation;
     private MAContainerData maContainerData;
     private List<CandleData> extraCandlesContainer;
+    private CandleData prevCandleSaver;
     private final int extraCandlesNeeded;
     private final int longMA = 20;
     private final int shortMA = 5;
@@ -47,10 +49,10 @@ public class StrategyMAUseCaseImpl implements StrategyUseCase {
     }
 
     @Override
-    public void initializeContainerForCandleLiveStreaming(String figi, CandleInterval interval) {
-        Instant now = Instant.now();
+    public void initializeContainerForCandleLiveStreaming(String figi, CandleInterval interval, Instant now) {
         List<CandleData> extraCandles = clientAPIRepository.getExtraHistoricalCandlesFromCertainTime(now, figi, interval, extraCandlesNeeded);
         maContainerData = initializeContainer(extraCandles);
+        prevCandleSaver = extraCandles.get(extraCandles.size() - 1);
     }
 
     private MAContainerData initializeContainer(List<CandleData> extraCandles) {
@@ -66,8 +68,14 @@ public class StrategyMAUseCaseImpl implements StrategyUseCase {
     }
 
     @Override
-    public ParameterContainer calculateParametersForCandle(CandleData candle) {
-        maContainerData.moveByOne(candle.getClose());
+    public ParameterContainer calculateParametersForCandle(CandleData candle, CandleInterval interval) {
+        if (isCandleSwitchedToNextInterval(prevCandleSaver, candle, interval))
+        { maContainerData.moveByOne(candle.getClose()); }
+        else
+        { maContainerData.changeLast(candle.getClose()); }
+
+        prevCandleSaver = candle;
+
         BigDecimal maLongAvg = calculateAverage(maContainerData.getCandlesCloseLong(), RoundingMode.HALF_UP);
         BigDecimal maShortAvg = calculateAverage(maContainerData.getCandlesCloseLong()
                 .subList(maContainerData.getCandlesCloseLong().size() - shortMA - 1, maContainerData.getCandlesCloseLong().size() - 1),
@@ -82,6 +90,8 @@ public class StrategyMAUseCaseImpl implements StrategyUseCase {
     @Override
     public void initializeExtraCandlesThroughFactory(List<CandleData> extraCandles) {
         extraCandlesContainer = extraCandles;
+        prevCandleSaver = extraCandlesContainer.get(extraCandlesContainer.size() - 1);
+        maContainerData = initializeContainer(extraCandlesContainer);
     }
 
     private List<ParameterContainer> initParamContainerInExtraCandlesShortageCase(List<ParameterContainer> paramContainer, int fillGaps) {
@@ -107,13 +117,14 @@ public class StrategyMAUseCaseImpl implements StrategyUseCase {
         candles = newCandlesSep.get(1);
 
         maContainerData = initializeContainer(extraCandlesContainer);
+        prevCandleSaver = extraCandlesContainer.get(extraCandlesContainer.size() - 1);
 
         List<ParameterContainer> paramContainer = new ArrayList<>();
         if (initialCandlesLen != candles.size()) {
             paramContainer = initParamContainerInExtraCandlesShortageCase(paramContainer, initialCandlesLen - candles.size());
         }
         for (CandleData candle : candles) {
-            var params = calculateParametersForCandle(candle);
+            var params = calculateParametersForCandle(candle, interval);
             paramContainer.add(params);
         }
 

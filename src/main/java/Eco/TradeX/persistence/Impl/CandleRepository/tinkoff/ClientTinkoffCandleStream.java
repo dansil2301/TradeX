@@ -25,7 +25,7 @@ public class ClientTinkoffCandleStream implements ClientCandleStream {
     }
 
     @Override
-    public void getStreamServiceCandle(String figi, CandleInterval interval, StreamProcessor<MarketDataResponse> processor) {
+    public void getStreamServiceCandle(String figi, StreamProcessor<MarketDataResponse> processor) {
         Consumer<Throwable> onErrorCallback = error -> LOGGER.info("Tinkoff data stream start error: " + error);
         investApi.getMarketDataStreamService().newStream("candles_stream", processor, onErrorCallback).subscribeCandles(Collections.singletonList(figi));
         LOGGER.info("Tinkoff data stream started");

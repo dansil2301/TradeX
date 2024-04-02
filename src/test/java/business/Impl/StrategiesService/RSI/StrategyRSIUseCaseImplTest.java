@@ -139,9 +139,10 @@ class StrategyRSIUseCaseImplTest extends BaseTest {
 
         when(clientAPIRepositoryMock.getExtraHistoricalCandlesFromCertainTime(any(Instant.class), eq("testFigi"), eq(CandleInterval.CANDLE_INTERVAL_1_MIN), eq(21)))
                 .thenReturn(mockCandles.subList(0, 21));
-        strategyRSIUseCaseMock.initializeContainerForCandleLiveStreaming("testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN);
+        Instant now = Instant.now();
+        strategyRSIUseCaseMock.initializeContainerForCandleLiveStreaming("testFigi", CandleInterval.CANDLE_INTERVAL_1_MIN, now);
 
-        ParameterContainer parameter = strategyRSIUseCaseMock.calculateParametersForCandle(mockCandles.get(21));
+        ParameterContainer parameter = strategyRSIUseCaseMock.calculateParametersForCandle(mockCandles.get(21), CandleInterval.CANDLE_INTERVAL_1_MIN);
         assertEquals(true, parameter != null);
     }
 }

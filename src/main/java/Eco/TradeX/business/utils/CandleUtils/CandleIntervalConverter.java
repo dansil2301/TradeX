@@ -22,7 +22,7 @@ public class CandleIntervalConverter {
         };
     }
 
-    public static int toMaximumFetchPeriod(CandleInterval interval) {
+    public static int toMaximumFetchPeriodInSeconds(CandleInterval interval) {
         return switch (interval) {
             case CANDLE_INTERVAL_1_MIN -> 86400;
             case CANDLE_INTERVAL_2_MIN -> 86400;
@@ -38,6 +38,49 @@ public class CandleIntervalConverter {
             case CANDLE_INTERVAL_WEEK -> 31536000;
             case CANDLE_INTERVAL_MONTH -> 63072000;
             default -> 80000;
+        };
+    }
+
+    public static int toMinutesOnlyMinutePeriod(CandleInterval interval) {
+        return switch (interval) {
+            case CANDLE_INTERVAL_1_MIN -> 1;
+            case CANDLE_INTERVAL_2_MIN -> 2;
+            case CANDLE_INTERVAL_3_MIN -> 3;
+            case CANDLE_INTERVAL_5_MIN -> 5;
+            case CANDLE_INTERVAL_10_MIN -> 10;
+            case CANDLE_INTERVAL_15_MIN -> 15;
+            case CANDLE_INTERVAL_30_MIN -> 30;
+            default -> -1;
+        };
+    }
+
+    public static int toHoursOnlyHoursPeriod(CandleInterval interval) {
+        return switch (interval) {
+            case CANDLE_INTERVAL_HOUR -> 1;
+            case CANDLE_INTERVAL_2_HOUR -> 2;
+            case CANDLE_INTERVAL_4_HOUR -> 4;
+            default -> -1;
+        };
+    }
+
+    public static int toDaysOnlyDaysPeriod(CandleInterval interval) {
+        return switch (interval) {
+            case CANDLE_INTERVAL_DAY -> 1;
+            default -> -1;
+        };
+    }
+
+    public static int toWeeksOnlyWeeksPeriod(CandleInterval interval) {
+        return switch (interval) {
+            case CANDLE_INTERVAL_WEEK -> 1;
+            default -> -1;
+        };
+    }
+
+    public static int toMonthsOnlyMonthsPeriod(CandleInterval interval) {
+        return switch (interval) {
+            case CANDLE_INTERVAL_MONTH -> 1;
+            default -> -1;
         };
     }
 }

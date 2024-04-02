@@ -15,7 +15,7 @@ import java.time.*;
 import java.util.*;
 import java.util.function.Consumer;
 
-import static Eco.TradeX.business.utils.CandleUtils.CandleIntervalConverter.toMaximumFetchPeriod;
+import static Eco.TradeX.business.utils.CandleUtils.CandleIntervalConverter.toMaximumFetchPeriodInSeconds;
 import static Eco.TradeX.business.utils.CandleUtils.CandleIntervalConverter.toSeconds;
 import static Eco.TradeX.business.utils.CandleUtils.ConvertToLocalCandleEntity.convertToCandlesData;
 
@@ -70,7 +70,7 @@ public class ClientTinkoffAPIImpl implements ClientAPIRepository {
 
         while (candles.size() < extraCandlesNeeded) {
             to = to == null ? from : from.minusSeconds(toSeconds(interval));
-            from = from.minusSeconds(toMaximumFetchPeriod(interval));
+            from = from.minusSeconds(toMaximumFetchPeriodInSeconds(interval));
 
             candles.addAll(0, getHistoricalCandles(from, to, figi, interval));
             candles = candles == null ? new ArrayList<>() : candles;
@@ -95,7 +95,7 @@ public class ClientTinkoffAPIImpl implements ClientAPIRepository {
 
         while (candles.size() < extraCandlesNeeded) {
             from = to.plusSeconds(toSeconds(interval));
-            to = to.plusSeconds(toMaximumFetchPeriod(interval));
+            to = to.plusSeconds(toMaximumFetchPeriodInSeconds(interval));
 
             candles.addAll(getHistoricalCandles(from, to, figi, interval));
             candles = candles == null ? new ArrayList<>() : candles;

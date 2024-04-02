@@ -10,6 +10,8 @@ import java.util.List;
 public interface StrategyFactoryUseCase {
     List<String> getStrategiesNames();
     List<StrategyUseCase> getStrategies(List<String> strategyNames);
+    void initializeContainerForCandleLiveStreaming(List<String> strategyNames, String figi, CandleInterval interval);
+    CandleStrategiesParams calculateParametersForCandle(CandleData candle, List<String> strategyNames, CandleInterval interval);
     List<CandleStrategiesParams> getCandlesStrategiesParameters(List<String> strategyNames,
                                                                 List<CandleData> candles,
                                                                 Instant from, String figi, CandleInterval interval);
