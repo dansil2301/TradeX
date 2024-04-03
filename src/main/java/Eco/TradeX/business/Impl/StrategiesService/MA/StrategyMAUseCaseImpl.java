@@ -69,7 +69,7 @@ public class StrategyMAUseCaseImpl implements StrategyUseCase {
 
     @Override
     public ParameterContainer calculateParametersForCandle(CandleData candle, CandleInterval interval) {
-        if (isCandleSwitchedToNextInterval(prevCandleSaver, candle, interval))
+        if (isCandleSwitchedToNextInterval(candle, prevCandleSaver, interval))
         { maContainerData.moveByOne(candle.getClose()); }
         else
         { maContainerData.changeLast(candle.getClose()); }
@@ -78,7 +78,7 @@ public class StrategyMAUseCaseImpl implements StrategyUseCase {
 
         BigDecimal maLongAvg = calculateAverage(maContainerData.getCandlesCloseLong(), RoundingMode.HALF_UP);
         BigDecimal maShortAvg = calculateAverage(maContainerData.getCandlesCloseLong()
-                .subList(maContainerData.getCandlesCloseLong().size() - shortMA - 1, maContainerData.getCandlesCloseLong().size() - 1),
+                .subList(maContainerData.getCandlesCloseLong().size() - shortMA, maContainerData.getCandlesCloseLong().size()),
                 RoundingMode.HALF_UP);
 
         return MAParameterContainer.builder()

@@ -17,8 +17,9 @@ public class CandlesIntervalChecker {
         Duration duration = Duration.between(oldTime, newTime);
 
         if (toMinutesOnlyMinutePeriod(interval) != -1) {
-            Duration intervalDuration = Duration.ofMinutes(toMinutesOnlyMinutePeriod(interval));
-            return duration.compareTo(intervalDuration) >= 0;
+            long intervalMinutes = toMinutesOnlyMinutePeriod(interval);
+            long durationMinutes = duration.toMinutes();
+            return durationMinutes >= intervalMinutes;
         }
         else if (toHoursOnlyHoursPeriod(interval) != -1) {
             long intervalHours = toHoursOnlyHoursPeriod(interval);

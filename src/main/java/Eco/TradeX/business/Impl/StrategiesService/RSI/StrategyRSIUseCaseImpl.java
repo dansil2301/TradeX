@@ -96,7 +96,7 @@ public class StrategyRSIUseCaseImpl implements StrategyUseCase {
     public ParameterContainer calculateParametersForCandle(CandleData candle, CandleInterval interval) {
         List<BigDecimal> gainLoss = getGainLossCurrentCandle(prevCandleSaver, candle);
 
-        if (isCandleSwitchedToNextInterval(prevCandleSaver, candle, interval))
+        if (isCandleSwitchedToNextInterval(candle, prevCandleSaver, interval))
         { rsiContainerData.moveByOne(gainLoss.get(0), gainLoss.get(1)); }
         else
         { rsiContainerData.changeLast(gainLoss.get(0), gainLoss.get(1)); }
