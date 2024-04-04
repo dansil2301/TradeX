@@ -10,6 +10,7 @@ import Eco.TradeX.domain.StrategyParams.CandleStrategiesParams;
 import Eco.TradeX.domain.StrategyParams.StrategyNameParameter;
 import Eco.TradeX.persistence.Interfaces.CandleRepositoryInterfaces.ClientAPIRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;
 
@@ -20,6 +21,7 @@ import static Eco.TradeX.business.utils.CandleUtils.PackCandleStrategyParams.pac
 
 @Service
 @AllArgsConstructor
+@Scope("prototype")
 public class StrategyFactoryUseCaseImpl implements StrategyFactoryUseCase {
     private final List<StrategyUseCase> strategies;
     private final ClientAPIRepository clientAPIRepository;

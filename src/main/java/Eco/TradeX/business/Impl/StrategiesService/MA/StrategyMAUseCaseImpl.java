@@ -6,6 +6,7 @@ import Eco.TradeX.business.utils.CandleUtils.CandlesSeparationAndInitiation;
 import Eco.TradeX.domain.CandleData;
 import Eco.TradeX.persistence.Interfaces.CandleRepositoryInterfaces.ClientAPIRepository;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;
 
@@ -22,6 +23,7 @@ import static Eco.TradeX.business.utils.CandleUtils.CandlesIntervalChecker.isCan
 
 @Service
 @Primary
+@Scope("prototype")
 public class StrategyMAUseCaseImpl implements StrategyUseCase {
     private ClientAPIRepository clientAPIRepository;
     private CandlesSeparationAndInitiation candlesSeparationAndInitiation;
