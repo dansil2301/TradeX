@@ -73,7 +73,6 @@ public class ClientTinkoffAPIImpl implements ClientAPIRepository {
             from = from.minusSeconds(toMaximumFetchPeriodInSeconds(interval));
 
             candles.addAll(0, getHistoricalCandles(from, to, figi, interval));
-            candles = candles == null ? new ArrayList<>() : candles;
 
             if (from.compareTo(stopDate) < 0) {
                 break;
@@ -98,7 +97,6 @@ public class ClientTinkoffAPIImpl implements ClientAPIRepository {
             to = to.plusSeconds(toMaximumFetchPeriodInSeconds(interval));
 
             candles.addAll(getHistoricalCandles(from, to, figi, interval));
-            candles = candles == null ? new ArrayList<>() : candles;
 
             if (to.compareTo(stopDate) > 0) {
                 break;
@@ -111,17 +109,4 @@ public class ClientTinkoffAPIImpl implements ClientAPIRepository {
 
         return candles;
     }
-
-    // todo build for future socket
-    public Candle getStreamServiceCandle(String figi, CandleInterval interval) {
-        investApi.getMarketDataStreamService().newStream("candles_stream", processor, onErrorCallback).subscribeCandles(Collections.singletonList(figi));
-
-        return null;
-    }
-
-    Consumer<Throwable> onErrorCallback = error -> LOGGER.error(error.toString());
-
-    StreamProcessor<MarketDataResponse> processor = response -> {
-
-    };
 }
