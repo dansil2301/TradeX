@@ -31,13 +31,6 @@ jobs:
       run: ./gradlew test
 
     - name: SonarCloud Scan
-      uses: jinguji/sonarcloud-gradle-github-action@v2
-      with:
-        sonar-token: ${{ secrets.SONAR_TOKEN }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: SonarCloud Scan
       run: |
         sudo apt-get update && sudo apt-get install -y unzip
         wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
