@@ -23,14 +23,14 @@ import static Eco.TradeX.business.utils.CandleUtils.PackCandleStrategyParams.pac
 @AllArgsConstructor
 @Scope("prototype")
 public class StrategyFactoryUseCaseImpl implements StrategyFactoryUseCase {
-    private final List<StrategyUseCase> strategies;
+    private final List<StrategyUseCase> strategiesUseCases;
     private final ClientAPIRepository clientAPIRepository;
 
     @Override
     public List<String> getStrategiesNames() {
         List<String> names = new ArrayList<>();
 
-        for (var strategy : strategies) {
+        for (var strategy : strategiesUseCases) {
             names.add(strategy.getStrategyName());
         }
 
@@ -41,7 +41,7 @@ public class StrategyFactoryUseCaseImpl implements StrategyFactoryUseCase {
     public List<StrategyUseCase> getStrategies(List<String> strategyNames) {
         List<StrategyUseCase> toCalcStrategies = new ArrayList<>();
 
-        for (var strategy : strategies) {
+        for (var strategy : strategiesUseCases) {
             if (strategyNames.contains(strategy.getStrategyName())) {
                 toCalcStrategies.add(strategy);
             }
