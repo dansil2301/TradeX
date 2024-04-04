@@ -30,18 +30,12 @@ jobs:
     - name: Run Tests
       run: ./gradlew test
 
-    - name: SonarQube Scan
-      if: ${{ always() }}
-      run: |
-        sudo apt-get update && sudo apt-get install -y unzip
-        wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
-        unzip sonar-scanner-cli-4.6.2.2472-linux.zip
-        export PATH="$PWD/sonar-scanner-4.6.2.2472-linux/bin:$PATH"
-        sonar-scanner \
-          -Dsonar.projectKey=TradeX \
-          -Dsonar.sources=. \
-          -Dsonar.host.url=http://localhost:9000 \
-          -Dsonar.login=squ_9d871c1f385b5ba50b096b6332a59112f1d874ae
+    - name: SonarCloud Scan
+      uses: jinguji/sonarcloud-gradle-github-action@v2
+      with:
+        sonar-token: ${{ secrets.SONAR_TOKEN }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Build & push Docker image production
       if: ${{ job.status == 'success' }}
