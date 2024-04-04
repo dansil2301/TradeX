@@ -31,7 +31,7 @@ jobs:
       run: ./gradlew test
 
     - name: SonarCloud Scan
-      run: ./gradlew soner
+      run: ./gradlew sonar
 
     - name: Build & push Docker image production
       if: ${{ job.status == 'success' }}
