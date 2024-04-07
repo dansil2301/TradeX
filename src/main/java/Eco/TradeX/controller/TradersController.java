@@ -38,7 +38,7 @@ public class TradersController {
         return ResponseEntity.ok().body(response);
     }
 
-    @PostMapping("/create-trader")
+    @PostMapping()
     public ResponseEntity<CreateTraderResponse> createTrader(@RequestBody @Valid CreateTraderRequest request, HttpServletRequest servletRequest) {
         Long id = createTraderUseCase.createTrader(request);
         String URL = getServerURL(servletRequest) + "/api/traders/get-trader-by-id?id=" + id;
@@ -47,13 +47,13 @@ public class TradersController {
                 .build());
     }
 
-    @DeleteMapping("/delete-trader")
-    public ResponseEntity<Void> deleteStudent(@RequestParam(value = "id") Long id) {
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteStudent(@PathVariable(value = "id") final Long id) {
         return null;
     }
 
-    @PutMapping("/update-trader")
-    public ResponseEntity<Void> updateStudent(@RequestParam(value = "id") Long id,
+    @PutMapping("{id}")
+    public ResponseEntity<Void> updateStudent(@PathVariable(value = "id") final Long id,
                                               @RequestBody @Valid CreateTraderRequest request,
                                               HttpServletRequest servletRequest) {
         return null;
