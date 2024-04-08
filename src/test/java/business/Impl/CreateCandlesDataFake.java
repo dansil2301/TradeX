@@ -1,6 +1,15 @@
 package business.Impl;
 
 import Eco.TradeX.domain.CandleData;
+import com.google.protobuf.GeneratedMessageV3;
+import com.google.protobuf.Message;
+import com.google.protobuf.Timestamp;
+import com.google.protobuf.TimestampOrBuilder;
+import lombok.Data;
+import ru.tinkoff.piapi.contract.v1.HistoricCandle;
+import ru.tinkoff.piapi.contract.v1.HistoricCandleOrBuilder;
+import ru.tinkoff.piapi.contract.v1.Quotation;
+import ru.tinkoff.piapi.contract.v1.QuotationOrBuilder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -33,4 +42,9 @@ public class CreateCandlesDataFake {
 
         return candlesFake;
     }
+
+    public List<HistoricCandle> createHistoricalCandles(int amountToGenerate) {
+        return null;
+    }
 }
+
