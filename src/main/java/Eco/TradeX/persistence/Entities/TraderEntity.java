@@ -18,17 +18,22 @@ public class TraderEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     private Long id;
+
     @Column(unique = true)
     @NotBlank
     private String username;
+
     @Column(unique = true)
     @NotBlank
     private String email;
+
     @Column
     @NotNull
     @Size(min = 12, message = "Password must be at least 12 characters long")
     private String password;
+
     @Column
     @NotNull
+    @Enumerated(EnumType.STRING)
     private TraderStatus status;
 }
