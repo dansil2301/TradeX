@@ -3,8 +3,8 @@ package Eco.TradeX.business.Impl.TradersService;
 import Eco.TradeX.business.Interfaces.TraderServiceInterfaces.CreateTraderUseCase;
 import Eco.TradeX.business.exceptions.TraderAlreadyExistsException;
 import Eco.TradeX.domain.Requests.CreateTraderRequest;
-import Eco.TradeX.persistence.Interfaces.TraderRepositoryInterfaces.TraderRepository;
-import Eco.TradeX.persistence.Impl.TraderRepository.TraderEntity;
+import Eco.TradeX.persistence.Impl.TraderRepository.TraderRepository;
+import Eco.TradeX.persistence.Entities.TraderEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

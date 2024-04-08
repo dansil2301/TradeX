@@ -3,7 +3,7 @@ package Eco.TradeX.business.Impl.TradersService;
 import Eco.TradeX.business.Interfaces.TraderServiceInterfaces.GetTradersMethodsUseCase;
 import Eco.TradeX.business.utils.TraderUtils.TraderConverter;
 import Eco.TradeX.domain.Trader.TraderData;
-import Eco.TradeX.persistence.Interfaces.TraderRepositoryInterfaces.TraderRepository;
+import Eco.TradeX.persistence.Impl.TraderRepository.TraderRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

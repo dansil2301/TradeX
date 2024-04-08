@@ -1,6 +1,6 @@
 package TestConfigs;
 
-import Eco.TradeX.persistence.Interfaces.TraderRepositoryInterfaces.TraderRepository;
+import Eco.TradeX.persistence.Impl.TraderRepository.TraderRepository;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
