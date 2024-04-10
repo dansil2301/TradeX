@@ -2,6 +2,7 @@ package Eco.TradeX.domain.StrategyParams;
 
 import Eco.TradeX.domain.CandleData;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 

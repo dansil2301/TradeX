@@ -17,11 +17,12 @@ import ru.tinkoff.piapi.contract.v1.CandleInterval;
 import java.time.Instant;
 import java.util.List;
 
+import static Eco.TradeX.business.utils.CandleUtils.EmptyChecker.getStartingTime;
+
 @RestController
 @RequestMapping("/api/strategies")
 @AllArgsConstructor
 public class StrategiesController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(StrategiesController.class);
     private final StrategyFactoryUseCase strategyFactoryUseCase;
     private final GetCandlesAPIInformationUseCase getCandlesAPIInformationUseCase;
 
@@ -39,7 +40,8 @@ public class StrategiesController {
                                                                                    @RequestParam(value = "interval") CandleInterval interval,
                                                                                    @RequestParam(value = "strategiesNames") List<String> strategiesNames) {
         List<CandleData> candles = getCandlesAPIInformationUseCase.getHistoricalCandlesAPI(from, to, figi, interval);
-        List<CandleStrategiesParams> parameters = strategyFactoryUseCase.getCandlesStrategiesParameters(strategiesNames, candles, candles.get(0).getTime(), figi, interval);
+        Instant startTime = getStartingTime(candles, from);
+        List<CandleStrategiesParams> parameters = strategyFactoryUseCase.getCandlesStrategiesParameters(strategiesNames, candles, startTime, figi, interval);
         return ResponseEntity.ok().body(GetStrategiesParametersResponse.builder()
                 .to(to)
                 .from(from)
@@ -79,10 +81,11 @@ public class StrategiesController {
         else
         { candles = getCandlesAPIInformationUseCase.getFixedLengthHistoricalCandlesFromAPIFuture(from, figi, interval, candleLength); }
 
-        List<CandleStrategiesParams> parameters = strategyFactoryUseCase.getCandlesStrategiesParameters(strategiesNames, candles, candles.get(0).getTime(), figi, interval);
+        Instant startTime = getStartingTime(candles, from);
+        List<CandleStrategiesParams> parameters = strategyFactoryUseCase.getCandlesStrategiesParameters(strategiesNames, candles, startTime, figi, interval);
         return ResponseEntity.ok().body(GetStrategiesParametersResponse.builder()
                 .to(from)
-                .from(candles.get(0).getTime())
+                .from(startTime)
                 .figi(figi)
                 .interval(interval)
                 .strategiesParams(parameters)

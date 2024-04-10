@@ -51,9 +51,6 @@ class StrategyFactoryUseCaseImplTest extends BaseTest {
     @InjectMocks
     private StrategyMAUseCaseImpl strategyMAUseCaseMock;
 
-    @Autowired
-    private ClientTinkoffAPIImpl client;
-
     @Test
     void getCandlesStrategiesParametersMock() {
         Instant to = LocalDate.of(2023, 2, 2).atStartOfDay(ZoneId.systemDefault()).toInstant();
