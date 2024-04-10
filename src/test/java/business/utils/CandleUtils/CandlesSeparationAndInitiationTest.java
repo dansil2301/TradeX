@@ -1,4 +1,4 @@
-package business.utils;
+package business.utils.CandleUtils;
 
 import Eco.TradeX.TradeXApplication;
 import Eco.TradeX.business.Impl.CandleService.GetCandlesAPIInformationUseCaseImpl;
