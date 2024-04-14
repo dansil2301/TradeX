@@ -8,9 +8,14 @@ import Eco.TradeX.persistence.Entities.TraderEntity;
 import Eco.TradeX.persistence.Impl.TraderRepository.TraderRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -20,6 +25,9 @@ import static org.mockito.Mockito.*;
 class CreateTraderUseCaseImplTest {
     @Mock
     private TraderRepository traderRepository;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private CreateTraderUseCaseImpl createTraderUseCase;
@@ -49,6 +57,7 @@ class CreateTraderUseCaseImplTest {
         when(traderRepository.existsByEmail(any(String.class))).thenReturn(false);
         when(traderRepository.save(any(TraderEntity.class))).thenReturn(null);
         when(traderRepository.findByEmail(any(String.class))).thenReturn(traderEntity);
+        when(passwordEncoder.encode(any(String.class))).thenReturn("PWOIUGHWPIOUGH");
 
         Long id = createTraderUseCase.createTrader(request);
 
