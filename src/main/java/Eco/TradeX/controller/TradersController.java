@@ -41,7 +41,7 @@ public class TradersController {
     @PostMapping()
     public ResponseEntity<CreateTraderResponse> createTrader(@RequestBody @Valid CreateTraderRequest request, HttpServletRequest servletRequest) {
         Long id = createTraderUseCase.createTrader(request);
-        String URL = getServerURL(servletRequest) + "/api/traders/get-trader-by-id?id=" + id;
+        String URL = getServerURL(servletRequest) + "/api/traders/?id=" + id;
         return ResponseEntity.status(HttpStatus.CREATED).body(CreateTraderResponse.builder()
                 .requestForNewTrader(URL)
                 .build());

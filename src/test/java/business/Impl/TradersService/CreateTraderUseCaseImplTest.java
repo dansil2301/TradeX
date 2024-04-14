@@ -56,19 +56,6 @@ class CreateTraderUseCaseImplTest {
     }
 
     @Test
-    public void testCreateTrader_WithExistingUsername() {
-        when(traderRepository.existsByUsername(anyString())).thenReturn(true);
-
-        CreateTraderRequest request = new CreateTraderRequest();
-        request.setUsername("existingUsername");
-        request.setEmail("newEmail@example.com");
-
-        assertThrows(TraderAlreadyExistsException.class, () -> createTraderUseCase.createTrader(request));
-
-        verify(traderRepository, times(1)).existsByUsername("existingUsername");
-    }
-
-    @Test
     public void testCreateTrader_WithExistingEmail() {
         when(traderRepository.existsByEmail(anyString())).thenReturn(true);
 

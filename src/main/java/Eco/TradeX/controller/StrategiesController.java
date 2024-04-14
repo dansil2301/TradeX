@@ -7,6 +7,7 @@ import Eco.TradeX.domain.Response.StrategiesResponse.GetStrategiesNamesResponse;
 import Eco.TradeX.domain.Response.StrategiesResponse.GetStrategiesParametersResponse;
 import Eco.TradeX.domain.StrategyParams.CandleStrategiesParams;
 import Eco.TradeX.persistence.Interfaces.CandleRepositoryInterfaces.ClientAPIRepository;
+import jakarta.annotation.security.RolesAllowed;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,7 @@ public class StrategiesController {
     private final StrategyFactoryUseCase strategyFactoryUseCase;
     private final GetCandlesAPIInformationUseCase getCandlesAPIInformationUseCase;
 
+    @RolesAllowed({"TRADER_BASIC", "TRADER_PLUS"})
     @GetMapping("/get-strategies-names")
     public ResponseEntity<GetStrategiesNamesResponse> getStrategyNames() {
         return ResponseEntity.ok().body(GetStrategiesNamesResponse.builder()
