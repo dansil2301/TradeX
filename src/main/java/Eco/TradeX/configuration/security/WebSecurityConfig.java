@@ -1,6 +1,7 @@
 package Eco.TradeX.configuration.security;
 
 import Eco.TradeX.configuration.security.auth.AuthenticationRequestFilter;
+import org.springframework.boot.autoconfigure.security.reactive.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -15,16 +16,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+
 @EnableWebSecurity
 @EnableMethodSecurity(jsr250Enabled = true)
 @Configuration
 public class WebSecurityConfig {
-
-//    private static final String[] SWAGGER_UI_RESOURCES = {
-//            "/v3/api-docs/**",
-//            "/swagger-resources/**",
-//            "/swagger-ui.html",
-//            "/swagger-ui/**"};
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity,
@@ -38,6 +34,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(registry ->
                         registry.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/traders", "/api/tokens").permitAll()
+                                .requestMatchers("/live-data/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .exceptionHandling(configure -> configure.authenticationEntryPoint(authenticationEntryPoint))

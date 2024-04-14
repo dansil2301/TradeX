@@ -6,6 +6,7 @@ import Eco.TradeX.business.Interfaces.StrategiesServiceinterfaces.StrategyFactor
 import Eco.TradeX.domain.CandleData;
 import Eco.TradeX.domain.Requests.GetSocketMarketStreaming;
 import Eco.TradeX.domain.StrategyParams.CandleStrategiesParams;
+import jakarta.annotation.security.RolesAllowed;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
