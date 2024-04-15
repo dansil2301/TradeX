@@ -44,6 +44,6 @@ public class LoginUseCaseImpl implements LoginUseCase {
 
     private String generateAccessToken(TraderEntity trader) {
         return accessTokenEncoder.encode(
-                new AccessTokenImpl(trader.getUsername(), trader.getId(), trader.getStatus()));
+                new AccessTokenImpl(trader.getEmail(), trader.getId(), trader.getStatus()));
     }
 }
