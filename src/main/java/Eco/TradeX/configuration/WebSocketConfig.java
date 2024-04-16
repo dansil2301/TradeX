@@ -21,8 +21,10 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.ErrorMessage;
 import org.springframework.messaging.support.MessageHeaderAccessor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -57,24 +59,28 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registration.interceptors(new ChannelInterceptor() {
             @Override
             public Message<?> preSend(Message<?> message, MessageChannel channel) {
-                StompHeaderAccessor accessor =
-                        MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
-                if (StompCommand.CONNECT.equals(accessor.getCommand())) {
-                    String token = accessor.getFirstNativeHeader("Authorization");
-                    if (token != null && token.startsWith("Bearer ")) {
-                        String authToken = token.substring(7);
-                        AccessToken accessToken = accessTokenDecoder.decode(authToken);
+                try {
+                    StompHeaderAccessor accessor =
+                            MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
+                    if (StompCommand.CONNECT.equals(accessor.getCommand())) {
+                        String token = accessor.getFirstNativeHeader("Authorization");
+                        if (token != null && token.startsWith("Bearer ")) {
+                            String authToken = token.substring(7);
+                            AccessToken accessToken = accessTokenDecoder.decode(authToken);
 
-                        UserDetails userDetails = new User(accessToken.getSubject(), "",
-                                Collections.singleton(new SimpleGrantedAuthority(SPRING_SECURITY_ROLE_PREFIX + accessToken.getStatus())));
+                            UserDetails userDetails = new User(accessToken.getSubject(), "",
+                                    Collections.singleton(new SimpleGrantedAuthority(SPRING_SECURITY_ROLE_PREFIX + accessToken.getStatus())));
 
-                        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                                userDetails, null, userDetails.getAuthorities());
-                        authenticationToken.setDetails(accessToken);
-                        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                                    userDetails, null, userDetails.getAuthorities());
+                            authenticationToken.setDetails(accessToken);
+                            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
-                        accessor.setUser(authenticationToken);
+                            accessor.setUser(authenticationToken);
+                        }
                     }
+                } catch (Exception e) {
+                    throw new BadCredentialsException("Authentication failed: " + e.getMessage());
                 }
 
                 return message;
