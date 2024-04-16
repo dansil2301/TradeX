@@ -1,6 +1,7 @@
 package Eco.TradeX.business.Impl.TradersService;
 
 import Eco.TradeX.business.Interfaces.TraderServiceInterfaces.CreateTraderUseCase;
+import Eco.TradeX.business.exceptions.PasswordIsNotStrongEnough;
 import Eco.TradeX.business.exceptions.TraderAlreadyExistsException;
 import Eco.TradeX.domain.Requests.CreateTraderRequest;
 import Eco.TradeX.persistence.Impl.TraderRepository.TraderRepository;
@@ -8,6 +9,9 @@ import Eco.TradeX.persistence.Entities.TraderEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import static Eco.TradeX.business.utils.TraderUtils.PasswordChecker.isPasswordLongEnough;
+import static Eco.TradeX.business.utils.TraderUtils.PasswordChecker.isPasswordStrong;
 
 @Service
 @AllArgsConstructor
@@ -19,6 +23,12 @@ public class CreateTraderUseCaseImpl implements CreateTraderUseCase {
     public Long createTrader(CreateTraderRequest request) {
         if (traderRepository.existsByEmail(request.getEmail())) {
             throw new TraderAlreadyExistsException("Trader with this email already exists");
+        }
+        if (!isPasswordLongEnough(request.getPassword())) {
+            throw new PasswordIsNotStrongEnough("Password is too short");
+        }
+        if (!isPasswordStrong(request.getPassword())) {
+            throw new PasswordIsNotStrongEnough("Password contain upper case latter, numbers and special symbols");
         }
 
         saveNewTrader(request);
