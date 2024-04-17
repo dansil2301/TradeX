@@ -18,6 +18,7 @@ public class TraderConverter {
                 .email(traderEntity.getEmail())
                 .password(traderEntity.getPassword())
                 .status(traderEntity.getStatus())
+                .createdAt(traderEntity.getRegisteredAt())
                 .build();
     }
 
