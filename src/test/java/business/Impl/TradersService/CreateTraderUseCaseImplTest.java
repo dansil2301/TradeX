@@ -41,13 +41,13 @@ class CreateTraderUseCaseImplTest {
         traderEntity.setId(1L);
         traderEntity.setUsername("test_user");
         traderEntity.setEmail("test@example.com");
-        traderEntity.setPassword("password123");
+        traderEntity.setPassword("Password_123");
         traderEntity.setStatus(TraderStatus.TRADER_BASIC);
 
         CreateTraderRequest request = CreateTraderRequest.builder()
                 .username("test_user")
                 .email("test@example.com")
-                .password("password123")
+                .password("Password_123")
                 .status(TraderStatus.TRADER_BASIC)
                 .build();
 
