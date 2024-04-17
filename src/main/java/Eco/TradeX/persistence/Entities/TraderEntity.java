@@ -7,6 +7,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity(name = "traders")
 @Getter
 @Setter
@@ -36,4 +38,8 @@ public class TraderEntity {
     @NotNull
     @Enumerated(EnumType.STRING)
     private TraderStatus status;
+
+    @Column(name = "registered_at")
+    @NotNull
+    private LocalDateTime registeredAt;
 }

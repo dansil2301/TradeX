@@ -23,7 +23,7 @@ import java.util.List;
 public class CandlesController {
     private final GetCandlesAPIInformationUseCase getCandlesAPIInformationUseCase;
 
-    @RolesAllowed({"TRADER_BASIC", "TRADER_PLUS"})
+    @RolesAllowed({"TRADER_BASIC","TRADER_PLUS"})
     @GetMapping
     public ResponseEntity<GetPeriodCandlesResponse> getCandles(@RequestParam(value = "from") Instant from,
                                                                @RequestParam(value = "to") Instant to,

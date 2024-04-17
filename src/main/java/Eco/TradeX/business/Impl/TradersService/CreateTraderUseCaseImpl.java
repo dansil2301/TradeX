@@ -10,6 +10,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 import static Eco.TradeX.business.utils.TraderUtils.PasswordChecker.isPasswordLongEnough;
 import static Eco.TradeX.business.utils.TraderUtils.PasswordChecker.isPasswordStrong;
 
@@ -28,7 +30,7 @@ public class CreateTraderUseCaseImpl implements CreateTraderUseCase {
             throw new PasswordIsNotStrongEnough("Password is too short");
         }
         if (!isPasswordStrong(request.getPassword())) {
-            throw new PasswordIsNotStrongEnough("Password contain upper case latter, numbers and special symbols");
+            throw new PasswordIsNotStrongEnough("Password should contain upper case latter, numbers and special symbols");
         }
 
         saveNewTrader(request);
@@ -43,6 +45,7 @@ public class CreateTraderUseCaseImpl implements CreateTraderUseCase {
                 .email(request.getEmail())
                 .password(encodedPassword)
                 .status(request.getStatus())
+                .registeredAt(LocalDateTime.now())
                 .build();
 
         traderRepository.save(newTrader);
