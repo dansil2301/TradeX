@@ -11,6 +11,7 @@ public interface StrategyFactoryUseCase {
     List<String> getStrategiesNames();
     List<StrategyUseCase> getStrategies(List<String> strategyNames);
     void initializeContainerForCandleLiveStreaming(List<String> strategyNames, String figi, CandleInterval interval);
+    void initializeContainers(List<String> strategyNames, String figi, CandleInterval interval, Instant from);
     CandleStrategiesParams calculateParametersForCandle(CandleData candle, List<String> strategyNames, CandleInterval interval);
     List<CandleStrategiesParams> getCandlesStrategiesParameters(List<String> strategyNames,
                                                                 List<CandleData> candles,
