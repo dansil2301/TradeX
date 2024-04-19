@@ -3,6 +3,7 @@ package Eco.TradeX.controller;
 import Eco.TradeX.business.Interfaces.CalculatorServiceInterfaces.CalculatorFactoryUseCase;
 import Eco.TradeX.business.Interfaces.CandleServiceInterfaces.GetCandlesAPIInformationUseCase;
 import Eco.TradeX.domain.CandleData;
+import Eco.TradeX.domain.Response.CaculatorResponse.GetProfitForSpecificPeriod;
 import Eco.TradeX.domain.Response.CandlesResponse.GetPeriodCandlesResponse;
 import jakarta.annotation.security.RolesAllowed;
 import lombok.AllArgsConstructor;
@@ -24,12 +25,15 @@ public class CalculatorController {
 
     @RolesAllowed({"TRADER_PLUS"})
     @GetMapping
-    public ResponseEntity<GetPeriodCandlesResponse> getCandles(@RequestParam(value = "from") Instant from,
-                                                               @RequestParam(value = "to") Instant to,
-                                                               @RequestParam(value = "figi") String figi,
-                                                               @RequestParam(value = "interval") CandleInterval interval,
-                                                               @RequestParam(value = "strategyName") String strategyName,
-                                                               @RequestParam(value = "deposit") Double deposit) {
-        return null;
+    public ResponseEntity<GetProfitForSpecificPeriod> getPeriodProfit(@RequestParam(value = "from") Instant from,
+                                                                 @RequestParam(value = "to") Instant to,
+                                                                 @RequestParam(value = "figi") String figi,
+                                                                 @RequestParam(value = "interval") CandleInterval interval,
+                                                                 @RequestParam(value = "strategyName") String strategyName,
+                                                                 @RequestParam(value = "deposit") Double deposit) {
+        Double amount = calculatorFactoryUseCase.calculateProfitForPeriod(from, to, figi, interval, strategyName, deposit);
+        return ResponseEntity.ok().body(GetProfitForSpecificPeriod.builder()
+                .amount(amount)
+                .build());
     }
 }

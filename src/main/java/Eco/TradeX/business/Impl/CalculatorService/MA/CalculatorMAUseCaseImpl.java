@@ -35,11 +35,10 @@ public class CalculatorMAUseCaseImpl implements CalculatorStrategyUseCase {
 
         if (firstEntry || prevParameters == null) {
             prevParameters = curParameters;
+            firstEntry = false;
             return ActionSignal.KEEP;
         }
 
-
-        firstEntry = false;
         ActionSignal action = getActionSignal(curParameters);
         prevParameters = curParameters;
         return action;

@@ -21,7 +21,6 @@ public class TraderEntity {
     @Column
     private Long id;
 
-    @Column(unique = true)
     @NotBlank
     private String username;
 

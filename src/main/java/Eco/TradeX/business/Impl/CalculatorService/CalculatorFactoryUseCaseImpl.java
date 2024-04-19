@@ -58,6 +58,7 @@ public class CalculatorFactoryUseCaseImpl implements CalculatorFactoryUseCase {
             if (action == ActionSignal.BUY) {
                 isBought = true;
                 stocksBought = stocksCanBeBought(finalAmount, candle.getClose().doubleValue());
+                finalAmount -= candle.getClose().doubleValue() * stocksBought;
             }
             else if (action == ActionSignal.SELL) {
                 isBought = false;
