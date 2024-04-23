@@ -6,6 +6,6 @@ import java.time.Instant;
 import java.util.List;
 
 public interface CalculatorFactoryUseCase {
-    List<String> getStrategiesNames();
+    List<String> getCalculatorNames();
     Double calculateProfitForPeriod(Instant from, Instant to, String figi, CandleInterval interval, String strategyName, Double deposit);
 }

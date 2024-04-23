@@ -4,7 +4,9 @@ import Eco.TradeX.business.Interfaces.CalculatorServiceInterfaces.CalculatorFact
 import Eco.TradeX.business.Interfaces.CandleServiceInterfaces.GetCandlesAPIInformationUseCase;
 import Eco.TradeX.domain.CandleData;
 import Eco.TradeX.domain.Response.CaculatorResponse.GetProfitForSpecificPeriod;
+import Eco.TradeX.domain.Response.Calculator.GetCalculatorNamesResponse;
 import Eco.TradeX.domain.Response.CandlesResponse.GetPeriodCandlesResponse;
+import Eco.TradeX.domain.Response.StrategiesResponse.GetStrategiesNamesResponse;
 import jakarta.annotation.security.RolesAllowed;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +26,15 @@ public class CalculatorController {
     private final CalculatorFactoryUseCase calculatorFactoryUseCase;
 
     @RolesAllowed({"TRADER_PLUS"})
-    @GetMapping
+    @GetMapping("/get-calculator-names")
+    public ResponseEntity<GetCalculatorNamesResponse> getCalculators() {
+        return ResponseEntity.ok().body(GetCalculatorNamesResponse.builder()
+                .calculatorNames(calculatorFactoryUseCase.getCalculatorNames())
+                .build());
+    }
+
+    @RolesAllowed({"TRADER_PLUS"})
+    @GetMapping("/get-amount")
     public ResponseEntity<GetProfitForSpecificPeriod> getPeriodProfit(@RequestParam(value = "from") Instant from,
                                                                  @RequestParam(value = "to") Instant to,
                                                                  @RequestParam(value = "figi") String figi,

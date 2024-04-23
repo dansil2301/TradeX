@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;
 
+import java.text.DecimalFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,7 @@ public class CalculatorFactoryUseCaseImpl implements CalculatorFactoryUseCase {
     private final ClientAPIRepository clientAPIRepository;
 
     @Override
-    public List<String> getStrategiesNames() {
+    public List<String> getCalculatorNames() {
         List<String> names = new ArrayList<>();
 
         for (var strategy : calculatorStrategyUseCases) {
@@ -70,7 +71,12 @@ public class CalculatorFactoryUseCaseImpl implements CalculatorFactoryUseCase {
         if (isBought && !candles.isEmpty())
         { finalAmount += candles.get(0).getClose().doubleValue() * stocksBought; }
 
-        return finalAmount;
+        return roundToTwoDecimalPlaces(finalAmount);
+    }
+
+    private Double roundToTwoDecimalPlaces(Double amount) {
+        DecimalFormat df = new DecimalFormat("#.##");
+        return Double.parseDouble(df.format(amount));
     }
 
     private int stocksCanBeBought(Double finalAmount, Double candlePrice) {
