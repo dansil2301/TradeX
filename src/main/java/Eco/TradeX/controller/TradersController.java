@@ -1,9 +1,12 @@
 package Eco.TradeX.controller;
 
 import Eco.TradeX.business.Interfaces.TraderServiceInterfaces.CreateTraderUseCase;
+import Eco.TradeX.business.Interfaces.TraderServiceInterfaces.DeleteTraderUseCase;
+import Eco.TradeX.business.Interfaces.TraderServiceInterfaces.EditTraderUseCase;
 import Eco.TradeX.business.Interfaces.TraderServiceInterfaces.GetTradersMethodsUseCase;
+import Eco.TradeX.business.exceptions.TraderExceptions;
 import Eco.TradeX.domain.Requests.CreateTraderRequest;
-import Eco.TradeX.domain.Response.StrategiesResponse.GetStrategiesNamesResponse;
+import Eco.TradeX.domain.Requests.EditTraderRequest;
 import Eco.TradeX.domain.Response.TradersResponse.CreateTraderResponse;
 import Eco.TradeX.domain.Response.TradersResponse.GetTradersResponse;
 import Eco.TradeX.domain.Trader.TraderData;
@@ -14,8 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
-
 import static Eco.TradeX.business.utils.ServerURLResolver.getServerURL;
 
 @RestController
@@ -24,6 +25,8 @@ import static Eco.TradeX.business.utils.ServerURLResolver.getServerURL;
 public class TradersController {
     private final GetTradersMethodsUseCase getTradersMethodsUseCase;
     private final CreateTraderUseCase createTraderUseCase;
+    private final EditTraderUseCase editTraderUseCase;
+    private final DeleteTraderUseCase deleteTraderUseCase;
 
     @GetMapping("{id}")
     public ResponseEntity<TraderData> getTrader(@PathVariable(value = "id") final Long id) {
@@ -49,13 +52,22 @@ public class TradersController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteStudent(@PathVariable(value = "id") final Long id) {
-        return null;
+        try {
+            deleteTraderUseCase.deleteTrader(id);
+            return ResponseEntity.noContent().build();
+        } catch (TraderExceptions e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Void> updateStudent(@PathVariable(value = "id") final Long id,
-                                              @RequestBody @Valid CreateTraderRequest request,
-                                              HttpServletRequest servletRequest) {
-        return null;
+    public ResponseEntity<EditTraderRequest> updateStudent(@PathVariable(value = "id") final Long id,
+                                                           @RequestBody @Valid EditTraderRequest request) {
+        try {
+            editTraderUseCase.editTrader(id, request);
+            return ResponseEntity.noContent().build();
+        } catch (TraderExceptions e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
