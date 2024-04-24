@@ -3,6 +3,7 @@ package Eco.TradeX.controller;
 import Eco.TradeX.business.Interfaces.CandleServiceInterfaces.GetCandlesAPIInformationUseCase;
 import Eco.TradeX.business.Interfaces.CandleServiceInterfaces.GetCurrentCandleIntervalParametersUseCase;
 import Eco.TradeX.business.Interfaces.StrategiesServiceinterfaces.StrategyFactoryUseCase;
+import Eco.TradeX.business.Interfaces.StrategiesServiceinterfaces.StrategyStreamingHelperUseCase;
 import Eco.TradeX.domain.CandleData;
 import Eco.TradeX.domain.Requests.GetSocketMarketStreaming;
 import Eco.TradeX.domain.StrategyParams.CandleStrategiesParams;
@@ -24,24 +25,15 @@ import static Eco.TradeX.business.utils.CandleUtils.ConvertToLocalCandleEntity.c
 @Controller
 @AllArgsConstructor
 public class StrategiesSocketController {
-    SimpMessagingTemplate template;
-    private final GetCandlesAPIInformationUseCase getCandlesAPIInformationUseCase;
-    private final StrategyFactoryUseCase strategyFactoryUseCase;
-    private final GetCurrentCandleIntervalParametersUseCase getCurrentCandleIntervalParametersUseCase;
     private static final Logger LOGGER = LoggerFactory.getLogger(StrategiesSocketController.class);
+    SimpMessagingTemplate template;
+    private final StrategyStreamingHelperUseCase strategyStreamingHelperUseCase;
 
     @MessageMapping("/start-live-data")
     public void getLiveMarketData(GetSocketMarketStreaming request) {
         StreamProcessor<MarketDataResponse> processor = response -> {
             if (response.hasCandle()) {
-                CandleData candleData = convertToCandleData(response.getCandle());
-                getCurrentCandleIntervalParametersUseCase.updateLastCandle(candleData);
-                candleData = getCurrentCandleIntervalParametersUseCase.getLastCandle();
-                CandleStrategiesParams candleStrategiesParams = strategyFactoryUseCase.calculateParametersForCandle(
-                        candleData,
-                        request.getStrategiesNames(),
-                        request.getInterval()
-                );
+                CandleStrategiesParams candleStrategiesParams = strategyStreamingHelperUseCase.CalculateCandleParams(request, response);
 
                 try {
                     template.convertAndSend("/topic/live-data-message", candleStrategiesParams);
@@ -51,8 +43,6 @@ public class StrategiesSocketController {
             }
         };
 
-        getCurrentCandleIntervalParametersUseCase.setLastCandleAndInterval(request.getFigi(), request.getInterval());
-        strategyFactoryUseCase.initializeContainerForCandleLiveStreaming(request.getStrategiesNames(), request.getFigi(), request.getInterval());
-        getCandlesAPIInformationUseCase.candleStreaming(request.getFigi(), processor);
+        strategyStreamingHelperUseCase.initializeStreamingServices(processor, request);
     }
 }

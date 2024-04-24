@@ -59,7 +59,7 @@ public class StrategyFactoryUseCaseImpl implements StrategyFactoryUseCase {
         initializeStrategiesExtraCandles(strategies, now, figi, interval);
     }
 
-
+    @Override
     public void initializeContainers(List<String> strategyNames, String figi, CandleInterval interval, Instant from) {
         List<StrategyUseCase> strategies = getStrategies(strategyNames);
         initializeStrategiesExtraCandles(strategies, from, figi, interval);
