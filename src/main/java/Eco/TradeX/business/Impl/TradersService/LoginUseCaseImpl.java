@@ -6,15 +6,11 @@ import Eco.TradeX.configuration.security.token.AccessTokenEncoder;
 import Eco.TradeX.configuration.security.token.impl.AccessTokenImpl;
 import Eco.TradeX.domain.Trader.LoginRequest;
 import Eco.TradeX.domain.Trader.LoginResponse;
-import Eco.TradeX.domain.Trader.TraderStatus;
 import Eco.TradeX.persistence.Entities.TraderEntity;
-import Eco.TradeX.persistence.Impl.TraderRepository.TraderRepository;
+import Eco.TradeX.persistence.Repositories.TraderRepository.TraderRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @AllArgsConstructor

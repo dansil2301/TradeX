@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import static Eco.TradeX.business.utils.ServerURLResolver.getServerURL;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/api/traders")
 @AllArgsConstructor
 public class TradersController {

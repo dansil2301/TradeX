@@ -4,7 +4,7 @@ import Eco.TradeX.business.Interfaces.TraderServiceInterfaces.CreateTraderUseCas
 import Eco.TradeX.business.exceptions.PasswordIsNotStrongEnough;
 import Eco.TradeX.business.exceptions.TraderAlreadyExistsException;
 import Eco.TradeX.domain.Requests.CreateTraderRequest;
-import Eco.TradeX.persistence.Impl.TraderRepository.TraderRepository;
+import Eco.TradeX.persistence.Repositories.TraderRepository.TraderRepository;
 import Eco.TradeX.persistence.Entities.TraderEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;

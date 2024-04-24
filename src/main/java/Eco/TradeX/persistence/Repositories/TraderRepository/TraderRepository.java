@@ -1,4 +1,4 @@
-package Eco.TradeX.persistence.Impl.TraderRepository;
+package Eco.TradeX.persistence.Repositories.TraderRepository;
 
 import Eco.TradeX.persistence.Entities.TraderEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
