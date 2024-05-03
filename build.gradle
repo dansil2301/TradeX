@@ -92,11 +92,7 @@ jacocoTestCoverageVerification {
 
 	afterEvaluate {
 		classDirectories = files(classDirectories.files.collect {
-			fileTree(dir: it, exclude: ['**/Eco/TradeX/domain/**'])
+			fileTree(dir: it, exclude: ['**/Eco/TradeX/domain/**', ''])
 		})
 	}
 }
-
-//tasks.named('check') {
-//	dependsOn 'jacocoTestCoverageVerification'
-//}

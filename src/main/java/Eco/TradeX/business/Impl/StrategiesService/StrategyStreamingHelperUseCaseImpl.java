@@ -8,6 +8,7 @@ import Eco.TradeX.domain.CandleData;
 import Eco.TradeX.domain.Requests.GetSocketMarketStreaming;
 import Eco.TradeX.domain.StrategyParams.CandleStrategiesParams;
 import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import ru.tinkoff.piapi.contract.v1.MarketDataResponse;
 import ru.tinkoff.piapi.core.stream.StreamProcessor;
@@ -16,6 +17,7 @@ import static Eco.TradeX.business.utils.CandleUtils.ConvertToLocalCandleEntity.c
 
 @Service
 @AllArgsConstructor
+@Scope("prototype")
 public class StrategyStreamingHelperUseCaseImpl implements StrategyStreamingHelperUseCase {
     private final GetCandlesAPIInformationUseCase getCandlesAPIInformationUseCase;
     private final StrategyFactoryUseCase strategyFactoryUseCase;
