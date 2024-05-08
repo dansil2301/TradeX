@@ -29,8 +29,7 @@ public class ClientTinkoffAPIImpl implements ClientAPIRepository {
         this.investApi = investApi;
     }
 
-    @Override
-    public List<CandleData> getHistoricalCandles(Instant _from, Instant _to, String figi, CandleInterval interval) {
+    private List<CandleData> getHistoricalCandlesLimited(Instant _from, Instant _to, String figi, CandleInterval interval) {
         try {
             List<HistoricCandle> candles = investApi.getMarketDataService()
                     .getCandlesSync(figi, _from, _to, interval);
@@ -45,6 +44,27 @@ public class ClientTinkoffAPIImpl implements ClientAPIRepository {
             LOGGER.error("Error fetching historical candles: " + e.getLocalizedMessage());
             throw new CandlesExceptions(e.getMessage());
         }
+    }
+
+    @Override
+    public List<CandleData> getHistoricalCandles(Instant _from, Instant _to, String figi, CandleInterval interval) {
+        Instant from = _from;
+        Instant to = from;
+        List<CandleData> candles = new ArrayList<>();
+
+        while (_to.getEpochSecond() > to.getEpochSecond()) {
+            to = from.plusSeconds(toMaximumFetchPeriodInSeconds(interval));
+            if (to.getEpochSecond() > _to.getEpochSecond())
+            { to = _to;}
+
+            List<CandleData> fetchedCandles = getHistoricalCandlesLimited(from, to, figi, interval);
+            if (fetchedCandles != null)
+            { candles.addAll(fetchedCandles); }
+
+            from = to;
+        }
+
+        return candles;
     }
 
     private String getUidByFigi(String figi) {
@@ -73,7 +93,7 @@ public class ClientTinkoffAPIImpl implements ClientAPIRepository {
             to = to == null ? from : from.minusSeconds(toSeconds(interval));
             from = from.minusSeconds(toMaximumFetchPeriodInSeconds(interval));
 
-            candles.addAll(0, getHistoricalCandles(from, to, figi, interval));
+            candles.addAll(0, getHistoricalCandlesLimited(from, to, figi, interval));
 
             if (from.compareTo(stopDate) < 0) {
                 break;
@@ -97,7 +117,7 @@ public class ClientTinkoffAPIImpl implements ClientAPIRepository {
             from = to.plusSeconds(toSeconds(interval));
             to = to.plusSeconds(toMaximumFetchPeriodInSeconds(interval));
 
-            candles.addAll(getHistoricalCandles(from, to, figi, interval));
+            candles.addAll(getHistoricalCandlesLimited(from, to, figi, interval));
             candles = filterUniqueCandles(candles);
 
             if (to.compareTo(stopDate) > 0) {
