@@ -67,7 +67,7 @@ class ClientTinkoffAPIImplTest extends BaseTest {
     @Test
     public void testGetHistoricalCandlesMockCorrect() {
         Instant from = Instant.now();
-        Instant to = Instant.now();
+        Instant to = Instant.now().plusSeconds(100);
 
         List<HistoricCandle> mockCandles = new ArrayList<>();
         HistoricCandle mockCandle = mock(HistoricCandle.class);
@@ -84,7 +84,7 @@ class ClientTinkoffAPIImplTest extends BaseTest {
     @Test
     void testGetHistoricalCandlesMockNoCandles() {
         Instant from = Instant.now();
-        Instant to = Instant.now();
+        Instant to = from;
 
         List<HistoricCandle> mockCandles = new ArrayList<>();
         when(investApiMock.getMarketDataService()).thenReturn(marketDataServiceMock);
@@ -98,7 +98,7 @@ class ClientTinkoffAPIImplTest extends BaseTest {
     @Test
     void testGetHistoricalCandlesMockLengthLimitError() {
         Instant from = Instant.now();
-        Instant to = Instant.now();
+        Instant to = Instant.now().plusSeconds(100);
 
         when(investApiMock.getMarketDataService()).thenReturn(marketDataServiceMock);
         when(marketDataServiceMock.getCandlesSync("testFigi", from, to, CandleInterval.CANDLE_INTERVAL_1_MIN))

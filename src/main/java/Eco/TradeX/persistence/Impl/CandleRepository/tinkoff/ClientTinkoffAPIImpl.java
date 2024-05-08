@@ -64,6 +64,10 @@ public class ClientTinkoffAPIImpl implements ClientAPIRepository {
             from = to;
         }
 
+        if (candles.isEmpty()) {
+            return null;
+        }
+
         return candles;
     }
 
@@ -83,6 +87,7 @@ public class ClientTinkoffAPIImpl implements ClientAPIRepository {
         }
     }
 
+    @Override
     public List<CandleData> getExtraHistoricalCandlesFromCertainTime(Instant _from, String figi, CandleInterval interval, int extraCandlesNeeded) {
         Instant from = _from;
         Instant to = null;
@@ -107,6 +112,7 @@ public class ClientTinkoffAPIImpl implements ClientAPIRepository {
         return candles;
     }
 
+    @Override
     public List<CandleData> getExtraCandlesFromCertainTimeToFuture(Instant _from, String figi, CandleInterval interval, int extraCandlesNeeded) {
         Instant from = null;
         Instant to = _from;
