@@ -22,6 +22,11 @@ public class TraderConverter {
                 .build();
     }
 
+    public TraderData convertToTraderData(TraderEntity entity) {
+        return convert(entity);
+    }
+
+
     public TraderData convertToTraderData(Optional<TraderEntity> entity) {
         if (entity.isPresent()) {
             var traderEntity = entity.get();

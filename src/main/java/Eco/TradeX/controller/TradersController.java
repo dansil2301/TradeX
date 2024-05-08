@@ -1,9 +1,6 @@
 package Eco.TradeX.controller;
 
-import Eco.TradeX.business.Interfaces.TraderServiceInterfaces.CreateTraderUseCase;
-import Eco.TradeX.business.Interfaces.TraderServiceInterfaces.DeleteTraderUseCase;
-import Eco.TradeX.business.Interfaces.TraderServiceInterfaces.EditTraderUseCase;
-import Eco.TradeX.business.Interfaces.TraderServiceInterfaces.GetTradersMethodsUseCase;
+import Eco.TradeX.business.Interfaces.TraderServiceInterfaces.*;
 import Eco.TradeX.business.exceptions.TraderExceptions;
 import Eco.TradeX.domain.Requests.CreateTraderRequest;
 import Eco.TradeX.domain.Requests.EditTraderRequest;
@@ -13,6 +10,7 @@ import Eco.TradeX.domain.Trader.TraderData;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +26,7 @@ public class TradersController {
     private final CreateTraderUseCase createTraderUseCase;
     private final EditTraderUseCase editTraderUseCase;
     private final DeleteTraderUseCase deleteTraderUseCase;
+    private final GetTraderPaginatedUseCase getTraderPaginatedUseCase;
 
     @GetMapping("{id}")
     public ResponseEntity<TraderData> getTrader(@PathVariable(value = "id") final Long id) {
@@ -40,6 +39,17 @@ public class TradersController {
                 .traders(getTradersMethodsUseCase.getAllTraders())
                 .build();
         return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/pages")
+    ResponseEntity<Page<TraderData>> getAppointmentPage(@RequestParam(value = "page") Integer page,
+                                                        @RequestParam(value = "pageSize") Integer pageSize) {
+        try {
+            Page<TraderData> traderPage = getTraderPaginatedUseCase.getTraderByPage(page, pageSize);
+            return new ResponseEntity<>(traderPage, HttpStatus.OK);
+        } catch (TraderExceptions e) {
+            return new ResponseEntity<>(getTraderPaginatedUseCase.getTraderByPage(0, pageSize), HttpStatus.OK);
+        }
     }
 
     @PostMapping()

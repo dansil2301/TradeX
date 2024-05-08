@@ -3,7 +3,10 @@ package Eco.TradeX.business.Impl.TradersService;
 import Eco.TradeX.business.Interfaces.TraderServiceInterfaces.CreateTraderUseCase;
 import Eco.TradeX.business.exceptions.PasswordIsNotStrongEnough;
 import Eco.TradeX.business.exceptions.TraderAlreadyExistsException;
+import Eco.TradeX.business.exceptions.UnauthorizedDataAccessException;
+import Eco.TradeX.configuration.security.token.AccessToken;
 import Eco.TradeX.domain.Requests.CreateTraderRequest;
+import Eco.TradeX.domain.Trader.TraderStatus;
 import Eco.TradeX.persistence.Repositories.TraderRepository.TraderRepository;
 import Eco.TradeX.persistence.Entities.TraderEntity;
 import lombok.AllArgsConstructor;
@@ -20,9 +23,13 @@ import static Eco.TradeX.business.utils.TraderUtils.PasswordChecker.isPasswordSt
 public class CreateTraderUseCaseImpl implements CreateTraderUseCase {
     private final TraderRepository traderRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AccessToken requestAccessToken;
 
     @Override
     public Long createTrader(CreateTraderRequest request) {
+        if (requestAccessToken.getStatus() != TraderStatus.ADMIN) {
+            throw new UnauthorizedDataAccessException("Admins can not be created through API");
+        }
         if (traderRepository.existsByEmail(request.getEmail())) {
             throw new TraderAlreadyExistsException("Trader with this email already exists");
         }

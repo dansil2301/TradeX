@@ -32,6 +32,10 @@ public class GetTradersMethodsUseCaseImpl implements GetTradersMethodsUseCase {
 
     @Override
     public List<TraderData> getAllTraders() {
+        if (requestAccessToken.getStatus() != TraderStatus.ADMIN) {
+            throw new UnauthorizedDataAccessException("TRADER_ID_NOT_FROM_LOGGED_IN_USER");
+        }
+
         var tradersEntities = traderRepository.findAll();
         return traderConverter.convertToTraderData(tradersEntities);
     }
