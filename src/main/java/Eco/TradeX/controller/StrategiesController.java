@@ -35,6 +35,7 @@ public class StrategiesController {
                 .build());
     }
 
+    @RolesAllowed({"TRADER_BASIC", "TRADER_PLUS"})
     @GetMapping("/get-strategy-params-without-candles")
     public ResponseEntity<GetStrategiesParametersResponse> getPeriodStrategyParams(@RequestParam(value = "from") Instant from,
                                                                                    @RequestParam(value = "to") Instant to,
@@ -53,6 +54,7 @@ public class StrategiesController {
                 .build());
     }
 
+    @RolesAllowed({"TRADER_BASIC", "TRADER_PLUS"})
     @GetMapping("/get-strategy-params-with-candles")
     public ResponseEntity<GetStrategiesParametersResponse> getPeriodStrategyParamsWithCandles(@RequestParam(value = "figi") String figi,
                                                                                               @RequestParam(value = "interval") CandleInterval interval,
@@ -70,6 +72,7 @@ public class StrategiesController {
                 .build());
     }
 
+    @RolesAllowed({"TRADER_BASIC", "TRADER_PLUS"})
     @GetMapping("/get-strategy-params-fixed-length-candles")
     public ResponseEntity<GetStrategiesParametersResponse> getFixedLengthCandles(@RequestParam(value = "from") Instant from,
                                                                                    @RequestParam(value = "figi") String figi,

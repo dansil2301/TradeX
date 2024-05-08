@@ -18,6 +18,7 @@ import java.util.function.Consumer;
 import static Eco.TradeX.business.utils.CandleUtils.CandleIntervalConverter.toMaximumFetchPeriodInSeconds;
 import static Eco.TradeX.business.utils.CandleUtils.CandleIntervalConverter.toSeconds;
 import static Eco.TradeX.business.utils.CandleUtils.ConvertToLocalCandleEntity.convertToCandlesData;
+import static Eco.TradeX.persistence.Utils.UniqueCandlesFilter.filterUniqueCandles;
 
 @Repository
 public class ClientTinkoffAPIImpl implements ClientAPIRepository {
@@ -97,6 +98,7 @@ public class ClientTinkoffAPIImpl implements ClientAPIRepository {
             to = to.plusSeconds(toMaximumFetchPeriodInSeconds(interval));
 
             candles.addAll(getHistoricalCandles(from, to, figi, interval));
+            candles = filterUniqueCandles(candles);
 
             if (to.compareTo(stopDate) > 0) {
                 break;
