@@ -39,4 +39,17 @@ public class GetTradersPaginatedUseCaseImpl implements GetTraderPaginatedUseCase
 
         return traderPage.map(converter::convertToTraderData);
     }
+
+    @Override
+    public Page<TraderData> getTraderByUniversalSearch(int pageNumber, int pageSize, String searchString) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<TraderEntity> traderPage = traderRepository.searchTraderEntityBy(searchString, pageable);
+
+        if (traderPage.isEmpty()) {
+            throw new TraderExceptions("No trader found on page: " + pageNumber);
+        }
+
+        return traderPage.map(converter::convertToTraderData);
+
+    }
 }

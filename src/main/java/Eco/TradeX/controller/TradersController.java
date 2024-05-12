@@ -52,6 +52,19 @@ public class TradersController {
         }
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<Page<TraderData>> searchAppointment(
+            @RequestParam(value = "page") Integer page,
+            @RequestParam(value = "pageSize") Integer pageSize,
+            @RequestParam(value = "searchString") String searchString) {
+        try {
+            Page<TraderData> traderPage = getTraderPaginatedUseCase.getTraderByUniversalSearch(page, pageSize, searchString);
+            return new ResponseEntity<>(traderPage, HttpStatus.OK);
+        } catch (TraderExceptions e) {
+            return new ResponseEntity<>(getTraderPaginatedUseCase.getTraderByUniversalSearch(0, pageSize, ""), HttpStatus.OK);
+        }
+    }
+
     @PostMapping()
     public ResponseEntity<CreateTraderResponse> createTrader(@RequestBody @Valid CreateTraderRequest request, HttpServletRequest servletRequest) {
         Long id = createTraderUseCase.createTrader(request);
