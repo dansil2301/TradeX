@@ -39,4 +39,14 @@ public class GetTradersMethodsUseCaseImpl implements GetTradersMethodsUseCase {
         var tradersEntities = traderRepository.findAll();
         return traderConverter.convertToTraderData(tradersEntities);
     }
+
+    @Override
+    public Long getCountOfTradersStatus(TraderStatus status) {
+        return traderRepository.countByStatus(status);
+    }
+
+    @Override
+    public Long getCountAllTraders() {
+        return traderRepository.count();
+    }
 }

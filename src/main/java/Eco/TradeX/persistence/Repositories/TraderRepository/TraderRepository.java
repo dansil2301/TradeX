@@ -1,6 +1,8 @@
 package Eco.TradeX.persistence.Repositories.TraderRepository;
 
+import Eco.TradeX.domain.Trader.TraderStatus;
 import Eco.TradeX.persistence.Entities.TraderEntity;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,6 +19,8 @@ public interface TraderRepository extends JpaRepository<TraderEntity, Long> {
     TraderEntity findByEmail(String email);
 
     Page<TraderEntity> findAllByOrderByUsernameAsc(Pageable pageable);
+
+    long countByStatus(@NotNull TraderStatus status);
 
     @Query("SELECT t FROM Eco.TradeX.persistence.Entities.TraderEntity t " +
             "WHERE LOWER(t.username) LIKE LOWER(CONCAT('%', :searchString, '%')) OR " +

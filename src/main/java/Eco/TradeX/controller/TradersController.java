@@ -6,7 +6,10 @@ import Eco.TradeX.domain.Requests.CreateTraderRequest;
 import Eco.TradeX.domain.Requests.EditTraderRequest;
 import Eco.TradeX.domain.Response.TradersResponse.CreateTraderResponse;
 import Eco.TradeX.domain.Response.TradersResponse.GetTradersResponse;
+import Eco.TradeX.domain.Response.TradersResponse.TotalTraders;
 import Eco.TradeX.domain.Trader.TraderData;
+import Eco.TradeX.domain.Trader.TraderStatus;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -33,6 +36,7 @@ public class TradersController {
         return ResponseEntity.ok().body(getTradersMethodsUseCase.getTraderById(id));
     }
 
+    @RolesAllowed({"ADMIN"})
     @GetMapping
     public ResponseEntity<GetTradersResponse> getTraders() {
         GetTradersResponse response = GetTradersResponse.builder()
@@ -41,9 +45,10 @@ public class TradersController {
         return ResponseEntity.ok().body(response);
     }
 
+    @RolesAllowed({"ADMIN"})
     @GetMapping("/pages")
-    ResponseEntity<Page<TraderData>> getAppointmentPage(@RequestParam(value = "page") Integer page,
-                                                        @RequestParam(value = "pageSize") Integer pageSize) {
+    ResponseEntity<Page<TraderData>> getTraderPage(@RequestParam(value = "page") Integer page,
+                                                   @RequestParam(value = "pageSize") Integer pageSize) {
         try {
             Page<TraderData> traderPage = getTraderPaginatedUseCase.getTraderByPage(page, pageSize);
             return new ResponseEntity<>(traderPage, HttpStatus.OK);
@@ -52,8 +57,9 @@ public class TradersController {
         }
     }
 
+    @RolesAllowed({"ADMIN"})
     @GetMapping("/search")
-    public ResponseEntity<Page<TraderData>> searchAppointment(
+    public ResponseEntity<Page<TraderData>> searchTraders(
             @RequestParam(value = "page") Integer page,
             @RequestParam(value = "pageSize") Integer pageSize,
             @RequestParam(value = "searchString") String searchString) {
@@ -63,6 +69,23 @@ public class TradersController {
         } catch (TraderExceptions e) {
             return new ResponseEntity<>(getTraderPaginatedUseCase.getTraderByUniversalSearch(0, pageSize, ""), HttpStatus.OK);
         }
+    }
+
+    @RolesAllowed({"ADMIN"})
+    @GetMapping("/countAllStatusTraders")
+    public ResponseEntity<TotalTraders> countAllTraders(
+            @RequestParam(value = "status") TraderStatus status) {
+        return new ResponseEntity<>(TotalTraders.builder()
+                .total(getTradersMethodsUseCase.getCountOfTradersStatus(status))
+                .build(), HttpStatus.OK);
+    }
+
+    @RolesAllowed({"ADMIN"})
+    @GetMapping("/countAllTraders")
+    public ResponseEntity<TotalTraders> countAllTraders() {
+        return new ResponseEntity<>(TotalTraders.builder()
+                .total(getTradersMethodsUseCase.getCountAllTraders())
+                .build(), HttpStatus.OK);
     }
 
     @PostMapping()
