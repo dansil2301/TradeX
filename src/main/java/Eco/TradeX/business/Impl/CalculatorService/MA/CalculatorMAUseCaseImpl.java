@@ -2,6 +2,7 @@ package Eco.TradeX.business.Impl.CalculatorService.MA;
 
 import Eco.TradeX.business.Impl.StrategiesService.MA.MAParameterContainer;
 import Eco.TradeX.business.Interfaces.CalculatorServiceInterfaces.CalculatorStrategyUseCase;
+import Eco.TradeX.business.exceptions.CalculationException;
 import Eco.TradeX.domain.Calculator.ActionSignal;
 import Eco.TradeX.domain.StrategyParams.CandleStrategiesParams;
 import Eco.TradeX.domain.StrategyParams.StrategyNameParameter;
@@ -31,6 +32,10 @@ public class CalculatorMAUseCaseImpl implements CalculatorStrategyUseCase {
                 curParameters = (MAParameterContainer) element.getParameters();
                 break;
             }
+        }
+
+        if (curParameters == null) {
+            throw new CalculationException("No parameters found for this candle: " + candleParam.getCandle().getTime());
         }
 
         if (firstEntry || prevParameters == null) {

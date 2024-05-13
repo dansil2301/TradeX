@@ -27,7 +27,7 @@ public class CreateTraderUseCaseImpl implements CreateTraderUseCase {
 
     @Override
     public Long createTrader(CreateTraderRequest request) {
-        if (requestAccessToken.getStatus() != TraderStatus.ADMIN) {
+        if (requestAccessToken.getStatus() == TraderStatus.ADMIN) {
             throw new UnauthorizedDataAccessException("Admins can not be created through API");
         }
         if (traderRepository.existsByEmail(request.getEmail())) {
@@ -41,6 +41,7 @@ public class CreateTraderUseCaseImpl implements CreateTraderUseCase {
         }
 
         saveNewTrader(request);
+        TraderEntity trader = traderRepository.findByEmail(request.getEmail());
         return traderRepository.findByEmail(request.getEmail()).getId();
     }
 

@@ -1,7 +1,9 @@
 package business.Impl.TradersService;
 
+import Eco.TradeX.TradeXApplication;
 import Eco.TradeX.business.Impl.TradersService.CreateTraderUseCaseImpl;
 import Eco.TradeX.business.exceptions.TraderAlreadyExistsException;
+import Eco.TradeX.configuration.security.token.AccessToken;
 import Eco.TradeX.domain.Requests.CreateTraderRequest;
 import Eco.TradeX.domain.Trader.TraderStatus;
 import Eco.TradeX.persistence.Entities.TraderEntity;
@@ -11,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,6 +21,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
+@SpringBootTest(classes = TradeXApplication.class)
 class CreateTraderUseCaseImplTest {
     @Mock
     private TraderRepository traderRepository;
@@ -25,13 +29,11 @@ class CreateTraderUseCaseImplTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
+    @Mock
+    private AccessToken accessToken;
+
     @InjectMocks
     private CreateTraderUseCaseImpl createTraderUseCase;
-
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     void createTraderTest() {
@@ -49,10 +51,11 @@ class CreateTraderUseCaseImplTest {
                 .status(TraderStatus.TRADER_BASIC)
                 .build();
 
+        when(accessToken.getStatus()).thenReturn(TraderStatus.TRADER_PLUS);
         when(traderRepository.existsByUsername(any(String.class))).thenReturn(false);
         when(traderRepository.existsByEmail(any(String.class))).thenReturn(false);
         when(traderRepository.save(any(TraderEntity.class))).thenReturn(null);
-        when(traderRepository.findByEmail(any(String.class))).thenReturn(traderEntity);
+        when(traderRepository.findByEmail("test@example.com")).thenReturn(traderEntity);
         when(passwordEncoder.encode(any(String.class))).thenReturn("PWOIUGHWPIOUGH");
 
         Long id = createTraderUseCase.createTrader(request);

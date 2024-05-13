@@ -56,12 +56,12 @@ public class CalculatorFactoryUseCaseImpl implements CalculatorFactoryUseCase {
             CandleStrategiesParams parameter = strategyFactoryUseCase.calculateParametersForCandle(candle, strategyNames, interval);
             ActionSignal action = calculator.ActionForThisCandle(parameter);
 
-            if (action == ActionSignal.BUY) {
+            if (action == ActionSignal.BUY && !isBought) {
                 isBought = true;
                 stocksBought = stocksCanBeBought(finalAmount, candle.getClose().doubleValue());
                 finalAmount -= candle.getClose().doubleValue() * stocksBought;
             }
-            else if (action == ActionSignal.SELL) {
+            else if (action == ActionSignal.SELL && isBought) {
                 isBought = false;
                 finalAmount += candle.getClose().doubleValue() * stocksBought;
                 stocksBought = 0;
@@ -69,7 +69,7 @@ public class CalculatorFactoryUseCaseImpl implements CalculatorFactoryUseCase {
         }
 
         if (isBought && !candles.isEmpty())
-        { finalAmount += candles.get(0).getClose().doubleValue() * stocksBought; }
+        { finalAmount += candles.get(candles.size() - 1).getClose().doubleValue() * stocksBought; }
 
         return roundToTwoDecimalPlaces(finalAmount);
     }

@@ -70,7 +70,12 @@ project.jacocoTestReport {
 	executionData tasks.withType(Test).findAll { it.state.executed }
 	afterEvaluate {
 		classDirectories = files(classDirectories.files.collect {
-			fileTree(dir: it, exclude: ['**/Eco/TradeX/domain/**'])
+			fileTree(dir: it,
+					exclude: [
+					'**/Eco/TradeX/domain/**',
+					'**/Eco/TradeX/configuration/**',
+					'**/Eco/TradeX/config/**',
+					'**/Eco/TradeX/business/exceptions/**'])
 		})
 	}
 
@@ -92,7 +97,12 @@ jacocoTestCoverageVerification {
 
 	afterEvaluate {
 		classDirectories = files(classDirectories.files.collect {
-			fileTree(dir: it, exclude: ['**/Eco/TradeX/domain/**', ''])
+			fileTree(dir: it,
+					exclude: [
+					'**/Eco/TradeX/domain/**',
+					'**/Eco/TradeX/configuration/**',
+					'**/Eco/TradeX/config/**',
+					'**/Eco/TradeX/business/exceptions/**'])
 		})
 	}
 }

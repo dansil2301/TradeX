@@ -27,7 +27,7 @@ public class EditTraderUseCaseImpl implements EditTraderUseCase {
             throw new UnauthorizedDataAccessException("TRADER_ID_NOT_FROM_LOGGED_IN_USER");
         }
         if (requestAccessToken.getStatus() != TraderStatus.ADMIN && request.getStatus() == TraderStatus.ADMIN) {
-            throw new UnauthorizedDataAccessException("ONLY ADMIN CAN CREAT ADMINS");
+            throw new UnauthorizedDataAccessException("NOBODY CAN CREAT ADMINS FROM ENDPOINTS");
         }
 
         trader.setUsername(request.getUsername());

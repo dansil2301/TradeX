@@ -50,6 +50,5 @@ public class GetTradersPaginatedUseCaseImpl implements GetTraderPaginatedUseCase
         }
 
         return traderPage.map(converter::convertToTraderData);
-
     }
 }
