@@ -75,7 +75,8 @@ project.jacocoTestReport {
 					'**/Eco/TradeX/domain/**',
 					'**/Eco/TradeX/configuration/**',
 					'**/Eco/TradeX/config/**',
-					'**/Eco/TradeX/business/exceptions/**'])
+					'**/Eco/TradeX/business/exceptions/**',
+					'**/Eco/TradeX/TradeXApplication.java'])
 		})
 	}
 
@@ -102,7 +103,8 @@ jacocoTestCoverageVerification {
 					'**/Eco/TradeX/domain/**',
 					'**/Eco/TradeX/configuration/**',
 					'**/Eco/TradeX/config/**',
-					'**/Eco/TradeX/business/exceptions/**'])
+					'**/Eco/TradeX/business/exceptions/**',
+					'**/Eco/TradeX/TradeXApplication'])
 		})
 	}
 }

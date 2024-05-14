@@ -6,10 +6,13 @@ System_Boundary(c3, "") {
     Container(candleController, "Candle Controller", "Component: Spring Rest Controller", "")
     Container(strategyController, "Strategy Controller", "Component: Spring Rest Controller", "")
     Container(tradersController, "Trader Controller", "Component: Spring Rest Controller", "")
+    Container(calculatorController, "Calculator Controller", "Component: Spring Rest Controller", "")
+    Container(loginController, "Login Controller", "Component: Spring Rest Controller", "")
 
     Container(strategyComponent, "Strategy Component", "Component: Spring Bean", "")
     Container(candleComponent, "Candle Component", "Component: Spring Bean", "")
     Container(traderComponent, "Trader Component", "Component: Spring Bean", "")
+    Container(calculatorComponent, "Calculator Component", "Component: Spring Bean", "")
 
     Container(candleRepository, "Candle Repository", "Component: Spring Repository", "")
     Container(traderRepository, "Trader Repository", "Component: Spring Repository", "")
@@ -21,11 +24,16 @@ Container(tinkoffAPI, "Tinkoff API", "Container: 3d party API", "stores market c
 Rel(singlePage, candleController, "Makes API calls to", "HTTP")
 Rel(singlePage, strategyController, "Makes API calls to", "HTTP")
 Rel(singlePage, tradersController, "Makes API calls to", "HTTP")
+Rel(singlePage, calculatorController, "Makes API calls to", "HTTP")
+Rel(singlePage, loginController, "Makes API calls to", "HTTP")
 
 Rel(strategyController, strategyComponent, "Uses")
 Rel(strategyController, candleComponent, "Uses")
 Rel(candleController, candleComponent, "Uses")
 Rel(tradersController, traderComponent, "Uses")
+Rel(calculatorController, calculatorComponent, "Uses")
+Rel(calculatorController, strategyComponent, "Uses")
+Rel(loginController, traderComponent, "Uses")
 
 Rel(strategyComponent, candleRepository, "Uses")
 Rel(candleComponent, candleRepository, "Uses")
