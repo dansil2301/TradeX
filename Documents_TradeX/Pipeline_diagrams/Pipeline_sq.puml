@@ -1,0 +1,35 @@
+@startuml
+actor Developer
+participant "GitHub Repository" as GitHubRepo
+participant "GitHub Actions" as GHActions
+participant "GitHub Runner" as GHRunner
+participant "Frontend Pipeline (FE)" as FEPipeline
+participant "Backend Pipeline (BE)" as BEPipeline
+participant "SonarCloud" as SonarCloud
+participant "DockerHub" as DockerHub
+
+Developer -> GitHubRepo: Commits Code
+activate GitHubRepo
+GitHubRepo -> GHActions: Trigger
+activate GHActions
+GHActions -> GHRunner: Execute
+activate GHRunner
+GHRunner -> FEPipeline: Trigger
+activate FEPipeline
+FEPipeline --> GitHubRepo: Build, Test, Deploy FE
+deactivate FEPipeline
+GHRunner -> BEPipeline: Trigger
+activate BEPipeline
+BEPipeline --> GitHubRepo: Build, Test, Deploy BE
+activate SonarCloud
+BEPipeline -> SonarCloud: Code Analysis
+deactivate SonarCloud
+BEPipeline --> GitHubRepo: Deploy to DockerHub
+activate DockerHub
+GitHubRepo -> DockerHub: Push Image
+deactivate DockerHub
+deactivate BEPipeline
+deactivate GHRunner
+deactivate GHActions
+deactivate GitHubRepo
+@enduml

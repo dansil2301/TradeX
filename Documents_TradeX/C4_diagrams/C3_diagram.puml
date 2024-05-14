@@ -38,6 +38,7 @@ Rel(loginController, traderComponent, "Uses")
 Rel(strategyComponent, candleRepository, "Uses")
 Rel(candleComponent, candleRepository, "Uses")
 Rel(traderComponent, traderRepository, "Uses")
+Rel(calculatorComponent, candleRepository, "Uses")
 
 Rel(candleRepository, tinkoffAPI, "Gets market data from", "HTTPS")
 Rel(traderRepository, db, "Gets user data from", "HTTPS")
