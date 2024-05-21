@@ -5,8 +5,8 @@ import Eco.TradeX.domain.Response.StatisticsResponse.GetStatisticsResponse;
 import Eco.TradeX.domain.Statistics.Pages;
 import Eco.TradeX.domain.Statistics.StatisticsItem;
 import Eco.TradeX.persistence.Entities.PagesEntity;
-import Eco.TradeX.persistence.Repositories.PagesRepository.PagesRepository;
-import Eco.TradeX.persistence.Repositories.PagesVisitedRepository.PagesVisitedRepository;
+import Eco.TradeX.persistence.Repositories.PagesRepository;
+import Eco.TradeX.persistence.Repositories.PagesVisitedRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +30,16 @@ public class GetStatisticsUseCaseImpl implements GetStatisticsUseCase {
 
     public GetStatisticsResponse getStatisticsPageVisited(Date from, Date to) {
         List<Object[]> statisticsResult = pagesVisitedRepository.findStatistics(from, to);
+
+        List<StatisticsItem> statisticsItems = statisticsResult.stream()
+                .map(this::mapToStatisticsItem)
+                .collect(Collectors.toList());
+
+        return GetStatisticsResponse.builder().statisticsPageVisited(statisticsItems).build();
+    }
+
+    public GetStatisticsResponse getStatisticsPageVisited(Date from, Date to, Pages pageName) {
+        List<Object[]> statisticsResult = pagesVisitedRepository.findStatistics(from, to, pageName.toString());
 
         List<StatisticsItem> statisticsItems = statisticsResult.stream()
                 .map(this::mapToStatisticsItem)

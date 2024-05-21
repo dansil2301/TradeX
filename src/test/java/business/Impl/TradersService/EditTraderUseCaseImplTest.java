@@ -7,7 +7,7 @@ import Eco.TradeX.configuration.security.token.AccessToken;
 import Eco.TradeX.domain.Requests.EditTraderRequest;
 import Eco.TradeX.domain.Trader.TraderStatus;
 import Eco.TradeX.persistence.Entities.TraderEntity;
-import Eco.TradeX.persistence.Repositories.TraderRepository.TraderRepository;
+import Eco.TradeX.persistence.Repositories.TraderRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;

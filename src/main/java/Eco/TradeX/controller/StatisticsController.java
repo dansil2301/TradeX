@@ -31,8 +31,12 @@ public class StatisticsController {
     @GetMapping("/get-statistics-pages-visited")
     public ResponseEntity<GetStatisticsResponse> getStatisticsPagesVisited(
             @RequestParam("from") @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
-            @RequestParam("to") @DateTimeFormat(pattern = "yyyy-MM-dd") Date to) {
+            @RequestParam("to") @DateTimeFormat(pattern = "yyyy-MM-dd") Date to,
+            @RequestParam(required = false, value = "pageName") Pages pageName) {
 
-        return ResponseEntity.ok().body(getStatisticsUseCase.getStatisticsPageVisited(from, to));
+        if (pageName == null)
+        { return ResponseEntity.ok().body(getStatisticsUseCase.getStatisticsPageVisited(from, to)); }
+        else
+        { return ResponseEntity.ok().body(getStatisticsUseCase.getStatisticsPageVisited(from, to, pageName)); }
     }
 }

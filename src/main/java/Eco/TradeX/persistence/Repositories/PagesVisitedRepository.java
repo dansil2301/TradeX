@@ -1,4 +1,4 @@
-package Eco.TradeX.persistence.Repositories.PagesVisitedRepository;
+package Eco.TradeX.persistence.Repositories;
 
 import Eco.TradeX.domain.Statistics.StatisticsItem;
 import Eco.TradeX.persistence.Entities.PagesVisitedEntity;
@@ -17,4 +17,14 @@ public interface PagesVisitedRepository extends JpaRepository<PagesVisitedEntity
             "WHERE pv.visited_at BETWEEN :startDate AND :endDate " +
             "GROUP BY DATE(pv.visited_at)", nativeQuery = true)
     List<Object[]> findStatistics(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
+    @Query(value = "SELECT COUNT(pv.id) as tradersVisited, DATE(pv.visited_at) as visitedAt " +
+            "FROM pages_visited pv " +
+            "JOIN pages p ON pv.page_id = p.id " +
+            "WHERE pv.visited_at BETWEEN :startDate AND :endDate " +
+            "AND p.page_name = :pageName " +
+            "GROUP BY DATE(pv.visited_at)", nativeQuery = true)
+    List<Object[]> findStatistics(@Param("startDate") Date startDate,
+                                  @Param("endDate") Date endDate,
+                                  @Param("pageName") String pageName);
 }

@@ -7,7 +7,7 @@ import Eco.TradeX.configuration.security.token.impl.AccessTokenImpl;
 import Eco.TradeX.domain.Trader.LoginRequest;
 import Eco.TradeX.domain.Trader.LoginResponse;
 import Eco.TradeX.persistence.Entities.TraderEntity;
-import Eco.TradeX.persistence.Repositories.TraderRepository.TraderRepository;
+import Eco.TradeX.persistence.Repositories.TraderRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

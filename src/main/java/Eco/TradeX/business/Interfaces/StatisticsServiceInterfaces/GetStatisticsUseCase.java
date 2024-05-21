@@ -9,4 +9,5 @@ import java.util.List;
 public interface GetStatisticsUseCase {
     List<Pages> getPagesNames();
     GetStatisticsResponse getStatisticsPageVisited(Date from, Date to);
+    GetStatisticsResponse getStatisticsPageVisited(Date from, Date to, Pages pageName);
 }

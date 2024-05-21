@@ -1,4 +1,4 @@
-package Eco.TradeX.persistence.Repositories.TraderRepository;
+package Eco.TradeX.persistence.Repositories;
 
 import Eco.TradeX.domain.Trader.TraderStatus;
 import Eco.TradeX.persistence.Entities.TraderEntity;

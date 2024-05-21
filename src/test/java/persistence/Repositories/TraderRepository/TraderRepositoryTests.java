@@ -3,16 +3,13 @@ package persistence.Repositories.TraderRepository;
 import Eco.TradeX.TradeXApplication;
 import Eco.TradeX.domain.Trader.TraderStatus;
 import Eco.TradeX.persistence.Entities.TraderEntity;
-import Eco.TradeX.persistence.Repositories.TraderRepository.TraderRepository;
-import TestConfigs.TestConfig;
-import jakarta.persistence.PersistenceUnit;
+import Eco.TradeX.persistence.Repositories.TraderRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.time.LocalDateTime;

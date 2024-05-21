@@ -8,14 +8,12 @@ import Eco.TradeX.configuration.security.token.AccessToken;
 import Eco.TradeX.domain.Trader.TraderData;
 import Eco.TradeX.domain.Trader.TraderStatus;
 import Eco.TradeX.persistence.Entities.TraderEntity;
-import Eco.TradeX.persistence.Repositories.TraderRepository.TraderRepository;
+import Eco.TradeX.persistence.Repositories.TraderRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -23,7 +21,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest(classes = TradeXApplication.class)

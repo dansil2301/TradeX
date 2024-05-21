@@ -1,4 +1,4 @@
-package Eco.TradeX.persistence.Repositories.PagesRepository;
+package Eco.TradeX.persistence.Repositories;
 
 import Eco.TradeX.domain.Statistics.Pages;
 import Eco.TradeX.persistence.Entities.PagesEntity;
@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PagesRepository extends JpaRepository<PagesEntity, Long> {
+    PagesEntity findAllById(Long id);
 }
