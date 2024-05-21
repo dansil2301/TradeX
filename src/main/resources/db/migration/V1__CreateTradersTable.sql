@@ -6,3 +6,17 @@ CREATE TABLE traders (
      status VARCHAR(255) NOT NULL,
      registered_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE pages (
+    id        BIGINT AUTO_INCREMENT PRIMARY KEY,
+    page_name VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE pages_visited (
+    id         BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id    BIGINT,
+    page_id    BIGINT,
+    visited_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES traders (id) ON DELETE CASCADE,
+    FOREIGN KEY (page_id) REFERENCES pages (id) ON DELETE CASCADE
+);
