@@ -17,7 +17,6 @@ import static Eco.TradeX.business.utils.CandleUtils.ConvertToLocalCandleEntity.c
 @Repository
 public class ClientTinkoffCandleStream implements ClientCandleStream {
     private final InvestApi investApi;
-    private CandleData receivedCandle = null;
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientTinkoffCandleStream.class);
 
     public ClientTinkoffCandleStream(InvestApi investApi){
