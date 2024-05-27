@@ -25,7 +25,7 @@ import java.util.List;
 public class CalculatorController {
     private final CalculatorFactoryUseCase calculatorFactoryUseCase;
 
-    @RolesAllowed({"TRADER_PLUS"})
+    @RolesAllowed({"TRADER_PLUS", "ADMIN"})
     @GetMapping("/get-calculator-names")
     public ResponseEntity<GetCalculatorNamesResponse> getCalculators() {
         return ResponseEntity.ok().body(GetCalculatorNamesResponse.builder()
@@ -33,7 +33,7 @@ public class CalculatorController {
                 .build());
     }
 
-    @RolesAllowed({"TRADER_PLUS"})
+    @RolesAllowed({"TRADER_PLUS", "ADMIN"})
     @GetMapping("/get-amount")
     public ResponseEntity<GetProfitForSpecificPeriod> getPeriodProfit(@RequestParam(value = "from") Instant from,
                                                                  @RequestParam(value = "to") Instant to,
