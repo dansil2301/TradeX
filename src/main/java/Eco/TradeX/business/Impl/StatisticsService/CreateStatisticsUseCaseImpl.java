@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Optional;
 
@@ -59,6 +60,11 @@ public class CreateStatisticsUseCaseImpl implements CreateStatisticsUseCase {
                 .visitedAt(new Date())
                 .build();
 
-        pagesVisitedRepository.save(pagesVisited);
+        LocalDate visitedAtDate = pagesVisited.getVisitedAt().toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+
+        if (pagesVisitedRepository.countPageVisitsByUserAndPageAndDate(pagesVisited.getUser().getId(), pagesVisited.getPage().getId(), visitedAtDate) == 0)
+        { pagesVisitedRepository.save(pagesVisited); }
     }
 }
