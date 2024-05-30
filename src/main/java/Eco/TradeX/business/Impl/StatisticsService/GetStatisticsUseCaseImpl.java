@@ -10,6 +10,7 @@ import Eco.TradeX.persistence.Repositories.PagesVisitedRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,7 +30,16 @@ public class GetStatisticsUseCaseImpl implements GetStatisticsUseCase {
     }
 
     public GetStatisticsResponse getStatisticsPageVisited(Date from, Date to) {
-        List<Object[]> statisticsResult = pagesVisitedRepository.findStatistics(from, to);
+        if (from == null || to == null || from.after(to)) {
+            throw new IllegalArgumentException("Invalid date range");
+        }
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(to);
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        Date adjustedTo = calendar.getTime();
+
+        List<Object[]> statisticsResult = pagesVisitedRepository.findStatistics(from, adjustedTo);
 
         List<StatisticsItem> statisticsItems = statisticsResult.stream()
                 .map(this::mapToStatisticsItem)
@@ -39,7 +49,16 @@ public class GetStatisticsUseCaseImpl implements GetStatisticsUseCase {
     }
 
     public GetStatisticsResponse getStatisticsPageVisited(Date from, Date to, Pages pageName) {
-        List<Object[]> statisticsResult = pagesVisitedRepository.findStatistics(from, to, pageName.toString());
+        if (from == null || to == null || from.after(to)) {
+            throw new IllegalArgumentException("Invalid date range");
+        }
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(to);
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        Date adjustedTo = calendar.getTime();
+
+        List<Object[]> statisticsResult = pagesVisitedRepository.findStatistics(from, adjustedTo, pageName.toString());
 
         List<StatisticsItem> statisticsItems = statisticsResult.stream()
                 .map(this::mapToStatisticsItem)
