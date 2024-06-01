@@ -36,16 +36,28 @@ jobs:
     - name: Run Tests
       run: ./gradlew test
 
-    - name: Build & push Docker image production
+#    - name: Build & push Docker image production
+#      if: ${{ job.status == 'success' }}
+#      uses: mr-smithers-excellent/docker-build-push@v6
+#      with:
+#        image: dansil2301/tradex
+#        tags: latest
+#        registry: docker.io
+#        dockerfile: Dockerfile
+#        username: ${{ secrets.DOCKER_USERNAME }}
+#        password: ${{ secrets.DOCKER_PASSWORD }}
+#        buildArgs: 'PROPERTIES_FILE=application-prod.properties,
+#                    TINKOFF_TOKEN=${{ secrets.TINKOFF_TOKEN }},
+#                    JWT_SECRET=${{ secrets.JWT_SECRET }}'
+    - name: Build Docker image
       if: ${{ job.status == 'success' }}
-      uses: mr-smithers-excellent/docker-build-push@v6
-      with:
-        image: dansil2301/tradex
-        tags: latest
-        registry: docker.io
-        dockerfile: Dockerfile
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-        buildArgs: 'PROPERTIES_FILE=application-prod.properties,
-        TINKOFF_TOKEN="${{ secrets.TINKOFF_TOKEN }}",
-        JWT_SECRET="${{ secrets.JWT_SECRET }}"'
+      run: |
+        docker build -t dansil2301/tradex:latest \
+          --build-arg PROPERTIES_FILE=application-prod.properties \
+          --build-arg TINKOFF_TOKEN=${{ secrets.TINKOFF_TOKEN }} \
+          --build-arg JWT_SECRET=${{ secrets.JWT_SECRET }} .
+    - name: Push Docker image
+      if: ${{ job.status == 'success' }}
+      run: |
+        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+        docker push dansil2301/tradex:latest
