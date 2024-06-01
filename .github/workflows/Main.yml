@@ -51,11 +51,7 @@ jobs:
 #                    JWT_SECRET=${{ secrets.JWT_SECRET }}'
     - name: Build Docker image
       if: ${{ job.status == 'success' }}
-      run: |
-        docker build -t dansil2301/tradex:latest \
-          --build-arg PROPERTIES_FILE=application-prod.properties \
-          --build-arg TINKOFF_TOKEN=${{ secrets.TINKOFF_TOKEN }} \
-          --build-arg JWT_SECRET=${{ secrets.JWT_SECRET }} .
+      run: docker build -t dansil2301/tradex:latest --build-arg PROPERTIES_FILE=application-prod.properties --build-arg TINKOFF_TOKEN=${{ secrets.TINKOFF_TOKEN }} --build-arg JWT_SECRET=${{ secrets.JWT_SECRET }} .
     - name: Push Docker image
       if: ${{ job.status == 'success' }}
       run: |
