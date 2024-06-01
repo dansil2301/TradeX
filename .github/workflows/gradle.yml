@@ -28,6 +28,7 @@ jobs:
       run: |
         echo "TINKOFF_TOKEN=${{ secrets.TINKOFF_TOKEN }}" >> $GITHUB_ENV
         echo "SONAR_TOKEN=${{ secrets.SONAR_TOKEN }}" >> $GITHUB_ENV
+        echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> $GITHUB_ENV
 
     - name: Build with Gradle Wrapper
       run: ./gradlew build
@@ -38,7 +39,7 @@ jobs:
     - name: SonarCloud Scan
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: ./gradlew sonarqube -Dsonar.token=$SONAR_TOKEN
+      run: ./gradlew sonar -Dsonar.token=$SONAR_TOKEN
 
     - name: Build & push Docker image production
       if: ${{ job.status == 'success' }}
@@ -50,4 +51,4 @@ jobs:
         dockerfile: Dockerfile
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-        buildArgs: 'PROPERTIES_FILE=application-prod.properties,TINKOFF_TOKEN="${{ secrets.TINKOFF_TOKEN }}"'
+        buildArgs: 'PROPERTIES_FILE=application-prod.properties,TINKOFF_TOKEN="${{ secrets.TINKOFF_TOKEN }},JWT_SECRET="${{ secrets.JWT_SECRET }}"'
