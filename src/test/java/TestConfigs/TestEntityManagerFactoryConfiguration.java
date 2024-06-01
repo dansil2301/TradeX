@@ -8,7 +8,9 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
 @TestConfiguration
-@EntityScan("Eco.TradeX.persistence.impl.TraderRepository")
+@EntityScan({"Eco.TradeX.persistence.Entities.TraderRepository",
+        "Eco.TradeX.persistence.Entities.PagesEntity",
+        "Eco.TradeX.persistence.Entities.PagesVisitedEntity"})
 public class TestEntityManagerFactoryConfiguration {
 
     @Bean(name="entityManagerFactory")

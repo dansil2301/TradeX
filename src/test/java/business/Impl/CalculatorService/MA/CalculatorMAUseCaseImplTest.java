@@ -10,6 +10,7 @@ import Eco.TradeX.domain.StrategyParams.StrategyNameParameter;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -19,6 +20,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = TradeXApplication.class)
+@ActiveProfiles("test")
 class CalculatorMAUseCaseImplTest {
     private CalculatorMAUseCaseImpl calculatorMAUseCase;
 
