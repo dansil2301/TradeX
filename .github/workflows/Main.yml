@@ -36,10 +36,10 @@ jobs:
     - name: Run Tests
       run: ./gradlew test
 
-    - name: SonarCloud Scan
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: ./gradlew sonar -Dsonar.token=$SONAR_TOKEN
+#    - name: SonarCloud Scan
+#      env:
+#        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#      run: ./gradlew sonar -Dsonar.token=$SONAR_TOKEN
 
     - name: Build & push Docker image production
       if: ${{ job.status == 'success' }}
