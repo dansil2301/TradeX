@@ -3,6 +3,7 @@ package Eco.TradeX.controller;
 import Eco.TradeX.business.Interfaces.TraderServiceInterfaces.LoginUseCase;
 import Eco.TradeX.domain.Trader.LoginRequest;
 import Eco.TradeX.domain.Trader.LoginResponse;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
