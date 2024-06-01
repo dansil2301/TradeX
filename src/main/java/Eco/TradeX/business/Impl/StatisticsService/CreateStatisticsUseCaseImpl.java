@@ -25,6 +25,7 @@ public class CreateStatisticsUseCaseImpl implements CreateStatisticsUseCase {
     private final PagesVisitedRepository pagesVisitedRepository;
     private final TraderRepository traderRepository;
     private final PagesRepository pagesRepository;
+
     @Override
     public void createPageVisit(CreatePageVisitRequest request) {
         validateRequest(request);
