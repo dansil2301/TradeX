@@ -46,6 +46,4 @@ jobs:
         dockerfile: Dockerfile
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-        buildArgs: |
-          PROPERTIES_FILE=application-prod.properties
-          TINKOFF_TOKEN="${{ secrets.TINKOFF_TOKEN }}"
+        buildArgs: PROPERTIES_FILE=application-prod.properties TINKOFF_TOKEN="${{ secrets.TINKOFF_TOKEN }}"
