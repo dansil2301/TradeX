@@ -1,10 +1,13 @@
 ARG TINKOFF_TOKEN
 ARG JWT_SECRET
+ARG AWS_DB_PASSWORD
 
 FROM openjdk:17-jdk-slim
 COPY build/docker/tradex.jar /app/tradex.jar
 
 ENV TINKOFF_TOKEN=${TINKOFF_TOKEN}
 ENV JWT_SECRET=${JWT_SECRET}
+ENV AWS_DB_PASSWORD=${AWS_DB_PASSWORD}
 
+EXPOSE 8080
 CMD ["java", "-jar", "/app/tradex.jar"]
