@@ -46,7 +46,7 @@ jobs:
         dockerfile: Dockerfile
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-        buildArgs: 'PROFILE=application-dep.properties,
+        buildArgs: 'spring.profiles.active=application-dep.properties,
                     TINKOFF_TOKEN=${{ secrets.TINKOFF_TOKEN }},
                     JWT_SECRET=${{ secrets.JWT_SECRET }},
                     AWS_DB_PASSWORD=${{ secrets.AWS_DB_PASSWORD }}'
