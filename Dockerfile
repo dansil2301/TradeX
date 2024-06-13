@@ -5,6 +5,7 @@ ARG AWS_DB_PASSWORD
 ARG AWS_DB_CONNECT
 
 FROM openjdk:17-jdk-slim
+WORKDIR /app
 COPY build/docker/tradex.jar /app/tradex.jar
 
 ENV TINKOFF_TOKEN=${TINKOFF_TOKEN}
